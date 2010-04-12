@@ -1,31 +1,27 @@
-import numpy
-from bv.utils import weighted_average
+from numpy import zeros, dot
+from pybv.utils import weighted_average, ascolumn
 
 class LuminanceCovariance:
 
     def __init__(self, config):
-        n = config.optics.num_photoreceptors
-        self.cov_luminance = numpy.zeros((n,n))
-        self.mean_luminance = numpy.zeros((n,1))
+        n = config.optics[0].num_photoreceptors
+        self.cov_luminance = zeros((n,n))
+        self.mean_luminance = zeros((n,1))
         self.num_samples = 0
         
-    def update(self, data):
+    def process_data(self, data):
         # Get the data as a column vector
-        y = ascolumn( data.optics.luminance )
+        y = ascolumn( data.optics[0].luminance )
         # Update mean estimate
         self.mean_luminance = weighted_average(self.mean_luminance, self.num_samples, y)
-        # Substract the mean
+        # Subtract the mean
         yn = y - self.mean_luminance
         # Compute the exterior product of normalized luminance
-        yy = numpy.dot(yn, yn.transpose())
+        yy = dot(yn, yn.transpose())
         # Update covariance estimate
         self.cov_luminance = weighted_average(self.cov_luminance, self.num_samples, yy ) 
         # Keep track of how many we integrated so far
         self.num_samples += 1
-        
-    def final_computation(self):
-        # no final computation defined for this one
-        pass
         
     def parallel_merge(self, that):
         """ Support function for parallel implementation of the simulation """
