@@ -1,5 +1,5 @@
 from numpy import zeros, dot
-from pybv.utils import weighted_average, ascolumn
+from pybv.utils import weighted_average, ascolumn, outer
 
 class SenselCovariance:
 
@@ -10,9 +10,9 @@ class SenselCovariance:
         self.num_samples = 0
         
     def process_data(self, data):
-        y = ascolumn( data.sensels )
+        y = data.sensels
         self.mean_sensels = weighted_average(self.mean_sensels, self.num_samples, y)
         yn = y - self.mean_sensels
-        yy = dot(yn, yn.transpose())
-        self.cov_sensels = weighted_average(self.cov_sensels, self.num_samples, yy ) 
+        T = outer(yn, yn)
+        self.cov_sensels = weighted_average(self.cov_sensels, self.num_samples, T ) 
         self.num_samples += 1

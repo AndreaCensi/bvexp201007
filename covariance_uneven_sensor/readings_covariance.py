@@ -1,5 +1,5 @@
 from numpy import zeros, dot
-from pybv.utils import weighted_average, ascolumn
+from pybv.utils import weighted_average, ascolumn, outer
 
 class ReadingsCovariance:
 
@@ -10,11 +10,11 @@ class ReadingsCovariance:
         self.num_samples = 0
         
     def process_data(self, data):
-        y = ascolumn( data.rangefinder[0].readings )
+        y = data.rangefinder[0].readings
         self.mean_readings = weighted_average(self.mean_readings, self.num_samples, y)
         yn = y - self.mean_readings
-        yy = dot(yn, yn.transpose())
-        self.cov_readings = weighted_average(self.cov_readings, self.num_samples, yy ) 
+        T = outer( yn, yn )
+        self.cov_readings = weighted_average(self.cov_readings, self.num_samples, T ) 
         self.num_samples += 1
         
     # def parallel_merge(self, that):

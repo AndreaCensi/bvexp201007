@@ -1,5 +1,5 @@
 from numpy import zeros, dot
-from pybv.utils import weighted_average, ascolumn
+from pybv.utils import weighted_average, ascolumn, outer
 
 class LuminanceCovariance:
 
@@ -10,16 +10,15 @@ class LuminanceCovariance:
         self.num_samples = 0
         
     def process_data(self, data):
-        # Get the data as a column vector
-        y = ascolumn( data.optics[0].luminance )
+        y = data.optics[0].luminance
         # Update mean estimate
         self.mean_luminance = weighted_average(self.mean_luminance, self.num_samples, y)
         # Subtract the mean
         yn = y - self.mean_luminance
         # Compute the exterior product of normalized luminance
-        yy = dot(yn, yn.transpose())
+        T = outer(yn, yn)
         # Update covariance estimate
-        self.cov_luminance = weighted_average(self.cov_luminance, self.num_samples, yy ) 
+        self.cov_luminance = weighted_average(self.cov_luminance, self.num_samples, T ) 
         # Keep track of how many we integrated so far
         self.num_samples += 1
         
