@@ -10,9 +10,9 @@ class DynamicTensor:
         self.T = zeros((k,n,n))
         
     def process_data(self, data):
-        y     =  data.optics[0].luminance
-        y_dot =  data.optics[0].luminance_dot 
-        u     =  data.commands 
+        y     = data.optics[0].luminance
+        y_dot = data.optics[0].luminance_dot 
+        u     = data.commands 
 
         T     = outer( u, outer(y, y_dot) )
 
