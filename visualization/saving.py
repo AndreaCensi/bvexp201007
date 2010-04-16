@@ -23,11 +23,12 @@ def posneg(value, depth=3):
 from PIL import Image
 import os 
 
-basepath = '/Users/andrea/svn/cds/pri/bv/src/pybv_experiments_results'
+basepath = '~/svn/cds/pri/bv/src/pybv_experiments_results'
 
 def get_filename(path, extension):
     path[-1] += ".%s" % extension
     filename= os.path.join(basepath, *path)
+    filename = os.path.expanduser(filename)
     dirname = os.path.dirname(filename)
     if not os.path.exists(dirname):
         os.makedirs(dirname)

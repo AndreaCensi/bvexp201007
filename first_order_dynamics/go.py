@@ -31,7 +31,7 @@ random_commands_gen = lambda niteration, vehicle: random.rand(3)
 num_iterations = 100
 
 if 'many' in sys.argv:
-    num_iterations = 1000
+    num_iterations = 100000
 
 all_jobs = {}
 sensors = {'uniform': sensor_uniform, 'nonuniform': sensor_nonuniform } 
