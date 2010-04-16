@@ -32,7 +32,7 @@ from sensel_covariance import SenselCovariance
 
 sensors = {'uniform': sensor_uniform, 'nonuniform': sensor_nonuniform } 
 
-for sensor_name, sensor in sensors:
+for sensor_name, sensor in sensors.items():
     job_id = 'covariance_luminance_%s' % sensor_name
 
     # first try: only luminance
