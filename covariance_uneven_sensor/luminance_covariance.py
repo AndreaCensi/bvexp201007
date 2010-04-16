@@ -12,6 +12,7 @@ class LuminanceCovariance:
 
     def process_data(self, data):
         y = data.optics[0].luminance
+        
         # Update mean estimate
         self.mean_luminance = weighted_average(self.mean_luminance, self.num_samples, y)
         # Subtract the mean

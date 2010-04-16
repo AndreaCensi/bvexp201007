@@ -4,25 +4,31 @@ import go # make sure everything ran
 from luminance_covariance import *
 from pybv_experiments.visualization import *
 from pybv.simulation import load_state
+from pybv.utils import cov2corr
+
+suite = 'covariance'
 
 for job_id in ['covariance_luminance_nonuniform', 'covariance_luminance_uniform']:
     state = load_state(job_id)
     covariance = state.result.cov_luminance
-    save_posneg_matrix(['covariance', job_id, 'cov_luminance'], covariance)
+    save_posneg_matrix([suite, job_id, 'covariance'], covariance)
+    save_posneg_matrix([suite, job_id, 'correlation'], cov2corr(covariance))
 
 from sensel_covariance import *
 
 for job_id in ['covariance_sensels_nonuniform', 'covariance_sensels_uniform']:
     state = load_state(job_id)
     covariance = state.result.cov_sensels
-    save_posneg_matrix(['covariance', job_id, 'cov_sensels'], covariance)
+    save_posneg_matrix([suite, job_id, 'covariance'], covariance)
+    save_posneg_matrix([suite, job_id, 'correlation'], cov2corr(covariance))
 
 from readings_covariance import *
 
-for job_id in ['covariance_readings_nonuniform', 'covariance_readings_uniform']:
+for job_id in ['covariance_distance_nonuniform', 'covariance_distance_uniform']:
     state = load_state(job_id)
     covariance = state.result.cov_readings
-    save_posneg_matrix(['covariance', job_id, 'cov_readings'], covariance)
+    save_posneg_matrix([suite, job_id, 'covariance'], covariance)
+    save_posneg_matrix([suite, job_id, 'correlation'], cov2corr(covariance))
 
     
 # 

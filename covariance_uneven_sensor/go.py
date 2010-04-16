@@ -12,6 +12,7 @@ world_radius = 10
 world = create_random_world(radius=world_radius)
 
 sensor_uniform = create_uniform_sensor(fov_deg=360, num_rays=180, spatial_sigma_deg=0.5, sigma=0.01)
+
 sensor_uniform.set_map(world)
 
 sensor_nonuniform = create_example_nonuniform()
@@ -30,22 +31,23 @@ from luminance_covariance import LuminanceCovariance
 from readings_covariance import ReadingsCovariance
 from sensel_covariance import SenselCovariance
 
+all_jobs = {}
 sensors = {'uniform': sensor_uniform, 'nonuniform': sensor_nonuniform } 
 
 for sensor_name, sensor in sensors.items():
-    job_id = 'covariance_luminance_%s' % sensor_name
-
+    
     # first try: only luminance
     vehicle = Vehicle()
     vehicle.add_optic_sensor(sensor)
     
-    random_pose_simulation(job_id=job_id, world=world, vehicle=vehicle, random_pose_gen=random_pose_gen, num_iterations=num_iterations, processing_class=LuminanceCovariance) 
+    job_id = 'covariance_luminance_%s' % sensor_name
+    all_jobs[job_id] = random_pose_simulation(job_id=job_id, world=world, vehicle=vehicle, random_pose_gen=random_pose_gen, num_iterations=num_iterations, processing_class=LuminanceCovariance) 
 
     # second try: only ranges
     vehicle2 = Vehicle()
     vehicle2.add_rangefinder(sensor)
     job_id = 'covariance_distance_%s' % sensor_name
-    random_pose_simulation(job_id=job_id, world=world, vehicle=vehicle2, random_pose_gen=random_pose_gen, num_iterations=num_iterations, processing_class=ReadingsCovariance)
+    all_jobs[job_id] = random_pose_simulation(job_id=job_id, world=world, vehicle=vehicle2, random_pose_gen=random_pose_gen, num_iterations=num_iterations, processing_class=ReadingsCovariance)
 
     # third try: both ranges and luminance
     vehicle3 = Vehicle()
@@ -53,5 +55,5 @@ for sensor_name, sensor in sensors.items():
     vehicle3.add_rangefinder(sensor)
 
     job_id = 'covariance_sensels_%s' % sensor_name
-    random_pose_simulation(job_id=job_id, world=world, vehicle=vehicle3,  random_pose_gen=random_pose_gen, num_iterations=num_iterations, processing_class=SenselCovariance)
+    all_jobs[job_id] = random_pose_simulation(job_id=job_id, world=world, vehicle=vehicle3,  random_pose_gen=random_pose_gen, num_iterations=num_iterations, processing_class=SenselCovariance)
 
