@@ -35,5 +35,7 @@ random_pose_gen = lambda niteration: get_safe_pose(
 
 random_commands_gen = lambda niteration, vehicle: random.rand(3)
 
-result = random_motion_simulation(job_id='dynamic_tensor', world=world, vehicle=vehicle,  random_pose_gen=random_pose_gen, random_commands_gen=random_commands_gen,     processing_class=DynamicTensor)
+num_iterations = 1000
+
+result = random_motion_simulation(job_id='dynamic_tensor', world=world, vehicle=vehicle,  random_pose_gen=random_pose_gen, num_iterations=num_iterations, random_commands_gen=random_commands_gen,     processing_class=DynamicTensor)
 

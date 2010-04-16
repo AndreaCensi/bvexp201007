@@ -6,7 +6,7 @@ class ReadingsCovariance:
     def __init__(self, config):
         n = config.rangefinder[0].num_readings
         self.cov_readings = zeros((n,n))
-        self.mean_readings = zeros((n,1))
+        self.mean_readings = zeros((n,))
         self.num_samples = 0
         
     def process_data(self, data):

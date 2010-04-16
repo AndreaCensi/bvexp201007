@@ -5,10 +5,11 @@ class LuminanceCovariance:
 
     def __init__(self, config):
         n = config.optics[0].num_photoreceptors
-        self.cov_luminance = zeros((n,n))
-        self.mean_luminance = zeros((n,1))
+        self.cov_luminance = zeros((n,n)
+        )
+        self.mean_luminance = zeros((n,))
         self.num_samples = 0
-        
+
     def process_data(self, data):
         y = data.optics[0].luminance
         # Update mean estimate

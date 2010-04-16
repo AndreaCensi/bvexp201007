@@ -6,7 +6,7 @@ class SenselCovariance:
     def __init__(self, config):
         n = config.num_sensels
         self.cov_sensels = zeros((n,n))
-        self.mean_sensels = zeros((n,1))
+        self.mean_sensels = zeros((n,))
         self.num_samples = 0
         
     def process_data(self, data):

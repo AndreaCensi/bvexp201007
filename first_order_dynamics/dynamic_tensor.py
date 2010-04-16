@@ -13,6 +13,7 @@ class DynamicTensor:
         y     = data.optics[0].luminance
         y_dot = data.optics[0].luminance_dot 
         u     = data.commands 
+        
 
         T     = outer( u, outer(y, y_dot) )
 
