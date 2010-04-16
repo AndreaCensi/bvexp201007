@@ -1,5 +1,5 @@
 
-import go # make sure everything ran
+#import go # make sure everything ran
 
 from dynamic_tensor import *
 from pybv_experiments.visualization import *
