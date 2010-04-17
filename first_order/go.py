@@ -17,8 +17,7 @@ sensor_uniform.set_map(world)
 sensor_nonuniform = create_example_nonuniform()
 sensor_nonuniform.set_map(world)
 
-from dynamic_tensor import DynamicTensor
-from firstorder_readings import *
+from pybv_experiments.first_order import DynamicTensor, FirstorderDistance
 
 raytracer = TexturedRaytracer()
 raytracer.set_map(world)
@@ -31,7 +30,7 @@ random_commands_gen = lambda niteration, vehicle: random.rand(3)
 num_iterations = 100
 
 if 'many' in sys.argv:
-    num_iterations = 10000
+    num_iterations = 1000000
 
 all_jobs = {}
 sensors = {'uniform': sensor_uniform, 'nonuniform': sensor_nonuniform } 

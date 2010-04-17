@@ -30,9 +30,7 @@ num_iterations = 100
 if 'many' in sys.argv:
     num_iterations = 10000
 
-from luminance_covariance import LuminanceCovariance
-from readings_covariance import ReadingsCovariance
-from sensel_covariance import SenselCovariance
+from pybv_experiments.covariance import LuminanceCovariance, ReadingsCovariance,SenselCovariance
 
 all_jobs = {}
 sensors = {'uniform': sensor_uniform, 'nonuniform': sensor_nonuniform } 
