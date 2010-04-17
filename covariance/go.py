@@ -27,6 +27,9 @@ random_pose_gen = lambda niteration: get_safe_pose(
 
 num_iterations = 100
 
+if 'many' in sys.argv:
+    num_iterations = 10000
+
 from luminance_covariance import LuminanceCovariance
 from readings_covariance import ReadingsCovariance
 from sensel_covariance import SenselCovariance
