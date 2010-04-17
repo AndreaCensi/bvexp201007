@@ -1,6 +1,6 @@
 import numpy
 
-def posneg(value, depth=3):
+def posneg(value, maxval=None, depth=3):
     """ Converts a 2D vlaue to normalized uint8 RGB red=positive, blue=negative 0-255
     
     Args:
@@ -8,9 +8,11 @@ def posneg(value, depth=3):
     """
     value = value.squeeze()
     assert(len(value.shape) == 2)
-    maxval = numpy.max(abs(value))
-    if maxval == 0:
-        raise ValueError('You asked to normalize a matrix which is all 0')
+    
+    if maxval is None:
+        maxval = numpy.max(abs(value))
+        if maxval == 0:
+            raise ValueError('You asked to normalize a matrix which is all 0')
 
     positive_part = numpy.abs((numpy.maximum(value, 0)/maxval)*255).astype('uint8')
     negative_part = numpy.abs((numpy.minimum(value, 0)/maxval)*255).astype('uint8')
@@ -49,7 +51,7 @@ import sys
 def should_I_force_replot():
     return any([x == 'replot' for x in sys.argv])
     
-def save_posneg_matrix(path, value, text=None):
+def save_posneg_matrix(path, value, maxvalue=None,text=None):
     if numpy.isnan(value).any():
         raise ValueError('Found NAN in image %s ' % os.path.join(path) )
     
@@ -59,7 +61,7 @@ def save_posneg_matrix(path, value, text=None):
         print "Already exists %s " % os.path.join(*path)
         return
         
-    converted = posneg(value, depth=4)
+    converted = posneg(value, depth=4, maxval=maxvalue)
     height,width=value.shape
     im = Image.frombuffer("RGBA", (width,height), converted.data, "raw", "RGBA", 0, 1)
     print "Printing %s " % os.path.join(*path)
