@@ -1,5 +1,5 @@
 from pybv.worlds import create_random_world, get_safe_pose
-from pybv.sensors import ImageRangeSensor, TexturedRaytracer
+from pybv.sensors import ImageRangeSensor, TexturedRaytracer, OlfactionSensor
 from pybv.utils import RigidBodyState
 from pybv.vehicle import Vehicle
 from pybv.simulation import random_pose_simulation
