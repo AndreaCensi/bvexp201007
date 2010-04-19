@@ -1,5 +1,5 @@
 from pybv.worlds import create_random_world, get_safe_pose
-from pybv.sensors import ImageRangeSensor, TexturedRaytracer
+from pybv.sensors import ImageRangeSensor, TexturedRaytracer, OlfactionSensor
 from pybv.utils import RigidBodyState, OpenStruct
 from pybv.vehicle import Vehicle, OmnidirectionalKinematics
 from pybv.simulation import random_motion_simulation
@@ -51,6 +51,22 @@ for sensor_name, sensor in sensors.items():
         processing_class=DynamicTensor)
 
 # now for rangefinder
+for sensor_name, sensor in sensors.items():
+    job_id = 'firstorder_distance_%s' % sensor_name
+
+    vehicle = Vehicle()
+    vehicle.add_rangefinder(sensor)
+    vehicle.set_dynamics(OmnidirectionalKinematics())
+
+    all_jobs[job_id] = random_motion_simulation(
+        job_id=job_id,
+        world=world, vehicle=vehicle,  
+        random_pose_gen=random_pose_gen, 
+        num_iterations=num_iterations, 
+        random_commands_gen=random_commands_gen,     
+        processing_class=FirstorderDistance)
+
+# now for olfaction
 for sensor_name, sensor in sensors.items():
     job_id = 'firstorder_distance_%s' % sensor_name
 
