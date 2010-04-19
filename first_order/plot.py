@@ -6,7 +6,8 @@ from pybv_experiments.visualization import *
 from pybv.simulation import load_state
 
 jobs = ['firstorder_distance_nonuniform',   'firstorder_luminance_nonuniform',
-'firstorder_distance_uniform',      'firstorder_luminance_uniform']
+'firstorder_distance_uniform',  'firstorder_luminance_uniform',
+ 'firstorder_polarized','firstorder_olfaction']
 
 for job_id in jobs:
     state = load_state(job_id)

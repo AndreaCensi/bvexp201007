@@ -11,7 +11,6 @@ class SenselCovariance:
         
     def process_data(self, data):
         y = data.sensels
-       # print y
         self.mean_sensels = weighted_average(self.mean_sensels, self.num_samples, y)
         yn = y - self.mean_sensels
         T = outer(yn, yn)

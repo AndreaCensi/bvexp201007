@@ -1,7 +1,7 @@
 from numpy import zeros, dot, multiply
 from pybv.utils import weighted_average, outer
 
-class FirstOrderSensels:
+class FirstorderSensels:
 
     def __init__(self, config):
         n = config.num_sensels
