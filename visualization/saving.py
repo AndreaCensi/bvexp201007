@@ -39,13 +39,21 @@ import os
 basepath = '~/svn/cds/pri/bv/src/pybv_experiments_results'
 
 def get_filename(path, extension):
-    path[-1] += ".%s" % extension
+    path = list(path)
+    path[-1] = path[-1] + ".%s" % extension
     filename= os.path.join(basepath, *path)
     filename = os.path.expanduser(filename)
     dirname = os.path.dirname(filename)
     if not os.path.exists(dirname):
         os.makedirs(dirname)
     return filename
+
+def image_newer_than_timestamp(path, timestamp):
+    for extension in ['eps','pdf','png']:
+        filename = get_filename(path, extension)
+        if os.path.exists(filename) and (os.path.getmtime(filename) > timestamp):
+            return True
+    return False
 
 import sys
 def should_I_force_replot():

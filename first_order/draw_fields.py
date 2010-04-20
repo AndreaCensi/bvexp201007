@@ -5,7 +5,7 @@ from numpy import array, ones
 
 from pybv import BVException
 from pybv.simulation import load_state, save_state, is_state_available
-from pybv_experiments.visualization import save_posneg_matrix
+from pybv_experiments.visualization import save_posneg_matrix, image_newer_than_timestamp
 
 failed = False
 suite = 'dynamic_tensor'
@@ -30,11 +30,16 @@ for job in jobs:
         field = array(field)
         assert(len(field.shape)==3)
         for i, cmd_name in [(0,'vx'),(1,'vy'),(2,'vtheta')]:
-            f = field[:,:,i].squeeze()
             image_name ='%s-%s' % (field_name, cmd_name)
             path = [suite, dirname, image_name ]
 
-            # TODO: add timestamp check
+            if image_newer_than_timestamp(path, state.timestamp):
+                print "Skipping %s" % path
+                continue
+             
+            f = field[:,:,i].squeeze()
+            
+            
             try:
                 save_posneg_matrix(path, f)
             except ValueError:
