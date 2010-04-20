@@ -1,11 +1,15 @@
 import sys
+import time
+
 from numpy import linspace, deg2rad
-from dynamic_tensor import *
-from pybv_experiments.visualization import *
+
 from pybv.utils import OpenStruct, RigidBodyState
 from pybv.simulation import load_state, save_state, is_state_available
 from pybv.worlds import create_random_world, get_safe_pose
 from pybv.sensors import TexturedRaytracer
+
+from pybv_experiments.visualization import *
+from dynamic_tensor import *
 
 def compute_command_fields(world, vehicle, T, reference_pose, vehicle_poses):
     """
@@ -13,7 +17,6 @@ def compute_command_fields(world, vehicle, T, reference_pose, vehicle_poses):
      
      returns: list of list of command arrays
     """
-    
     reference_data = vehicle.compute_observations(reference_pose)
     g = reference_data.sensels
             
@@ -91,5 +94,6 @@ for job_id in jobs:
     result.lattice_theta_y = lattice_theta_y
     result.field_theta_y = compute_command_fields(world, vehicle, T,  
                                                   ref_pose, lattice_theta_y)
+    result.timestamp = time.time()
     save_state(job_name, result)
     

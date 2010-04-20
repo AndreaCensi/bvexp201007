@@ -25,7 +25,11 @@ random_pose_gen = lambda niteration: get_safe_pose(
         raytracer=raytracer, world_radius=0.9*world_radius, 
         safe_zone=0.5, num_tries=100)
 
-random_commands_gen = lambda niteration, vehicle: random.rand(3)
+# TOTHINK: with this, Tx=Ty=Ttheta
+# random_commands_gen = lambda niteration, vehicle: random.rand(3)
+
+# Generate commands uniformly between -1,1
+random_commands_gen = lambda niteration, vehicle: (random.rand(3)-0.5)*2
 
 num_iterations = 100
 
