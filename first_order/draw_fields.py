@@ -33,17 +33,17 @@ for job in jobs:
             image_name ='%s-%s' % (field_name, cmd_name)
             path = [suite, dirname, image_name ]
 
-            if image_newer_than_timestamp(path, state.timestamp):
-                print "Skipping %s" % path
-                continue
+#            if image_newer_than_timestamp(path, state.timestamp):
+#                print "Skipping %s" % path
+#                continue
              
             f = field[:,:,i].squeeze()
             
             
             try:
-                save_posneg_matrix(path, f)
-            except ValueError:
-                print "could not draw %s" % path
+                save_posneg_matrix(path, f,previous_timestamp=state.timestamp)
+            except ValueError as e:
+                print "could not draw %s: %s" % (path, e)
                 save_posneg_matrix(path, ones(shape=f.shape) ) 
                 failed = True
 

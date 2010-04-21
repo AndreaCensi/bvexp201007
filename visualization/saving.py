@@ -55,19 +55,27 @@ def image_newer_than_timestamp(path, timestamp):
             return True
     return False
 
-import sys
-def should_I_force_replot():
-    return any([x == 'replot' for x in sys.argv])
+#import sys
+#def should_I_force_replot():
+#    return any([x == 'replot' for x in sys.argv])
     
 def save_posneg_matrix(path, value, maxvalue=None,text=None):
     if numpy.isnan(value).any():
         raise ValueError('Found NAN in image %s ' % os.path.join(path) )
     
     filename = get_filename(path, 'png')
-    force_replot = should_I_force_replot()
-    if (not force_replot) and os.path.exists(filename):
-        print "Already exists %s " % os.path.join(*path)
-        return
+    #force_replot = should_I_force_replot()
+    #exists = os.path.exists(filename)
+        
+    #if (previous_timestamp is not None) and exists:
+        #if os.path.getmtime(filename) > previous_timestamp:
+         #   print "%s: Up to date" % os.path.join(*path)
+          #  return
+        
+    #else:    
+     #   if (not force_replot) and exists:
+      #      print "%s: already exists " % os.path.join(*path)
+       #     return
         
     converted = posneg(value, depth=4, maxval=maxvalue)
     height,width=value.shape

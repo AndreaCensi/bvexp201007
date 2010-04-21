@@ -1,8 +1,9 @@
 import sys
 import time
 
-from numpy import linspace, deg2rad
+from numpy import linspace, deg2rad, isnan
 
+from pybv import BVException
 from pybv.utils import OpenStruct, RigidBodyState
 from pybv.simulation import load_state, save_state, is_state_available
 from pybv.worlds import create_random_world, get_safe_pose
@@ -27,6 +28,8 @@ def compute_command_fields(world, vehicle, T, reference_pose, vehicle_poses):
             pose = reference_pose.oplus(pose_diff)
             data = vehicle.compute_observations(pose)
             y = data.sensels
+            if isnan(y).any():
+                raise BVException('Found NaN in sensels')
             commands =  dot(dot(T, y), (g - y)) 
             assert(len(commands) == vehicle.config.num_commands)
             results_row.append(commands)
@@ -82,7 +85,7 @@ for job_id in jobs:
     T = state.result.T
     raytracer = TexturedRaytracer()
     raytracer.set_map(world)
-    ref_pose = get_safe_pose(raytracer, world_radius=10, safe_zone=1) # TODO: bounding box
+    ref_pose = get_safe_pose(raytracer, world_radius=10, safe_zone=2) # TODO: bounding box
     
     result = OpenStruct()
     result.lattice_x_y = lattice_x_y
