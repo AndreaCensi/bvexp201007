@@ -34,10 +34,10 @@ def compute_command_fields(world, vehicle, T, reference_pose, vehicle_poses):
             assert(len(commands) == vehicle.config.num_commands)
             results_row.append(commands)
             
-            sys.stderr.write('.')
+            #sys.stderr.write('.')
         results.append(results_row)
-        sys.stderr.write('\n')
-    sys.stderr.write('\n\n')
+        #sys.stderr.write('\n')
+    #sys.stderr.write('\n\n')
     return results
     
 
@@ -76,18 +76,20 @@ def compute_fields(state):
 
     result = OpenStruct()
     result.lattice_x_y = lattice_x_y
+    
+    yield (result, 0, 3) 
     result.field_x_y = compute_command_fields(world, vehicle, T, 
                                               ref_pose, lattice_x_y)
     result.lattice_x_theta = lattice_x_theta
+    yield (result, 1, 3)
     result.field_x_theta = compute_command_fields(world, vehicle, T, 
                                                   ref_pose, lattice_x_theta)
     result.lattice_theta_y = lattice_theta_y
+    yield (result, 2, 3)
     result.field_theta_y = compute_command_fields(world, vehicle, T,  
                                                   ref_pose, lattice_theta_y)
-    result.timestamp = time.time()
-
-    return result
-
+    
+    yield (result, 3, 3)
 
 def draw_fields(result, conf_name):
     suite = 'fields'
