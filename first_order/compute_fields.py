@@ -41,7 +41,7 @@ def compute_command_fields(world, vehicle, T, reference_pose, vehicle_poses):
     return results
     
 
-def compute_fields(state, previous_result):
+def compute_fields(state, previous_result=None):
     vehicle = state.vehicle
     world = state.world
     T = state.result.T
