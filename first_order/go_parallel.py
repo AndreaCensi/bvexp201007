@@ -12,7 +12,7 @@ from pybv_experiments import vehicles_list_A
 from pybv_experiments.first_order.plot_parallel import plot_tensors, plot_covariance
 from pybv_experiments.first_order.normalize_tensor import normalize_tensor
 from pybv_experiments.first_order.compute_fields import compute_fields, draw_fields
-from pybv_experiments.parsim import add_computation
+from compmake import add_computation
 from pybv_experiments.covariance import SenselCovariance
 
 
