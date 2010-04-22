@@ -1,8 +1,9 @@
 """ Standard pieces used in the experiments """
 from numpy import deg2rad, pi, linspace, array, cos, sin
 
-from pybv.sensors import ImageRangeSensor, OlfactionSensor
-from pybv.utils import RigidBodyState
+from pybv.sensors import *
+from pybv.vehicle import Vehicle, OmnidirectionalKinematics
+from pybv.utils import RigidBodyState, make_sure_pickable
 
 def create_uniform_sensor(sensor, fov_deg, num_rays, spatial_sigma_deg=0.5, sigma=0.01):
     """ Creates a uniform image/range sensor whose rays are uniformly distributed """
@@ -32,3 +33,55 @@ def create_ring_olfaction_sensor(fov_deg, num_sensors, radius):
         of.add_receptor( pose=RigidBodyState(position=position), sensitivity=sensitivity)
     return of
     
+    
+def vehicles_list_A():
+    """ 
+    Returns a list of vehicles to compare. 
+    
+    Returns a list of tuples (name, vehicle) """
+    
+    vlist = []
+
+    vehicle = Vehicle()
+    vehicle.set_dynamics(OmnidirectionalKinematics())
+    sensor = create_uniform_sensor(Optics(), 
+                        fov_deg=360, num_rays=180, 
+                        spatial_sigma_deg=0.5, sigma=0.01)
+    vehicle.add_sensor(sensor)
+    vlist.append(('v_optic_unif', vehicle))
+    
+    vehicle = Vehicle()
+    vehicle.set_dynamics(OmnidirectionalKinematics())
+    sensor = create_example_nonuniform(Optics())
+    vehicle.add_sensor(sensor)
+    vlist.append(('v_optic_nonunif', vehicle))
+    
+    vehicle = Vehicle()
+    vehicle.set_dynamics(OmnidirectionalKinematics())
+    sensor = create_uniform_sensor(Rangefinder(), 
+                        fov_deg=360, num_rays=180, 
+                        spatial_sigma_deg=0.5, sigma=0.01)
+    vehicle.add_sensor(sensor)
+    vlist.append(('v_rangefinder_unif', vehicle))
+
+    vehicle = Vehicle()
+    vehicle.set_dynamics(OmnidirectionalKinematics())
+    sensor = create_example_nonuniform(Rangefinder())
+    vehicle.add_sensor(sensor)
+    vlist.append(('v_rangefinder_nonunif', vehicle))
+
+    vehicle = Vehicle()
+    vehicle.set_dynamics(OmnidirectionalKinematics())
+    sensor = create_ring_olfaction_sensor(fov_deg=180, num_sensors=40, radius=0.3)
+    vehicle.add_sensor(sensor)
+    vlist.append(('v_olfaction', vehicle))
+
+    vehicle = Vehicle()
+    vehicle.set_dynamics(OmnidirectionalKinematics())
+    vehicle.add_sensor(PolarizedLightSensor(45))
+    vlist.append(('v_polarized', vehicle))
+
+    return vlist
+    
+    
+        

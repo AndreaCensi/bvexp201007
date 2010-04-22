@@ -36,7 +36,7 @@ def posneg(value, maxval=None, depth=3):
 from PIL import Image
 import os 
 
-basepath = '~/svn/cds/pri/bv/src/pybv_experiments_results'
+basepath = '~/parsim_storage/'
 
 def get_filename(path, extension):
     path = list(path)
@@ -54,29 +54,13 @@ def image_newer_than_timestamp(path, timestamp):
         if os.path.exists(filename) and (os.path.getmtime(filename) > timestamp):
             return True
     return False
-
-#import sys
-#def should_I_force_replot():
-#    return any([x == 'replot' for x in sys.argv])
     
 def save_posneg_matrix(path, value, maxvalue=None,text=None):
     if numpy.isnan(value).any():
         raise ValueError('Found NAN in image %s ' % os.path.join(path) )
     
     filename = get_filename(path, 'png')
-    #force_replot = should_I_force_replot()
-    #exists = os.path.exists(filename)
-        
-    #if (previous_timestamp is not None) and exists:
-        #if os.path.getmtime(filename) > previous_timestamp:
-         #   print "%s: Up to date" % os.path.join(*path)
-          #  return
-        
-    #else:    
-     #   if (not force_replot) and exists:
-      #      print "%s: already exists " % os.path.join(*path)
-       #     return
-        
+
     converted = posneg(value, depth=4, maxval=maxvalue)
     height,width=value.shape
     im = Image.frombuffer("RGBA", (width,height), converted.data, "raw", "RGBA", 0, 1)

@@ -1,27 +1,25 @@
 import sys
 
-from numpy import deg2rad, linspace, pi, random
-from numpy.linalg import norm
+from numpy import  random
 
 from pybv.worlds import create_random_world, get_safe_pose
 from pybv.sensors import ImageRangeSensor, TexturedRaytracer, OlfactionSensor, \
     Rangefinder, Optics, PolarizedLightSensor
 from pybv.utils import RigidBodyState, OpenStruct
-from pybv.vehicle import Vehicle, OmnidirectionalKinematics
-from pybv.simulation import random_motion_simulation
+from pybv.simulation import random_motion_simulation, random_pose_simulation
 
-from pybv_experiments import create_uniform_sensor, create_example_nonuniform, \
-    create_ring_olfaction_sensor
-
-from pybv_experiments.first_order.plot_parallel import plot_tensors
-
+from pybv_experiments import vehicles_list_A
+from pybv_experiments.first_order.plot_parallel import plot_tensors, plot_covariance
+from pybv_experiments.first_order.normalize_tensor import normalize_tensor
+from pybv_experiments.first_order.compute_fields import compute_fields, draw_fields
 from pybv_experiments.parsim import add_computation
+from pybv_experiments.covariance import SenselCovariance
+
 
 world_radius = 10
 world = create_random_world(radius=world_radius)
 
-from pybv_experiments.first_order import \
-    DynamicTensor, FirstorderDistance, FirstorderSensels
+from pybv_experiments.first_order import  FirstorderSensels
 
 raytracer = TexturedRaytracer()
 raytracer.set_map(world)
@@ -33,102 +31,65 @@ def my_random_pose_gen(niteration):
     
 random_pose_gen = my_random_pose_gen 
 
-# TOTHINK: with this, Tx=Ty=Ttheta
-# random_commands_gen = lambda niteration, vehicle: random.rand(3)
-
 # Generate commands uniformly between -1,1
 def my_random_commands_gen(ninteration, vehicle):
     return  (random.rand(3)-0.5)*2
 
 random_commands_gen = my_random_commands_gen
 
-# random_commands_gen = lambda niteration, vehicle: (random.rand(3)-0.5)*2
 
 num_iterations = 100
 
 if 'many' in sys.argv:
     num_iterations = 10000
 
-all_jobs = {}
-sensors_optics = {'uniform': create_uniform_sensor(Optics(), 
-                        fov_deg=360, num_rays=180, 
-                        spatial_sigma_deg=0.5, sigma=0.01), 
-           'nonuniform': create_example_nonuniform(Optics()) } 
+for vname, vehicle in vehicles_list_A():
+    first_order_job_id = '%s-first_order' % vname
 
-for sensor_name, sensor in sensors_optics.items():
-    job_id = 'firstorder_luminance_%s' % sensor_name
+    add_computation(depends=[], parsim_job_id=first_order_job_id, 
+                          command=random_motion_simulation,
+        world=world, vehicle=vehicle,  
+        random_pose_gen=random_pose_gen, 
+        num_iterations=num_iterations, 
+        random_commands_gen=random_commands_gen,     
+        processing_class=FirstorderSensels)
 
-    vehicle = Vehicle()
-    vehicle.add_sensor(sensor)
-    vehicle.set_dynamics(OmnidirectionalKinematics())
+    add_computation(depends=first_order_job_id, 
+                    parsim_job_id=first_order_job_id+'-plot_tensors',
+                    command=plot_tensors, 
+                    conf_name=vname)
+
+    covariance_job_id = '%s-covariance' % vname
+
+    add_computation(depends=[], parsim_job_id=covariance_job_id, 
+                          command=random_pose_simulation,
+        world=world, vehicle=vehicle,  
+        random_pose_gen=random_pose_gen, 
+        num_iterations=num_iterations, 
+        processing_class=SenselCovariance)
+
+    add_computation(depends=covariance_job_id, 
+                    parsim_job_id=covariance_job_id+'-plot_tensors',
+                    command=plot_covariance, 
+                    conf_name=vname)
     
-    add_computation(depends=[], parsim_job_id=job_id, command=random_motion_simulation,
-        job_id=job_id, 
-        world=world, vehicle=vehicle,  
-        random_pose_gen=random_pose_gen, 
-        num_iterations=num_iterations, 
-        random_commands_gen=random_commands_gen,     
-        processing_class=DynamicTensor)
+    normalization_job_id = '%s-normalized' % vname
+    
+    add_computation(depends=[covariance_job_id, first_order_job_id], 
+                    parsim_job_id=normalization_job_id, 
+                    command=normalize_tensor)
 
-    add_computation(depends=job_id, parsim_job_id=job_id+'-plot_tensors',
-                     command=plot_tensors, job_id=job_id)
+    add_computation(depends=normalization_job_id, 
+                    parsim_job_id=normalization_job_id+'-plot_tensors',
+                    command=plot_tensors, 
+                    conf_name=vname,prefix='normalized_')
+    
 
-sensors_rangefinder = {'uniform': create_uniform_sensor(Rangefinder(), 
-                        fov_deg=360, num_rays=180, 
-                        spatial_sigma_deg=0.5, sigma=0.01), 
-           'nonuniform': create_example_nonuniform(Rangefinder()) } 
-
-# now for rangefinder
-for sensor_name, sensor in sensors_rangefinder.items():
-    job_id = 'firstorder_distance_%s' % sensor_name
-
-    vehicle = Vehicle()
-    vehicle.add_sensor(sensor)
-    vehicle.set_dynamics(OmnidirectionalKinematics())
-
-    add_computation(depends=[], parsim_job_id=job_id, command=random_motion_simulation,
-        job_id=job_id, 
-        world=world, vehicle=vehicle,  
-        random_pose_gen=random_pose_gen, 
-        num_iterations=num_iterations, 
-        random_commands_gen=random_commands_gen,     
-        processing_class=FirstorderDistance)
-    add_computation(depends=job_id, parsim_job_id=job_id+'-plot_tensors',
-                     command=plot_tensors, job_id=job_id)
-
-# now for olfaction
-if 1:
-    job_id = 'firstorder_olfaction' 
-    os = create_ring_olfaction_sensor(fov_deg=180, num_sensors=40, radius=0.3)
-    vehicle = Vehicle()
-    vehicle.add_sensor(os)
-    vehicle.set_dynamics(OmnidirectionalKinematics())
-
-    add_computation(depends=[], parsim_job_id=job_id, command=random_motion_simulation,
-        job_id=job_id,
-        world=world, vehicle=vehicle,  
-        random_pose_gen=random_pose_gen, 
-        num_iterations=num_iterations, 
-        random_commands_gen=random_commands_gen,     
-        processing_class=FirstorderSensels)
-    add_computation(depends=job_id, parsim_job_id=job_id+'-plot_tensors',
-                     command=plot_tensors, job_id=job_id)
-
-# now for olfaction
-if 1:
-    job_id = 'firstorder_polarized' 
-    vehicle = Vehicle()
-    vehicle.add_sensor(PolarizedLightSensor(45))
-    vehicle.set_dynamics(OmnidirectionalKinematics())
-
-    add_computation(depends=[], parsim_job_id=job_id, command=random_motion_simulation,
-                    job_id=job_id,
-        world=world, vehicle=vehicle,  
-        random_pose_gen=random_pose_gen, 
-        num_iterations=num_iterations, 
-        random_commands_gen=random_commands_gen,     
-        processing_class=FirstorderSensels)
-    add_computation(depends=job_id, parsim_job_id=job_id+'-plot_tensors',
-                     command=plot_tensors, job_id=job_id)
-
-all_jobs = OpenStruct(**all_jobs)
+    fields_job_id = '%s-fields' % vname
+    add_computation(depends=first_order_job_id, parsim_job_id=fields_job_id,
+                    command=compute_fields)
+    
+    draw_fields_job_id = '%s-draw_fields' % vname
+    add_computation(depends=fields_job_id, parsim_job_id=draw_fields_job_id,
+                    command=draw_fields,conf_name=vname)
+    

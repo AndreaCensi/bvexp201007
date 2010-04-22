@@ -39,7 +39,6 @@ for job in jobs:
              
             f = field[:,:,i].squeeze()
             
-            
             try:
                 save_posneg_matrix(path, f,previous_timestamp=state.timestamp)
             except ValueError as e:
