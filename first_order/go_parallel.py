@@ -15,7 +15,7 @@ from pybv_experiments.first_order.compute_fields import compute_fields, draw_fie
 from compmake import add_computation
 from pybv_experiments.covariance import SenselCovariance
 
-
+# FIXME: in this way, each time we create a different random world
 world_radius = 10
 world = create_random_world(radius=world_radius)
 
@@ -37,12 +37,8 @@ def my_random_commands_gen(ninteration, vehicle):
 
 random_commands_gen = my_random_commands_gen
 
-
 num_iterations = 100
-
-if 'many' in sys.argv:
-    num_iterations = 10000
-
+ 
 for vname, vehicle in vehicles_list_A():
     first_order_job_id = '%s-first_order' % vname
 
