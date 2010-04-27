@@ -39,7 +39,9 @@ random_commands_gen = my_random_commands_gen
 
 num_iterations = 100
  
-for vname, vehicle in vehicles_list_A():
+vehicle_list =  vehicles_list_A()
+
+for vname, vehicle in vehicle_list:
     first_order_job_id = '%s-first_order' % vname
 
     add_computation(depends=[], parsim_job_id=first_order_job_id, 
@@ -88,4 +90,22 @@ for vname, vehicle in vehicles_list_A():
     draw_fields_job_id = '%s-draw_fields' % vname
     add_computation(depends=fields_job_id, parsim_job_id=draw_fields_job_id,
                     command=draw_fields,conf_name=vname)
+
+
+f = open('../tex/all_vehicles.tex','w')
+for vname, vehicle in vehicle_list:
     
+    texname = vname.replace('_','-')
+    #vname = vname.replace('_','\\_')
+    f.write("""
+    
+    \\cleardoublepage
+    \\subsection{vdesc}
+    
+    \\showcovariances{vname}{vdesc}
+    \\showtensors{vname}{vdesc}
+    \\showgrids{vname}{vdesc}
+    
+    """.replace('vname',vname).replace('vdesc',texname))
+    
+f.close()
