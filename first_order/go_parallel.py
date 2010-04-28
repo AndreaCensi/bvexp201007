@@ -5,11 +5,13 @@ from pybv.sensors import TexturedRaytracer
 from pybv.simulation import random_motion_simulation, random_pose_simulation
 
 from pybv_experiments import vehicles_list_A
-from pybv_experiments.first_order.plot_parallel import plot_tensors, plot_covariance
+from pybv_experiments.first_order.plot_parallel import plot_tensors, plot_covariance, \
+    plot_tensors_tex
 from pybv_experiments.first_order.normalize_tensor import normalize_tensor
-from pybv_experiments.first_order.compute_fields import compute_fields, draw_fields
-from compmake import add_computation
+from pybv_experiments.first_order.compute_fields import compute_fields, draw_fields, \
+    draw_fields_tex
 from pybv_experiments.covariance import SenselCovariance
+from compmake.ui import comp
 
 # FIXME: in this way, each time we create a different random world
 world_radius = 10
@@ -40,53 +42,49 @@ vehicle_list = vehicles_list_A()
 for vname, vehicle in vehicle_list:
     first_order_job_id = '%s-first_order' % vname
 
-    add_computation(depends=[], parsim_job_id=first_order_job_id,
-                          command=random_motion_simulation,
+    firstorder_result = comp(
+        command=random_motion_simulation,
         world=world, vehicle=vehicle,
         random_pose_gen=random_pose_gen,
         num_iterations=num_iterations,
         random_commands_gen=random_commands_gen,
-        processing_class=FirstorderSensels)
+        processing_class=FirstorderSensels,
+        job_id=first_order_job_id)
 
-    add_computation(depends=first_order_job_id,
-                    parsim_job_id=first_order_job_id + '-plot_tensors',
-                    command=plot_tensors,
-                    conf_name=vname)
+    comp(plot_tensors, state=firstorder_result,
+         path=[vname, 'first_order'], prefix='normal_')
+    comp(plot_tensors_tex, path=[vname, 'first_order'], prefix='normal_',
+         label='%s-first_order' % vname, caption='?')
 
-    covariance_job_id = '%s-covariance' % vname
 
-    add_computation(depends=[], parsim_job_id=covariance_job_id,
-                          command=random_pose_simulation,
+    covariance_result = comp(random_pose_simulation,
         world=world, vehicle=vehicle,
         random_pose_gen=random_pose_gen,
         num_iterations=num_iterations,
         processing_class=SenselCovariance)
 
-    add_computation(depends=covariance_job_id,
-                    parsim_job_id=covariance_job_id + '-plot_tensors',
-                    command=plot_covariance,
-                    conf_name=vname)
+    comp(plot_covariance, state=covariance_result,
+         path=[vname, 'covariance'])
+    
     
     normalization_job_id = '%s-normalized' % vname
     
-    add_computation(depends=[covariance_job_id, first_order_job_id],
-                    parsim_job_id=normalization_job_id,
-                    command=normalize_tensor)
+    normalization_result = comp(normalize_tensor, covariance_result, firstorder_result)
 
-    add_computation(depends=normalization_job_id,
-                    parsim_job_id=normalization_job_id + '-plot_tensors',
-                    command=plot_tensors,
-                    conf_name=vname, prefix='normalized_')
+    comp(plot_tensors, state=normalization_result,
+         path=[vname, 'first_order'], prefix='normalized_')
+    comp(plot_tensors_tex, path=[vname, 'first_order'], prefix='normalized_',
+         label='%s-first_order-normalized' % vname, caption='Result normalized')
+
+
+    fields_result = comp(compute_fields, firstorder_result)
+    comp(draw_fields, fields_result, path=[vname, 'first_order'], prefix='normal_')
+    comp(draw_fields_tex, path=[vname, 'first_order'], prefix='normal_')
     
-
-    fields_job_id = '%s-fields' % vname
-    add_computation(depends=first_order_job_id, parsim_job_id=fields_job_id,
-                    command=compute_fields)
+    nfields_result = comp(compute_fields, normalization_result)
+    comp(draw_fields, fields_result, path=[vname, 'first_order'], prefix='normalized_')
+    comp(draw_fields_tex, path=[vname, 'first_order'], prefix='normalized_')
     
-    draw_fields_job_id = '%s-draw_fields' % vname
-    add_computation(depends=fields_job_id, parsim_job_id=draw_fields_job_id,
-                    command=draw_fields, conf_name=vname)
-
 
 f = open('../tex/all_vehicles.tex', 'w')
 for vname, vehicle in vehicle_list:

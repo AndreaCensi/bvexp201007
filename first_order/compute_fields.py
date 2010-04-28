@@ -86,9 +86,7 @@ def compute_fields(state, previous_result=None):
     
     yield (result, 3, 3)
 
-def draw_fields(result, conf_name):
-    suite = 'fields'
-    
+def draw_fields(result, path, prefix=''):
     fields = [('x_y', result.field_x_y),
               ('x_theta', result.field_x_theta),
               ('theta_y', result.field_theta_y) ]
@@ -98,9 +96,13 @@ def draw_fields(result, conf_name):
         assert(len(field.shape) == 3)
         for i, cmd_name in [(0, 'vx'), (1, 'vy'), (2, 'vtheta')]:
             image_name = '%s-%s' % (field_name, cmd_name)
-            path = [conf_name, suite, image_name ]
+            path = path + [ prefix + image_name ]
             
             f = field[:, :, i].squeeze()
 
             save_posneg_matrix(path, f) 
-                
+
+def draw_fields_tex(path, prefix=''):
+    # TODO
+    pass
+     
