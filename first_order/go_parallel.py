@@ -85,7 +85,7 @@ for vname, vehicle in vehicle_list:
     comp(draw_fields, fields_result, path=[vname, 'first_order'], prefix='normalized_')
     comp(draw_fields_tex, path=[vname, 'first_order'], prefix='normalized_')
     
-if False:
+if True:
     f = open('../tex/all_vehicles.tex', 'w')
     for vname, vehicle in vehicle_list:
         
