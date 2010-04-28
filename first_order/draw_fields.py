@@ -22,28 +22,28 @@ for job in jobs:
 
     state = load_state(job)
     
-    fields = [('x_y', state.field_x_y), 
-              ('x_theta',state.field_x_theta), 
+    fields = [('x_y', state.field_x_y),
+              ('x_theta', state.field_x_theta),
               ('theta_y', state.field_theta_y) ]
 
     for field_name, field in fields:
         field = array(field)
-        assert(len(field.shape)==3)
-        for i, cmd_name in [(0,'vx'),(1,'vy'),(2,'vtheta')]:
-            image_name ='%s-%s' % (field_name, cmd_name)
+        assert(len(field.shape) == 3)
+        for i, cmd_name in [(0, 'vx'), (1, 'vy'), (2, 'vtheta')]:
+            image_name = '%s-%s' % (field_name, cmd_name)
             path = [suite, dirname, image_name ]
 
 #            if image_newer_than_timestamp(path, state.timestamp):
 #                print "Skipping %s" % path
 #                continue
              
-            f = field[:,:,i].squeeze()
+            f = field[:, :, i].squeeze()
             
             try:
-                save_posneg_matrix(path, f,previous_timestamp=state.timestamp)
+                save_posneg_matrix(path, f, previous_timestamp=state.timestamp)
             except ValueError as e:
                 print "could not draw %s: %s" % (path, e)
-                save_posneg_matrix(path, ones(shape=f.shape) ) 
+                save_posneg_matrix(path, ones(shape=f.shape)) 
                 failed = True
 
 if failed:

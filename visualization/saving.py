@@ -1,4 +1,6 @@
 import numpy
+from PIL import Image #@UnresolvedImport
+import os
 
 def posneg(value, maxval=None, depth=3):
     """ Converts a 2D vlaue to normalized uint8 RGB red=positive, blue=negative 0-255
@@ -33,8 +35,8 @@ def posneg(value, maxval=None, depth=3):
     
     return result
 
-from PIL import Image
-import os 
+
+
 
 basepath = '~/parsim_storage/'
 

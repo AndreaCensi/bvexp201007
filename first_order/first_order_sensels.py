@@ -6,16 +6,16 @@ class FirstorderSensels:
     def __init__(self, config):
         n = config.num_sensels
         k = config.num_commands        
-        self.T = zeros((k,n,n))
+        self.T = zeros((k, n, n))
         self.num_samples = 0
         
     def process_data(self, data):
-        y     = data.sensels
+        y = data.sensels
         y_dot = data.sensels_dot 
-        u     = data.commands 
+        u = data.commands 
 
-        T     = outer( u, outer(y, y_dot) )
+        T = outer(u, outer(y, y_dot))
 
-        self.T = weighted_average(self.T, self.num_samples, T ) 
+        self.T = weighted_average(self.T, self.num_samples, T) 
         self.num_samples += 1
         

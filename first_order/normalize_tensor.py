@@ -1,4 +1,3 @@
-from pybv.utils import OpenStruct
 from copy import deepcopy
 
 def normalize_tensor(result_covariance, result_firstorder):

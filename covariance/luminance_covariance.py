@@ -5,7 +5,7 @@ class LuminanceCovariance:
 
     def __init__(self, config):
         n = config.optics[0].num_photoreceptors
-        self.cov_luminance = zeros((n,n))
+        self.cov_luminance = zeros((n, n))
         self.mean_luminance = zeros((n,))
         self.num_samples = 0
 
@@ -18,7 +18,7 @@ class LuminanceCovariance:
         # Compute the exterior product of normalized luminance
         T = outer(yn, yn)
         # Update covariance estimate
-        self.cov_luminance = weighted_average(self.cov_luminance, self.num_samples, T ) 
+        self.cov_luminance = weighted_average(self.cov_luminance, self.num_samples, T) 
         # Keep track of how many we integrated so far
         self.num_samples += 1
         

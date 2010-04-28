@@ -13,7 +13,7 @@ def plot_covariance(covariance, directions=None):
 
     n = covariance.shape[0]
     if directions is None:
-        directions = range(1,n)
+        directions = range(1, n)
         
     X = directions
     Y = directions
