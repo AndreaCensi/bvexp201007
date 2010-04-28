@@ -1,9 +1,7 @@
-if 0:
-
-	from mpl_toolkits.mplot3d import Axes3D
-	from matplotlib import cm
-	import matplotlib.pyplot as plt
-	import numpy as np
+from mpl_toolkits.mplot3d import Axes3D
+from matplotlib import cm
+import matplotlib.pyplot as plt
+import numpy as np
 
 
 def plot_covariance(covariance, directions=None):
