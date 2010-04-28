@@ -85,21 +85,21 @@ for vname, vehicle in vehicle_list:
     comp(draw_fields, fields_result, path=[vname, 'first_order'], prefix='normalized_')
     comp(draw_fields_tex, path=[vname, 'first_order'], prefix='normalized_')
     
-
-f = open('../tex/all_vehicles.tex', 'w')
-for vname, vehicle in vehicle_list:
-    
-    texname = vname.replace('_', '-')
-    #vname = vname.replace('_','\\_')
-    f.write("""
-    
-    \\cleardoublepage
-    \\subsection{vdesc}
-    
-    \\showcovariances{vname}{vdesc}
-    \\showtensors{vname}{vdesc}
-    \\showgrids{vname}{vdesc}
-    
-    """.replace('vname', vname).replace('vdesc', texname))
-    
-f.close()
+if False:
+    f = open('../tex/all_vehicles.tex', 'w')
+    for vname, vehicle in vehicle_list:
+        
+        texname = vname.replace('_', '-')
+        #vname = vname.replace('_','\\_')
+        f.write("""
+        
+        \\cleardoublepage
+        \\subsection{vdesc}
+        
+        \\showcovariances{vname}{vdesc}
+        \\showtensors{vname}{vdesc}
+        \\showgrids{vname}{vdesc}
+        
+        """.replace('vname', vname).replace('vdesc', texname))
+        
+    f.close()
