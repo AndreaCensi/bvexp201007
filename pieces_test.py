@@ -1,6 +1,7 @@
 import unittest
 from pybv.sensors import Rangefinder, Optics
-from pieces import *
+from pieces import vehicles_list_A, create_uniform_sensor, create_example_nonuniform
+from pybv.utils.misc import make_sure_pickable
 
 class Basics(unittest.TestCase):
     
@@ -12,6 +13,6 @@ class Basics(unittest.TestCase):
     
     def testPickable(self):
         ''' Making sure that all test vehicles are pickable '''
-        for name, vehicle in vehicles_list_A():
+        for name, vehicle in vehicles_list_A(): #@UnusedVariable
             v2 = make_sure_pickable(vehicle)
             make_sure_pickable(v2)
