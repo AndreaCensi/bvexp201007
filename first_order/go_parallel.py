@@ -59,7 +59,6 @@ for vname, vehicle in vehicle_list:
          label='%s-first_order' % vname, caption='?',
          extra_dep=plotting)
 
-
     covariance_result = comp(random_pose_simulation,
         world=world, vehicle=vehicle,
         random_pose_gen=random_pose_gen,
