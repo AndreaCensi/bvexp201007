@@ -50,6 +50,7 @@ def compute_fields(firstorder_result, world_gen, spacing_xy=1, spacing_theta=90,
         lattice_y = linspace(-spacing_xy, spacing_xy, resolution)
         lattice_theta = linspace(-deg2rad(spacing_theta), deg2rad(spacing_theta), resolution)
         
+        
         def make_grid(lattice_row, lattice_col, func):
             rows = []
             for y in lattice_row:
@@ -146,22 +147,22 @@ def draw_fields_tex(path, prefix='', **kwargs):
         
     Optional arguments:
     
-        label, caption, image_width
+        figure_label, figure_caption, image_width
     '''
     tex = """
     \\begin{figure}
         \\setlength\\fboxsep{0pt} 
-        \\caption{\\label{fig:label} caption  }
+        \\caption{\\label{fig:figure_label} figure_caption  }
         \\hfill
         \\subfloat[x,y vx]{\\fbox{\\includegraphics[width=image_width]{PREFIXx_y-vx}}}
-        \\subfloat[x,y vy]{\\fbox{\includegraphics[width=image_width]{PREFIXx_y-vy}}}
-        \\subfloat[x,y vt]{\\fbox{\includegraphics[width=image_width]{PREFIXx_y-vtheta}}}
+        \\subfloat[x,y vy]{\\fbox{\\includegraphics[width=image_width]{PREFIXx_y-vy}}}
+        \\subfloat[x,y vt]{\\fbox{\\includegraphics[width=image_width]{PREFIXx_y-vtheta}}}
         \\hfill
 
         \\hfill        
-        \\subfloat[x,theta vx]{\\fbox{includegraphics[width=image_width]{PREFIXx_theta-vx}}}
-        \\subfloat[x,theta vy]{\\fbox{\includegraphics[width=image_width]{PREFIXx_theta-vy}}}
-        \\subfloat[x,theta vt]{\\fbox{\includegraphics[width=image_width]{PREFIXx_theta-vtheta}}}
+        \\subfloat[x,theta vx]{\\fbox{\\includegraphics[width=image_width]{PREFIXx_theta-vx}}}
+        \\subfloat[x,theta vy]{\\fbox{\\includegraphics[width=image_width]{PREFIXx_theta-vy}}}
+        \\subfloat[x,theta vt]{\\fbox{\\includegraphics[width=image_width]{PREFIXx_theta-vtheta}}}
         \\hfill
 
         \\hfill
@@ -172,7 +173,7 @@ def draw_fields_tex(path, prefix='', **kwargs):
  
     \\end{figure}
 """
-    sub = {'image_width': '3cm', 'label': 'unknown', 'caption': '',
+    sub = {'image_width': '3cm', 'figure_label': 'unknown', 'figure_caption': '',
            'PREFIX': prefix}
     sub.update(**kwargs)
     for k, v in sub.items():

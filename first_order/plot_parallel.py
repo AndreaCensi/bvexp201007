@@ -29,22 +29,22 @@ def plot_tensors_tex(path, prefix='', **kwargs):
         
     Optional arguments:
     
-        label, caption, image_width
+        figure_label, figure_caption, image_width
     '''
     tex = """
-    \begin{figure}
-        \setlength\fboxsep{0pt} 
-        \caption{\label{fig:label} caption  }
-        \hfill        
-        \subfloat[cap1]{\fbox{\includegraphics[width=image_width]{pic1}}}
-        \hfill
-        \subfloat[cap2]{\fbox{\includegraphics[width=image_width]{pic2}}}
-        \hfill    
-        \subfloat[cap3]{\fbox{\includegraphics[width=image_width]{pic3}}}
-        \hfill 
-    \end{figure}
+    \\begin{figure}
+        \\setlength\\fboxsep{0pt} 
+        \\caption{\\label{fig:figure_label} figure_caption  }
+        \\hfill        
+        \\subfloat[cap1]{\\fbox{\\includegraphics[width=image_width]{pic1}}}
+        \\hfill
+        \\subfloat[cap2]{\\fbox{\\includegraphics[width=image_width]{pic2}}}
+        \\hfill    
+        \\subfloat[cap3]{\\fbox{\\includegraphics[width=image_width]{pic3}}}
+        \\hfill 
+    \\end{figure}
 """
-    sub = {'image_width': '3cm', 'label': 'unknown', 'caption': '',
+    sub = {'image_width': '3cm', 'figure_label': 'unknown', 'figure_caption': '',
            'cap1': '$T_x$', 'cap2': '$T_y$', 'cap3':'$T_\\theta$',
            'pic1': prefix + 'Tx', 'pic2': prefix + 'Ty', 'pic3': prefix + 'Ttheta'}
     sub.update(**kwargs)
@@ -73,18 +73,18 @@ def plot_covariance_tex(path, prefix='', **kwargs):
         
     Optional arguments:
     
-        label, caption, image_width
+        figure_label, figure_caption, image_width
     '''
     tex = """
-    \begin{figure}
-        \setlength\fboxsep{0pt} 
-        \caption{\label{fig:label} Correlation  }
+    \\begin{figure}
+        \\setlength\\fboxsep{0pt} 
+        \\caption{\\label{fig:figure_label} figure_caption  }
         
-        \fbox{\includegraphics[width=image_width]{pic1}}
+        \\fbox{\\includegraphics[width=image_width]{pic1}}
          
-    \end{figure}
+    \\end{figure}
 """
-    sub = {'image_width': '3cm', 'label': 'unknown', 'caption': '',
+    sub = {'image_width': '3cm', 'figure_label': 'unknown', 'figure_caption': 'Correlation2',
            'pic1': prefix + 'correlation'}
     
     sub.update(**kwargs)
