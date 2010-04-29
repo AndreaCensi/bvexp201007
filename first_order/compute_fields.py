@@ -56,20 +56,14 @@ def compute_fields(firstorder_result, world_gen, spacing_xy=1, spacing_theta=90,
                     row.append(func(x, y))
                 rows.append(row)
             return rows
-        
-        lattice_x_y = make_grid(lattice_y, lattice_x,
-                lambda y, x: RigidBodyState(position=[x, y]))
-        
-        lattice_x_theta = make_grid(lattice_theta, lattice_x,
-                lambda theta, x: RigidBodyState(position=[x, 0], attitude=theta))
-        
-        lattice_theta_y = make_grid(lattice_y, lattice_theta,
-                lambda y, theta: RigidBodyState(position=[0, y], attitude=theta))
-        
+         
         result = OpenStruct()
-        result.lattice_x_y = lattice_x_y
-        result.lattice_x_theta = lattice_x_theta
-        result.lattice_theta_y = lattice_theta_y
+        result.lattice_x_y = make_grid(lattice_y, lattice_x,
+                lambda y, x: RigidBodyState(position=[x, y]))
+        result.lattice_x_theta = make_grid(lattice_theta, lattice_x,
+                lambda theta, x: RigidBodyState(position=[x, 0], attitude=theta))
+        result.lattice_theta_y = make_grid(lattice_y, lattice_theta,
+                lambda y, theta: RigidBodyState(position=[0, y], attitude=theta))
         result.fields_x_y = []
         result.fields_x_theta = []
         result.fields_theta_y = []
@@ -100,15 +94,15 @@ def compute_fields(firstorder_result, world_gen, spacing_xy=1, spacing_theta=90,
     yield (result, 0, 3) 
     if len(result.fields_x_y) <= number_completed:
         result.fields_x_y.append(compute_command_fields(world, vehicle, T,
-                                              ref_pose, lattice_x_y))
+                                              ref_pose, result.lattice_x_y))
     yield (result, 1, 3)
     if len(result.fields_x_theta) <= number_completed:
         result.fields_x_theta.append(compute_command_fields(world, vehicle, T,
-                                                  ref_pose, lattice_x_theta))
+                                                  ref_pose, result.lattice_x_theta))
     yield (result, 2, 3)
     if len(result.fields_theta_y) <= number_completed:
         result.fields_theta_y.append(compute_command_fields(world, vehicle, T,
-                                                  ref_pose, lattice_theta_y))
+                                                  ref_pose, result.lattice_theta_y))
     yield (result, 3, 3)
 
 def draw_fields(result, path, prefix=''):
