@@ -57,8 +57,8 @@ for vname, vehicle in vehicle_list:
         job_id='first_order')
 
     plotting = comp(plot_tensors, state=firstorder_result,
-         path=[vname, 'first_order'], prefix='normal_')
-    comp(plot_tensors_tex, path=[vname, 'first_order'], prefix='normal_',
+         path=[vname, 'first_order'], prefix='natural_')
+    comp(plot_tensors_tex, path=[vname, 'first_order'], prefix='natural_',
          label='%s-first_order' % vname, caption='?',
          extra_dep=plotting)
 
@@ -80,13 +80,15 @@ for vname, vehicle in vehicle_list:
          extra_dep=plotting)
 
 
-    fields_result = comp(compute_fields, firstorder_result, world_gen=my_world_gen)
+    fields_result = comp(compute_fields, firstorder_result, world_gen=my_world_gen,
+                         job_id='fields')
     fields_plot = comp(draw_fields, fields_result, path=[vname, 'first_order'],
-                       prefix='normal_')
-    comp(draw_fields_tex, path=[vname, 'first_order'], prefix='normal_',
+                       prefix='natural_')
+    comp(draw_fields_tex, path=[vname, 'first_order'], prefix='natural_',
          extra_dep=fields_plot)
-    nfields_result = comp(compute_fields, normalization_result)
-    nfields_plot = comp(draw_fields, fields_result, path=[vname, 'first_order'],
+    nfields_result = comp(compute_fields, normalization_result, world_gen=my_world_gen,
+                          job_id='nfields')
+    nfields_plot = comp(draw_fields, nfields_result, path=[vname, 'first_order'],
                         prefix='normalized_')
     comp(draw_fields_tex, path=[vname, 'first_order'], prefix='normalized_',
          extra_dep=nfields_plot)

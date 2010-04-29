@@ -15,9 +15,9 @@ def plot_tensors(state, path, prefix=''):
 
     # normalize everything to the same absolute value
     maxvalue = abs(T).max()
-    save_posneg_matrix(path + [prefix + 'Tx_norm'], Tx, maxvalue=maxvalue)
-    save_posneg_matrix(path + [prefix + 'Ty_norm'], Ty, maxvalue=maxvalue)
-    save_posneg_matrix(path + [prefix + 'Ttheta_norm'], Ttheta, maxvalue=maxvalue)
+    save_posneg_matrix(path + [prefix + 'Tx_samescale'], Tx, maxvalue=maxvalue)
+    save_posneg_matrix(path + [prefix + 'Ty_samescale'], Ty, maxvalue=maxvalue)
+    save_posneg_matrix(path + [prefix + 'Ttheta_samescale'], Ttheta, maxvalue=maxvalue)
 
 def plot_tensors_tex(path, prefix, **kwargs):
     ''' Creates support TeX files for displaying the images 

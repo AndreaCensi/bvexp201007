@@ -6,9 +6,10 @@ from pybv.worlds import get_safe_pose
 from pybv.sensors import TexturedRaytracer
 
 from pybv_experiments.visualization import save_posneg_matrix
+import numpy
 
 
-def compute_command_fields(world, vehicle, T, reference_pose, vehicle_poses):
+def compute_command_fields(vehicle, T, reference_pose, vehicle_poses):
     """
      vehicle_poses: list of lists of Poses
      
@@ -34,11 +35,11 @@ def compute_command_fields(world, vehicle, T, reference_pose, vehicle_poses):
         results.append(results_row)
         #sys.stderr.write('\n')
     #sys.stderr.write('\n\n')
-    return results
+    return array(results)
     
 
 def compute_fields(firstorder_result, world_gen, spacing_xy=1, spacing_theta=90,
-                   resolution=3, previous_result=None):
+                   resolution=15, previous_result=None):
     vehicle = firstorder_result.vehicle
     T = firstorder_result.result.T
     
@@ -76,6 +77,8 @@ def compute_fields(firstorder_result, world_gen, spacing_xy=1, spacing_theta=90,
     number_completed = min([ len(x) \
         for x in [result.fields_x_y, result.fields_x_theta, result.fields_theta_y]])
     
+    print "So far completed %s" % number_completed
+    
     # sample world if we don't have one
     if len(result.worlds) <= number_completed:
         result.worlds.append(world_gen())
@@ -91,35 +94,40 @@ def compute_fields(firstorder_result, world_gen, spacing_xy=1, spacing_theta=90,
         del raytracer
     ref_pose = result.ref_poses[-1]
         
+    vehicle.set_map(world)
+    
     yield (result, 0, 3) 
     if len(result.fields_x_y) <= number_completed:
-        result.fields_x_y.append(compute_command_fields(world, vehicle, T,
+        result.fields_x_y.append(compute_command_fields(vehicle, T,
                                               ref_pose, result.lattice_x_y))
     yield (result, 1, 3)
     if len(result.fields_x_theta) <= number_completed:
-        result.fields_x_theta.append(compute_command_fields(world, vehicle, T,
+        result.fields_x_theta.append(compute_command_fields(vehicle, T,
                                                   ref_pose, result.lattice_x_theta))
     yield (result, 2, 3)
     if len(result.fields_theta_y) <= number_completed:
-        result.fields_theta_y.append(compute_command_fields(world, vehicle, T,
+        result.fields_theta_y.append(compute_command_fields(vehicle, T,
                                                   ref_pose, result.lattice_theta_y))
     yield (result, 3, 3)
 
 def draw_fields(result, path, prefix=''):
-    fields = [('x_y', result.field_x_y),
-              ('x_theta', result.field_x_theta),
-              ('theta_y', result.field_theta_y) ]
+    fields = [('x_y', result.fields_x_y),
+              ('x_theta', result.fields_x_theta),
+              ('theta_y', result.fields_theta_y) ]
 
     for field_name, field in fields:
         field = array(field)
-        assert(len(field.shape) == 3)
+        average = numpy.mean(field, 0)
+        print "List  shape: %s " % str(field.shape)
+        print "Mean shape: %s " % str(average.shape)
+        assert(len(average.shape) == 3)
         for i, cmd_name in [(0, 'vx'), (1, 'vy'), (2, 'vtheta')]:
             image_name = '%s-%s' % (field_name, cmd_name)
-            path = path + [ prefix + image_name ]
+            impath = path + [ prefix + image_name ]
             
-            f = field[:, :, i].squeeze()
+            f = average[:, :, i].squeeze()
 
-            save_posneg_matrix(path, f) 
+            save_posneg_matrix(impath, f) 
 
 def draw_fields_tex(path, prefix=''):
     # TODO
