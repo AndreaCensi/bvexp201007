@@ -37,54 +37,78 @@ def compute_command_fields(world, vehicle, T, reference_pose, vehicle_poses):
     return results
     
 
-def compute_fields(state, previous_result=None):
-    vehicle = state.vehicle
-    world = state.world
-    T = state.result.T
-    raytracer = TexturedRaytracer()
-    raytracer.set_map(world)
-    ref_pose = get_safe_pose(raytracer, world_radius=8, safe_zone=2) # TODO: bounding box
+def compute_fields(firstorder_result, world_gen, spacing_xy=1, spacing_theta=90,
+                   resolution=3, previous_result=None):
+    vehicle = firstorder_result.vehicle
+    T = firstorder_result.result.T
     
-    # Create the lattice for sampling
-    resolution = 20
-    lattice_x = linspace(-1, 1, resolution)
-    lattice_y = linspace(-1, 1, resolution)
-    lattice_theta = linspace(-deg2rad(90), deg2rad(90), resolution)
+    if previous_result is None:
+        # Create the lattice for sampling
+        lattice_x = linspace(-spacing_xy, spacing_xy, resolution)
+        lattice_y = linspace(-spacing_xy, spacing_xy, resolution)
+        lattice_theta = linspace(-deg2rad(spacing_theta), deg2rad(spacing_theta), resolution)
+        
+        def make_grid(lattice_row, lattice_col, func):
+            rows = []
+            for y in lattice_row:
+                row = []
+                for x in lattice_col:
+                    row.append(func(x, y))
+                rows.append(row)
+            return rows
+        
+        lattice_x_y = make_grid(lattice_y, lattice_x,
+                lambda y, x: RigidBodyState(position=[x, y]))
+        
+        lattice_x_theta = make_grid(lattice_theta, lattice_x,
+                lambda theta, x: RigidBodyState(position=[x, 0], attitude=theta))
+        
+        lattice_theta_y = make_grid(lattice_y, lattice_theta,
+                lambda y, theta: RigidBodyState(position=[0, y], attitude=theta))
+        
+        result = OpenStruct()
+        result.lattice_x_y = lattice_x_y
+        result.lattice_x_theta = lattice_x_theta
+        result.lattice_theta_y = lattice_theta_y
+        result.fields_x_y = []
+        result.fields_x_theta = []
+        result.fields_theta_y = []
+        result.worlds = []
+        result.ref_poses = []
+    else:
+        result = previous_result
     
-    def make_grid(lattice_row, lattice_col, func):
-        rows = []
-        for y in lattice_row:
-            row = []
-            for x in lattice_col:
-                row.append(func(x, y))
-            rows.append(row)
-        return rows
+    # This is the number of completed iterations
+    number_completed = min([ len(x) \
+        for x in [result.fields_x_y, result.fields_x_theta, result.fields_theta_y]])
     
-    lattice_x_y = make_grid(lattice_y, lattice_x,
-            lambda y, x: RigidBodyState(position=[x, y]))
+    # sample world if we don't have one
+    if len(result.worlds) <= number_completed:
+        result.worlds.append(world_gen())
+    world = result.worlds[-1]
     
-    lattice_x_theta = make_grid(lattice_theta, lattice_x,
-            lambda theta, x: RigidBodyState(position=[x, 0], attitude=theta))
-    
-    lattice_theta_y = make_grid(lattice_y, lattice_theta,
-            lambda y, theta: RigidBodyState(position=[0, y], attitude=theta))
-    
-
-    result = OpenStruct()
-    result.lattice_x_y = lattice_x_y
-    
+    # sample pose if we don't have one   
+    if len(result.ref_poses) <= number_completed:
+        # Initalize raytracer for pose queries
+        raytracer = TexturedRaytracer()
+        raytracer.set_map(world)
+        result.ref_poses.append(
+                get_safe_pose(raytracer, world_radius=8, safe_zone=2)) # TODO: bounding box
+        del raytracer
+    ref_pose = result.ref_poses[-1]
+        
     yield (result, 0, 3) 
-    result.field_x_y = compute_command_fields(world, vehicle, T,
-                                              ref_pose, lattice_x_y)
-    result.lattice_x_theta = lattice_x_theta
+    if len(result.fields_x_y) <= number_completed:
+        result.fields_x_y.append(compute_command_fields(world, vehicle, T,
+                                              ref_pose, lattice_x_y))
     yield (result, 1, 3)
-    result.field_x_theta = compute_command_fields(world, vehicle, T,
-                                                  ref_pose, lattice_x_theta)
-    result.lattice_theta_y = lattice_theta_y
+    if len(result.fields_x_theta) <= number_completed:
+        result.fields_x_theta.append(compute_command_fields(world, vehicle, T,
+                                                  ref_pose, lattice_x_theta))
     yield (result, 2, 3)
-    result.field_theta_y = compute_command_fields(world, vehicle, T,
-                                                  ref_pose, lattice_theta_y)
-    
+    if len(result.fields_theta_y) <= number_completed:
+        result.fields_theta_y.append(compute_command_fields(world, vehicle, T,
+                                                  ref_pose, lattice_theta_y))
     yield (result, 3, 3)
 
 def draw_fields(result, path, prefix=''):

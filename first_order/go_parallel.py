@@ -19,6 +19,9 @@ from compmake import comp, comp_prefix
 world_radius = 10
 world = create_random_world(radius=world_radius)
 
+def my_world_gen():
+    return create_random_world(radius=10)
+
 from pybv_experiments.first_order import  FirstorderSensels
 
 raytracer = TexturedRaytracer()
@@ -77,7 +80,7 @@ for vname, vehicle in vehicle_list:
          extra_dep=plotting)
 
 
-    fields_result = comp(compute_fields, firstorder_result)
+    fields_result = comp(compute_fields, firstorder_result, world_gen=my_world_gen)
     fields_plot = comp(draw_fields, fields_result, path=[vname, 'first_order'],
                        prefix='normal_')
     comp(draw_fields_tex, path=[vname, 'first_order'], prefix='normal_',
