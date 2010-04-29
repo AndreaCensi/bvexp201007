@@ -61,6 +61,7 @@ def save_posneg_matrix(path, value, maxvalue=None):
     if numpy.isnan(value).any():
         raise ValueError('Found NAN in image %s ' % os.path.join(path))
     
+    
     filename = get_filename(path, 'png')
 
     converted = posneg(value, depth=4, maxval=maxvalue)

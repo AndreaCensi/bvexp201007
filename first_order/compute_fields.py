@@ -5,7 +5,7 @@ from pybv.utils import OpenStruct, RigidBodyState
 from pybv.worlds import get_safe_pose
 from pybv.sensors import TexturedRaytracer
 
-from pybv_experiments.visualization import save_posneg_matrix
+from pybv_experiments.visualization import save_posneg_matrix, get_filename
 import numpy
 
 
@@ -16,7 +16,7 @@ def compute_command_fields(vehicle, T, reference_pose, vehicle_poses):
      returns: list of list of command arrays
     """
     reference_data = vehicle.compute_observations(reference_pose)
-    g = reference_data.sensels
+    goal = reference_data.sensels
     # FIXME: unused world???       
     results = []
     for row in vehicle_poses:
@@ -27,7 +27,7 @@ def compute_command_fields(vehicle, T, reference_pose, vehicle_poses):
             y = data.sensels
             if isnan(y).any():
                 raise BVException('Found NaN in sensels')
-            commands = dot(dot(T, y), (g - y)) 
+            commands = dot(dot(T, y), (goal - y)) 
             assert(len(commands) == vehicle.config.num_commands)
             results_row.append(commands)
             
@@ -36,6 +36,7 @@ def compute_command_fields(vehicle, T, reference_pose, vehicle_poses):
         #sys.stderr.write('\n')
     #sys.stderr.write('\n\n')
     return array(results)
+    
     
 
 def compute_fields(firstorder_result, world_gen, spacing_xy=1, spacing_theta=90,
@@ -132,11 +133,52 @@ def draw_fields(result, path, prefix=''):
             image_name = '%s-%s' % (field_name, cmd_name)
             impath = path + [ prefix + image_name ]
             
-            f = average[:, :, i].squeeze()
+            fi = average[:, :, i].squeeze()
+            save_posneg_matrix(impath, fi) 
 
-            save_posneg_matrix(impath, f) 
+def draw_fields_tex(path, prefix='', **kwargs):
+    ''' Creates support TeX files for displaying the images 
+        created by draw_fields(). Figure name is prefix+'fields.tex' 
+    
+    Arguments:
+    
+        path, prefix:  the arguments you gave to draw_fields
+        
+    Optional arguments:
+    
+        label, caption, image_width
+    '''
+    tex = """
+    \\begin{figure}
+        \\setlength\\fboxsep{0pt} 
+        \\caption{\\label{fig:label} caption  }
+        \\hfill
+        \\subfloat[x,y vx]{\\fbox{\\includegraphics[width=image_width]{PREFIXx_y-vx}}}
+        \\subfloat[x,y vy]{\\fbox{\includegraphics[width=image_width]{PREFIXx_y-vy}}}
+        \\subfloat[x,y vt]{\\fbox{\includegraphics[width=image_width]{PREFIXx_y-vtheta}}}
+        \\hfill
 
-def draw_fields_tex(path, prefix=''):
-    # TODO
-    pass
+        \\hfill        
+        \\subfloat[x,theta vx]{\\fbox{includegraphics[width=image_width]{PREFIXx_theta-vx}}}
+        \\subfloat[x,theta vy]{\\fbox{\includegraphics[width=image_width]{PREFIXx_theta-vy}}}
+        \\subfloat[x,theta vt]{\\fbox{\includegraphics[width=image_width]{PREFIXx_theta-vtheta}}}
+        \\hfill
+
+        \\hfill
+        \\subfloat[theta,y vx]{\\fbox{\includegraphics[width=image_width]{PREFIXtheta_y-vx}}}
+        \\subfloat[theta,y vy]{\\fbox{\includegraphics[width=image_width]{PREFIXtheta_y-vy}}}
+        \\subfloat[theta,y vt]{\\fbox{\includegraphics[width=image_width]{PREFIXtheta_y-vtheta}}}
+        \\hfill
+ 
+    \\end{figure}
+"""
+    sub = {'image_width': '3cm', 'label': 'unknown', 'caption': '',
+           'PREFIX': prefix}
+    sub.update(**kwargs)
+    for k, v in sub.items():
+        tex = tex.replace(k, v)
+
+    filename = get_filename(path + [prefix + 'fields'], 'tex')
+    with open(filename, 'w') as f:
+        f.write(tex)
      

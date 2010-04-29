@@ -1,11 +1,13 @@
-from numpy import zeros, dot
-from pybv.utils import weighted_average, ascolumn, outer
+from numpy import zeros 
+from pybv.utils import weighted_average, outer
 
 class LuminanceCovariance:
 
     def __init__(self, config):
         n = config.optics[0].num_photoreceptors
+        # Initialize a n x n matrix of zeros
         self.cov_luminance = zeros((n, n))
+        # Initialize a n-vector of zero
         self.mean_luminance = zeros((n,))
         self.num_samples = 0
 
@@ -22,10 +24,4 @@ class LuminanceCovariance:
         # Keep track of how many we integrated so far
         self.num_samples += 1
         
-#    def parallel_merge(self, that):
-#        """ Support function for parallel implementation of the simulation """
-#        self.cov_luminance = weighted_average(self.cov_luminance, self.num_samples, that.cov_luminance, that.num_samples)
-#        self.mean_luminance = weighted_average(self.mean_luminance, self.num_samples, that.mean_luminance, that.num_samples)        
-#        self.num_samples += that.num_samples
-        
-    
+

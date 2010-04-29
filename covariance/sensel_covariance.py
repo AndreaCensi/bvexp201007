@@ -1,5 +1,5 @@
-from numpy import zeros, dot
-from pybv.utils import weighted_average, ascolumn, outer
+from numpy import zeros 
+from pybv.utils import weighted_average, outer
 
 class SenselCovariance:
 
