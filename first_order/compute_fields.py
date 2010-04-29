@@ -96,19 +96,26 @@ def compute_fields(firstorder_result, world_gen, spacing_xy=1, spacing_theta=90,
         
     vehicle.set_map(world)
     
-    yield (result, 0, 3) 
+    num = number_completed * 3
+    total = (number_completed + 1) * 3
+    
+    yield (result, num, total) 
     if len(result.fields_x_y) <= number_completed:
         result.fields_x_y.append(compute_command_fields(vehicle, T,
                                               ref_pose, result.lattice_x_y))
-    yield (result, 1, 3)
+    
+    num += 1
+    yield (result, num, total)
     if len(result.fields_x_theta) <= number_completed:
         result.fields_x_theta.append(compute_command_fields(vehicle, T,
                                                   ref_pose, result.lattice_x_theta))
-    yield (result, 2, 3)
+    num += 1
+    yield (result, num, total)
     if len(result.fields_theta_y) <= number_completed:
         result.fields_theta_y.append(compute_command_fields(vehicle, T,
                                                   ref_pose, result.lattice_theta_y))
-    yield (result, 3, 3)
+    num += 1
+    yield (result, num, total)
 
 def draw_fields(result, path, prefix=''):
     fields = [('x_y', result.fields_x_y),
