@@ -11,7 +11,9 @@ from pybv_experiments.first_order.normalize_tensor import normalize_tensor
 from pybv_experiments.first_order.compute_fields import compute_fields, draw_fields, \
     draw_fields_tex
 from pybv_experiments.covariance import SenselCovariance
-from compmake.ui import comp
+from compmake import comp, comp_prefix
+
+
 
 # FIXME: in this way, each time we create a different random world
 world_radius = 10
@@ -40,7 +42,7 @@ num_iterations = 100
 vehicle_list = vehicles_list_A()
 
 for vname, vehicle in vehicle_list:
-    first_order_job_id = '%s-first_order' % vname
+    comp_prefix(vname)
 
     firstorder_result = comp(
         command=random_motion_simulation,
@@ -49,12 +51,13 @@ for vname, vehicle in vehicle_list:
         num_iterations=num_iterations,
         random_commands_gen=random_commands_gen,
         processing_class=FirstorderSensels,
-        job_id=first_order_job_id)
+        job_id='first_order')
 
-    comp(plot_tensors, state=firstorder_result,
+    plotting = comp(plot_tensors, state=firstorder_result,
          path=[vname, 'first_order'], prefix='normal_')
     comp(plot_tensors_tex, path=[vname, 'first_order'], prefix='normal_',
-         label='%s-first_order' % vname, caption='?')
+         label='%s-first_order' % vname, caption='?',
+         extra_dep=plotting)
 
 
     covariance_result = comp(random_pose_simulation,
@@ -66,24 +69,25 @@ for vname, vehicle in vehicle_list:
     comp(plot_covariance, state=covariance_result,
          path=[vname, 'covariance'])
     
-    
-    normalization_job_id = '%s-normalized' % vname
-    
     normalization_result = comp(normalize_tensor, covariance_result, firstorder_result)
 
-    comp(plot_tensors, state=normalization_result,
+    plotting = comp(plot_tensors, state=normalization_result,
          path=[vname, 'first_order'], prefix='normalized_')
     comp(plot_tensors_tex, path=[vname, 'first_order'], prefix='normalized_',
-         label='%s-first_order-normalized' % vname, caption='Result normalized')
+         label='%s-first_order-normalized' % vname, caption='Result normalized',
+         extra_dep=plotting)
 
 
     fields_result = comp(compute_fields, firstorder_result)
-    comp(draw_fields, fields_result, path=[vname, 'first_order'], prefix='normal_')
-    comp(draw_fields_tex, path=[vname, 'first_order'], prefix='normal_')
-    
+    fields_plot = comp(draw_fields, fields_result, path=[vname, 'first_order'],
+                       prefix='normal_')
+    comp(draw_fields_tex, path=[vname, 'first_order'], prefix='normal_',
+         extra_dep=fields_plot)
     nfields_result = comp(compute_fields, normalization_result)
-    comp(draw_fields, fields_result, path=[vname, 'first_order'], prefix='normalized_')
-    comp(draw_fields_tex, path=[vname, 'first_order'], prefix='normalized_')
+    nfields_plot = comp(draw_fields, fields_result, path=[vname, 'first_order'],
+                        prefix='normalized_')
+    comp(draw_fields_tex, path=[vname, 'first_order'], prefix='normalized_',
+         extra_dep=nfields_plot)
     
 if True:
     f = open('../tex/all_vehicles.tex', 'w')
