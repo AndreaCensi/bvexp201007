@@ -13,7 +13,7 @@ from pybv_experiments.covariance import SenselCovariance
 from compmake import comp, comp_prefix
 from pybv.sensors.textured_raytracer import TexturedRaytracer
 from pybv_experiments.visualization.saving import get_filename
-from pybv_experiments.covariance.first_order_sensels_normalize import FirstorderSenselsNormalizeMean, \
+from pybv_experiments.covariance.first_order_sensels_normalize import  \
     FirstorderSenselsNormalizeUnif
  
 def my_world_gen():
