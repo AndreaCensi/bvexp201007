@@ -1,5 +1,5 @@
 """ Standard pieces used in the experiments """
-from numpy import deg2rad, pi, linspace, array, cos, sin
+from numpy import deg2rad
 
 from pybv.sensors import *
 from pybv.vehicle import Vehicle, OmnidirectionalKinematics
@@ -63,6 +63,14 @@ def vehicles_list_A():
                         spatial_sigma_deg=0.5, sigma=0.01)
     vehicle.add_sensor(sensor)
     vlist.append(('v_rangefinder_unif', vehicle))
+
+    vehicle = Vehicle()
+    vehicle.set_dynamics(OmnidirectionalKinematics())
+    sensor = create_uniform_sensor(Nearnessfinder(),
+                        fov_deg=360, num_rays=180,
+                        spatial_sigma_deg=0.5, sigma=0.01)
+    vehicle.add_sensor(sensor)
+    vlist.append(('v_nearness_unif', vehicle))
 
     vehicle = Vehicle()
     vehicle.set_dynamics(OmnidirectionalKinematics())
