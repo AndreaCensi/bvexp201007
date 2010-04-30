@@ -13,7 +13,8 @@ from pybv_experiments.covariance import SenselCovariance
 from compmake import comp, comp_prefix
 from pybv.sensors.textured_raytracer import TexturedRaytracer
 from pybv_experiments.visualization.saving import get_filename
-from pybv_experiments.covariance.first_order_sensels_normalize import FirstorderSenselsNormalizeMean
+from pybv_experiments.covariance.first_order_sensels_normalize import FirstorderSenselsNormalizeMean, \
+    FirstorderSenselsNormalizeUnif
  
 def my_world_gen():
     return create_random_world(radius=10)
@@ -52,7 +53,7 @@ for vname, vehicle in vehicle_list:
         random_pose_gen=random_pose_gen,
         num_iterations=num_iterations,
         random_commands_gen=random_commands_gen,
-        processing_class=FirstorderSenselsNormalizeMean,
+        processing_class=FirstorderSenselsNormalizeUnif,
         job_id='first_order')
 
     plotting = comp(plot_tensors, state=firstorder_result,
