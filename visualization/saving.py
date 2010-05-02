@@ -47,7 +47,7 @@ def get_filename(path, extension):
     path[-1] = path[-1] + ".%s" % extension
     path2 = [Basepath] # XXX insert 
     path2.extend(path)
-    filename = os.path.join(path2)
+    filename = os.path.join(*path2)
     filename = os.path.expanduser(filename)
     dirname = os.path.dirname(filename)
     if not os.path.exists(dirname):
