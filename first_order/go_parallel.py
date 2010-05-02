@@ -39,7 +39,8 @@ def my_random_commands_gen(ninteration, vehicle): #@UnusedVariable
 
 random_commands_gen = my_random_commands_gen
 
-num_iterations = 100
+num_iterations = 500
+dt = 1
  
 vehicle_list = vehicles_list_A()
 
@@ -52,7 +53,7 @@ for vname, vehicle in vehicle_list:
         world_gen=my_world_gen, vehicle=vehicle,
         random_pose_gen=random_pose_gen,
         num_iterations=num_iterations,
-        random_commands_gen=random_commands_gen,
+        random_commands_gen=random_commands_gen, dt=dt,
         processing_class=FirstorderSenselsNormalizeUnif,
         job_id='first_order')
 

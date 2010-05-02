@@ -23,6 +23,28 @@ class FirstorderSenselsNormalizeMean:
         self.num_samples += 1
         
 
+class Expectation:
+    ''' A class to compute the mean of a quantity over time '''
+    def __init__(self):
+        self.num_samples = 0
+        self.value = None
+        
+    def update(self, val):
+        if not self.value:
+            self.value = val
+        else:
+            self.value = weighted_average(self.value, self.num_samples, val) 
+    
+#    def get_value(self):
+#        return self.value
+
+class MeanCovariance:
+    ''' Computes mean and covariance of a quantity '''
+    def __init__(self):
+        self.mean = Expectation()
+        self.covariance = Expectation()
+
+
 class FirstorderSenselsNormalizeUnif:
 
     def __init__(self, config):
@@ -42,8 +64,8 @@ class FirstorderSenselsNormalizeUnif:
         y_n = y - self.y_mean
         T = outer(u, outer(y_n, y_dot))
 
-        if self.num_samples > 50:
+        #if self.num_samples > 50:
             # delay execution
-            self.T = weighted_average(self.T, self.num_samples - 50, T)
+        self.T = weighted_average(self.T, self.num_samples, T)
         self.num_samples += 1
         
