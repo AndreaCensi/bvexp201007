@@ -42,8 +42,12 @@ def vehicles_list_A():
     
     vlist = []
 
+    # XXX something smells here in deg2rad(25)
+    kin = OmnidirectionalKinematics(\
+        max_linear_velocity=0.5, max_angular_velocity=deg2rad(25))
+    
     vehicle = Vehicle()
-    vehicle.set_dynamics(OmnidirectionalKinematics())
+    vehicle.set_dynamics(kin)
     sensor = create_uniform_sensor(Optics(),
                         fov_deg=360, num_rays=180,
                         spatial_sigma_deg=0.5, sigma=0.01)
@@ -51,13 +55,13 @@ def vehicles_list_A():
     vlist.append(('v_optic_unif', vehicle))
     
     vehicle = Vehicle()
-    vehicle.set_dynamics(OmnidirectionalKinematics())
+    vehicle.set_dynamics(kin)
     sensor = create_example_nonuniform(Optics())
     vehicle.add_sensor(sensor)
     vlist.append(('v_optic_nonunif', vehicle))
     
     vehicle = Vehicle()
-    vehicle.set_dynamics(OmnidirectionalKinematics())
+    vehicle.set_dynamics(kin)
     sensor = create_uniform_sensor(Rangefinder(),
                         fov_deg=360, num_rays=180,
                         spatial_sigma_deg=0.5, sigma=0.01)
@@ -65,7 +69,7 @@ def vehicles_list_A():
     vlist.append(('v_rangefinder_unif', vehicle))
 
     vehicle = Vehicle()
-    vehicle.set_dynamics(OmnidirectionalKinematics())
+    vehicle.set_dynamics(kin)
     sensor = create_uniform_sensor(Nearnessfinder(),
                         fov_deg=360, num_rays=180,
                         spatial_sigma_deg=0.5, sigma=0.01)
@@ -73,19 +77,19 @@ def vehicles_list_A():
     vlist.append(('v_nearness_unif', vehicle))
 
     vehicle = Vehicle()
-    vehicle.set_dynamics(OmnidirectionalKinematics())
+    vehicle.set_dynamics(kin)
     sensor = create_example_nonuniform(Rangefinder())
     vehicle.add_sensor(sensor)
     vlist.append(('v_rangefinder_nonunif', vehicle))
 
     vehicle = Vehicle()
-    vehicle.set_dynamics(OmnidirectionalKinematics())
+    vehicle.set_dynamics(kin)
     sensor = create_ring_olfaction_sensor(fov_deg=180, num_sensors=40, radius=0.3)
     vehicle.add_sensor(sensor)
     vlist.append(('v_olfaction', vehicle))
 
     vehicle = Vehicle()
-    vehicle.set_dynamics(OmnidirectionalKinematics())
+    vehicle.set_dynamics(kin)
     vehicle.add_sensor(PolarizedLightSensor(45))
     vlist.append(('v_polarized', vehicle))
 
