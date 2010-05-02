@@ -15,8 +15,9 @@ if 0:
             
         X = directions
         Y = directions
+    
         X, Y = np.meshgrid(X, Y)
         Z = covariance
-        ax.plot_surface(X, Y, Z, rstride=1, cstride=1, cmap=cm.jet)
+        #ax.plot_surface(X, Y, Z, rstride=1, cstride=1, cmap=cm.jet)
     
         plt.show()
