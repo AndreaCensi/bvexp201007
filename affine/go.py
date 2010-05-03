@@ -38,8 +38,8 @@ def my_random_commands_gen_special(ninteration, vehicle): #@UnusedVariable
 
 random_commands_gen = my_random_commands_gen
 
-num_iterations = 50
-dt = 1
+num_iterations = 100
+dt = 0.5
  
 vehicle_list = vehicles_list_A()
 
