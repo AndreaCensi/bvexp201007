@@ -4,6 +4,7 @@ from numpy import dot
 import pylab
 from pybv_experiments.visualization.saving import get_filename, save_posneg_matrix
 from numpy.lib.scimath import sqrt
+import numpy
 
 class Expectation:
     ''' A class to compute the mean of a quantity over time '''
@@ -29,12 +30,24 @@ class MeanCovariance:
     def __init__(self, rcond=1e-3, max_window=None):
         self.mean_accum = Expectation(max_window)
         self.covariance_accum = Expectation(max_window)
+        self.minimum = None
+        self.maximum = None
         self.rcond = rcond
         self.information = None
         self.covariance = None
         self.mean = None
         
     def update(self, value):
+        if not self.maximum:
+            self.maximum = value
+        else:
+            self.maximum = numpy.maximum(value, self.maximum)
+            
+        if not self.minimum:
+            self.minimum = value
+        else:
+            self.minimum = numpy.minimum(value, self.minimum)
+            
         self.mean_accum.update(value)
         self.mean = self.mean_accum.get_value()        
         value_norm = value - self.mean
@@ -91,10 +104,14 @@ def affine_plot(state, path, prefix=''):
     y_dot_mean = state.result.y_dot_stats.mean
     y_dot_cov = state.result.y_dot_stats.covariance
     y_dot_inf = state.result.y_dot_stats.information
+    y_dot_min = state.result.y_dot_stats.minimum
+    y_dot_max = state.result.y_dot_stats.maximum
     
     y_mean = state.result.y_stats.mean
     y_cov = state.result.y_stats.covariance
     y_inf = state.result.y_stats.information
+    y_min = state.result.y_stats.minimum
+    y_max = state.result.y_stats.maximum
     
     u_mean = state.result.u_stats.mean
     u_inf = state.result.u_stats.information
@@ -104,10 +121,12 @@ def affine_plot(state, path, prefix=''):
     T = state.result.T.get_value()
  
     plot_var_stats(path, name=prefix + 'y_dot', \
-                              mean=y_dot_mean, cov=y_dot_cov, inf=y_dot_inf)
+                              mean=y_dot_mean, cov=y_dot_cov, inf=y_dot_inf, \
+                              minimum=y_dot_min, maximum=y_dot_max)
     
     plot_var_stats(path, name=prefix + 'y', \
-                              mean=y_mean, cov=y_cov, inf=y_inf)
+                              mean=y_mean, cov=y_cov, inf=y_inf,
+                              minimum=y_min, maximum=y_max)
     
     plot_var_stats(path, name=prefix + 'u', \
                               mean=u_mean, cov=u_cov, inf=u_inf)
@@ -187,7 +206,7 @@ def affine_plot(state, path, prefix=''):
         f.write(tex)
 
 
-def plot_var_stats(path, name, mean, cov, inf):
+def plot_var_stats(path, name, mean, cov, inf, minimum=None, maximum=None):
     '''Writes on path/name.tex'''
     
     save_posneg_matrix(path + [name + '_covariance'], cov)
@@ -201,6 +220,13 @@ def plot_var_stats(path, name, mean, cov, inf):
     f = pylab.figure()
     x = range(len(mean))
     pylab.errorbar(x, mean, yerr=e)
+    
+    if minimum is not None:
+        pylab.plot(x, minimum, 'b-')
+    if maximum is not None:
+        pylab.plot(x, maximum, 'b-')
+        
+    
     pylab.savefig(filename)
     pylab.close(f)
     
