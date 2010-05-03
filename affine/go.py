@@ -26,10 +26,10 @@ class MyPoseGen:
 random_pose_gen = MyPoseGen() 
 
 # Generate commands uniformly between -1,1
-def my_random_commands_gen_unif(ninteration, vehicle): #@UnusedVariable
+def my_random_commands_gen(ninteration, vehicle): #@UnusedVariable
     return  (random.rand(3) - 0.5) * 2
 
-def my_random_commands_gen(ninteration, vehicle): #@UnusedVariable
+def my_random_commands_gen_special(ninteration, vehicle): #@UnusedVariable
     val = (random.rand(1) - 0.5) * 2
     i = int(floor(random.rand(1) * 2.99))
     u = zeros(3)

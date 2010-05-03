@@ -7,9 +7,10 @@ from numpy.lib.scimath import sqrt
 
 class Expectation:
     ''' A class to compute the mean of a quantity over time '''
-    def __init__(self):
+    def __init__(self, max_window=None):
         self.num_samples = 0
         self.value = None
+        self.max_window = max_window
         
     def update(self, val):
         if  self.value is None:
@@ -17,15 +18,17 @@ class Expectation:
         else:
             self.value = weighted_average(self.value, self.num_samples, val) 
         self.num_samples += 1
+        if self.max_window and self.num_samples > self.max_window:
+            self.num_samples = self. max_window 
     
     def get_value(self):
         return self.value
 
 class MeanCovariance:
     ''' Computes mean and covariance of a quantity '''
-    def __init__(self, rcond=1e-3):
-        self.mean_accum = Expectation()
-        self.covariance_accum = Expectation()
+    def __init__(self, rcond=1e-3, max_window=None):
+        self.mean_accum = Expectation(max_window)
+        self.covariance_accum = Expectation(max_window)
         self.rcond = rcond
         self.information = None
         self.covariance = None
@@ -44,12 +47,13 @@ class MeanCovariance:
 class AffineModel:
 
     def __init__(self, config):
+        max_window = 1000 
         # TODO: pass vehicle and not config
-        self.y_dot_stats = MeanCovariance()
-        self.y_stats = MeanCovariance()
-        self.u_stats = MeanCovariance()
-        self.T = Expectation()
-        self.N = Expectation()
+        self.y_dot_stats = MeanCovariance(max_window)
+        self.y_stats = MeanCovariance(max_window)
+        self.u_stats = MeanCovariance(max_window)
+        self.T = Expectation(max_window)
+        self.N = Expectation(max_window)
         
     def process_data(self, data):        
         y = data.sensels
