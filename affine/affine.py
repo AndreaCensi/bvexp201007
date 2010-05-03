@@ -54,7 +54,7 @@ class MeanCovariance:
         P = outer(value_norm, value_norm)
         self.covariance_accum.update(P)
         self.covariance = self.covariance_accum.get_value()
-        self.information = pinv(self.covariance)
+        self.information = pinv(self.covariance, rcond=1e-2)
 
 
 class AffineModel:
