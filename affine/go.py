@@ -7,6 +7,8 @@ from compmake import comp, comp_prefix
 from pybv.sensors.textured_raytracer import TexturedRaytracer
 from pybv_experiments.visualization.saving import get_filename 
 from pybv_experiments.affine.affine import affine_plot, AffineModel
+from numpy.ma.core import floor
+from numpy.core.numeric import zeros
  
 def my_world_gen():
     return create_random_world(radius=10)
@@ -24,8 +26,15 @@ class MyPoseGen:
 random_pose_gen = MyPoseGen() 
 
 # Generate commands uniformly between -1,1
-def my_random_commands_gen(ninteration, vehicle): #@UnusedVariable
+def my_random_commands_gen_unif(ninteration, vehicle): #@UnusedVariable
     return  (random.rand(3) - 0.5) * 2
+
+def my_random_commands_gen(ninteration, vehicle): #@UnusedVariable
+    val = (random.rand(1) - 0.5) * 2
+    i = int(floor(random.rand(1) * 2.99))
+    u = zeros(3)
+    u[i] = val
+    return u
 
 random_commands_gen = my_random_commands_gen
 
