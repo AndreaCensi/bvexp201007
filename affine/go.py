@@ -14,6 +14,7 @@ def my_world_gen():
     return create_random_world(radius=10)
 
 class MyPoseGen:
+    
     def set_map(self, world):
         self.raytracer = TexturedRaytracer()
         self.raytracer.set_map(world)
