@@ -29,7 +29,7 @@ class MyPoseGen:
         return get_safe_pose(
                              raytracer=self.raytracer,
                              world_radius=9,
-                             safe_zone=0.5, num_tries=100)
+                             safe_zone=0.5, num_tries=200)
 
 random_pose_gen = MyPoseGen() 
 
@@ -40,7 +40,7 @@ def my_random_commands_gen(ninteration, vehicle): #@UnusedVariable
 random_commands_gen = my_random_commands_gen
 
 num_iterations = 500
-dt = 1
+dt = 0.5
  
 vehicle_list = vehicles_list_A()
 

@@ -3,7 +3,6 @@ from numpy import deg2rad
 
 from pybv.sensors import *
 from pybv.vehicle import Vehicle, OmnidirectionalKinematics
-from pybv.utils import RigidBodyState, make_sure_pickable
 
 def create_uniform_sensor(sensor, fov_deg, num_rays, spatial_sigma_deg=0.5, sigma=0.01):
     """ Creates a uniform image/range sensor whose rays are uniformly distributed """

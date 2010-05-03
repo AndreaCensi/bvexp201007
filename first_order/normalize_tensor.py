@@ -1,7 +1,7 @@
 from copy import deepcopy
 from numpy import linalg, tensordot
 
-def normalize_tensor(result_covariance, result_firstorder, rcond=1e-3):
+def normalize_tensor(result_covariance, result_firstorder, rcond=1e-2):
     covariance = result_covariance.result.cov_sensels
     T = result_firstorder.result.T
     
