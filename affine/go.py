@@ -1,4 +1,5 @@
-from numpy import  random
+from numpy import floor, zeros, random
+
 
 from pybv.worlds import create_random_world, get_safe_pose
 from pybv.simulation import random_motion_simulation 
@@ -7,8 +8,6 @@ from compmake import comp, comp_prefix
 from pybv.sensors.textured_raytracer import TexturedRaytracer
 from pybv_experiments.visualization.saving import get_filename 
 from pybv_experiments.affine.affine import affine_plot, AffineModel
-from numpy.ma.core import floor
-from numpy.core.numeric import zeros
  
 def my_world_gen():
     return create_random_world(radius=10)
@@ -18,11 +17,14 @@ class MyPoseGen:
     def set_map(self, world):
         self.raytracer = TexturedRaytracer()
         self.raytracer.set_map(world)
+        
     def generate_pose(self):
-        return get_safe_pose(
+        pose = get_safe_pose(
                              raytracer=self.raytracer,
                              world_radius=9,
                              safe_zone=1, num_tries=100)
+        #print "Found pose %s" % pose
+        return pose
 
 random_pose_gen = MyPoseGen() 
 
