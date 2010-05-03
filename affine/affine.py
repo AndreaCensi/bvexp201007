@@ -38,12 +38,12 @@ class MeanCovariance:
         self.mean = None
         
     def update(self, value):
-        if not self.maximum:
+        if  self.maximum is None:
             self.maximum = value
         else:
             self.maximum = numpy.maximum(value, self.maximum)
             
-        if not self.minimum:
+        if self.minimum is None:
             self.minimum = value
         else:
             self.minimum = numpy.minimum(value, self.minimum)
