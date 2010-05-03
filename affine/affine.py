@@ -124,6 +124,8 @@ def affine_plot(state, path, prefix=''):
     # plot tensor N
     
     filename = get_filename(path + [prefix + 'N'], 'png')
+    
+    pylab.ioff()
     f = pylab.figure()
     for i in range(N.shape[1]):
         v = N[:, i].squeeze()
@@ -194,6 +196,8 @@ def plot_var_stats(path, name, mean, cov, inf):
     filename = get_filename(path + [name + '_mean'], 'png')
     e = 3 * sqrt(cov.diagonal())
     
+    pylab.ioff()
+
     f = pylab.figure()
     x = range(len(mean))
     pylab.errorbar(x, mean, yerr=e)
