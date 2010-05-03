@@ -21,7 +21,7 @@ class MyPoseGen:
         return get_safe_pose(
                              raytracer=self.raytracer,
                              world_radius=9,
-                             safe_zone=0.5, num_tries=100)
+                             safe_zone=1, num_tries=100)
 
 random_pose_gen = MyPoseGen() 
 
