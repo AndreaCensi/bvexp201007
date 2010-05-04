@@ -1,5 +1,6 @@
 from numpy import zeros
 from pybv.utils import weighted_average, outer
+import numpy
 
 class FirstorderSenselsNormalizeMean:
 
@@ -35,7 +36,7 @@ class FirstorderSenselsNormalizeUnif:
         
     def process_data(self, data):        
         y = data.sensels
-        y_dot = data.sensels_dot 
+        y_dot = numpy.sign(data.sensels_dot) 
         u = data.commands 
 
         self.y_mean = weighted_average(self.y_mean, self.num_samples, y.mean()) 
