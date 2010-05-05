@@ -102,6 +102,7 @@ def vehicles_list_A():
     sensor = create_ring_olfaction_sensor(fov_deg=180, num_sensors=40,
                                           radius=0.3)
     sensor.normalize_mean = True
+    sensor.normalize_sum = True
     vehicle.add_sensor(sensor)
     vlist.append(('v_olfaction180n', vehicle))
 
@@ -117,6 +118,7 @@ def vehicles_list_A():
     sensor = create_ring_olfaction_sensor(fov_deg=360, num_sensors=40,
                                           radius=0.3)
     sensor.normalize_mean = True
+    sensor.normalize_sum = True
     vehicle.add_sensor(sensor)
     vlist.append(('v_olfaction360n', vehicle))
 
