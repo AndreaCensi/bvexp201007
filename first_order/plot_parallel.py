@@ -19,6 +19,11 @@ def plot_tensors(state, path, prefix=''):
     save_posneg_matrix(path + [prefix + 'Ttheta_samescale'], Ttheta,
                        maxvalue=maxvalue)
 
+    n = state.total_iterations
+    f = get_filename(path + [prefix + 'n'], 'txt')
+    with open(f, 'w') as file:
+        file.write('%s iterations\n' % n)
+
 def plot_tensors_tex(path, prefix='', **kwargs):
     ''' Creates support TeX files for displaying the images 
         created by plot_tensors(). 
@@ -31,10 +36,15 @@ def plot_tensors_tex(path, prefix='', **kwargs):
     
         figure_label, figure_caption, image_width
     '''
+    
+    f = get_filename(path + [prefix + 'n'], 'txt')
+    txt = open(f).read()
+
+    
     tex = """
     \\begin{figure}
         \\setlength\\fboxsep{0pt} 
-        \\caption{\\label{fig:figure_label} figure_caption  }
+        \\caption{\\label{fig:figure_label} figure_caption iterations }
         \\hfill        
         \\subfloat[cap1]{\\fbox{\\includegraphics[width=image_width]{pic1}}}
         \\hfill
@@ -45,6 +55,7 @@ def plot_tensors_tex(path, prefix='', **kwargs):
     \\end{figure}
 """
     sub = {'image_width': '3cm', 'figure_label': 'unknown', 'figure_caption': '',
+           'iterations': txt,
            'cap1': '$T_x$', 'cap2': '$T_y$', 'cap3':'$T_\\theta$',
            'pic1': prefix + 'Tx', 'pic2': prefix + 'Ty', 'pic3': prefix + 'Ttheta'}
     sub.update(**kwargs)

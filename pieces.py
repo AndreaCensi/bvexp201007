@@ -96,6 +96,20 @@ def vehicles_list_A():
 
     vehicle = Vehicle()
     vehicle.set_dynamics(kin)
+    sensor = create_ring_olfaction_sensor(fov_deg=360, num_sensors=40, radius=0.3)
+    vehicle.add_sensor(sensor)
+    vlist.append(('v_olfaction360', vehicle))
+
+    vehicle = Vehicle()
+    vehicle.set_dynamics(kin)
+    sensor = create_ring_olfaction_sensor(fov_deg=360, num_sensors=40, radius=0.3)
+    sensor.normalize = True
+    vehicle.add_sensor(sensor)
+    vlist.append(('v_olfaction360_norm', vehicle))
+
+    
+    vehicle = Vehicle()
+    vehicle.set_dynamics(kin)
     vehicle.add_sensor(PolarizedLightSensor(45))
     vlist.append(('v_polarized', vehicle))
 
