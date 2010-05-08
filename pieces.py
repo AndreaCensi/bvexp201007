@@ -90,17 +90,18 @@ def vehicles_list_A():
     vehicle.add_sensor(sensor)
     vlist.append(('v_rangefinder_nonunif', vehicle))
 
+    olfaction_radius = 0.5
     vehicle = Vehicle()
     vehicle.set_dynamics(kin)
     sensor = create_ring_olfaction_sensor(fov_deg=180, num_sensors=40,
-                                          radius=0.3)
+                                          radius=olfaction_radius)
     vehicle.add_sensor(sensor)
     vlist.append(('v_olfaction180o', vehicle))
 
     vehicle = Vehicle()
     vehicle.set_dynamics(kin)
     sensor = create_ring_olfaction_sensor(fov_deg=180, num_sensors=40,
-                                          radius=0.3)
+                                          radius=olfaction_radius)
     sensor.normalize_mean = True
     sensor.normalize_sum = True
     vehicle.add_sensor(sensor)
@@ -109,14 +110,14 @@ def vehicles_list_A():
     vehicle = Vehicle()
     vehicle.set_dynamics(kin)
     sensor = create_ring_olfaction_sensor(fov_deg=360, num_sensors=40,
-                                          radius=0.3)
+                                          radius=olfaction_radius)
     vehicle.add_sensor(sensor)
     vlist.append(('v_olfaction360o', vehicle))
 
     vehicle = Vehicle()
     vehicle.set_dynamics(kin)
     sensor = create_ring_olfaction_sensor(fov_deg=360, num_sensors=40,
-                                          radius=0.3)
+                                          radius=olfaction_radius)
     sensor.normalize_mean = True
     sensor.normalize_sum = True
     vehicle.add_sensor(sensor)
