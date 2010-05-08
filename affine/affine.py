@@ -103,12 +103,12 @@ class AffineModel:
         self.T.update(Ts)
 
         # this assumes the normal bilinear model 
-        bT = outer(u_norm, outer(y, y_dot))        
+        bT = outer(u_norm, outer(y - self.y_stats.mean, y_dot))        
         self.bT.update(bT)
 
         # this assumes the normal bilinear model 
         bTn = outer(u_norm, outer(y_norm, y_dot))        
-        self.bTn.update(bT)
+        self.bTn.update(bTn)
 
 def affine_plot(state, path, prefix=''):
     y_dot_mean = state.result.y_dot_stats.mean
