@@ -43,8 +43,8 @@ def my_random_commands_gen_special(ninteration, vehicle): #@UnusedVariable
 
 random_commands_gen = my_random_commands_gen
 
-num_iterations = 100
-dt = 0.5
+num_iterations = 500
+dt = 0.1
  
 vehicle_list = vehicles_list_A()
 
@@ -60,9 +60,7 @@ for vname, vehicle in vehicle_list:
         processing_class=AffineModel,
         job_id='affine')
 
-
-    plotting = comp(affine_plot, state=result,
-         path=[vname], prefix='affine_')
+    comp(affine_plot, state=result, path=[vname], prefix='affine_')
 comp_prefix('')
 
 

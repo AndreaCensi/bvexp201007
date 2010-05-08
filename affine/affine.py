@@ -59,14 +59,17 @@ class MeanCovariance:
 
 class AffineModel:
 
-    def __init__(self, config):
-        max_window = 1000 
+    def __init__(self, config, max_window=None):
         # TODO: pass vehicle and not config
         self.y_dot_stats = MeanCovariance(max_window)
         self.y_stats = MeanCovariance(max_window)
         self.u_stats = MeanCovariance(max_window)
         self.T = Expectation(max_window)
         self.N = Expectation(max_window)
+        # bilinear T
+        self.bT = Expectation(max_window)
+        # bilinear T, normalized
+        self.bTn = Expectation(max_window)
         
     def process_data(self, data):        
         y = data.sensels
@@ -99,6 +102,13 @@ class AffineModel:
         Ts = outer(u_norm, outer(y_norm, y_dot - Nu))        
         self.T.update(Ts)
 
+        # this assumes the normal bilinear model 
+        bT = outer(u_norm, outer(y, y_dot))        
+        self.bT.update(bT)
+
+        # this assumes the normal bilinear model 
+        bTn = outer(u_norm, outer(y_norm, y_dot))        
+        self.bTn.update(bT)
 
 def affine_plot(state, path, prefix=''):
     y_dot_mean = state.result.y_dot_stats.mean
@@ -118,7 +128,6 @@ def affine_plot(state, path, prefix=''):
     u_cov = state.result.u_stats.covariance
     
     N = state.result.N.get_value()
-    T = state.result.T.get_value()
  
     plot_var_stats(path, name=prefix + 'y_dot', \
                               mean=y_dot_mean, cov=y_dot_cov, inf=y_dot_inf, \
@@ -133,13 +142,20 @@ def affine_plot(state, path, prefix=''):
     
     
     # plot tensor T
-    Tx = T[0, :, :].squeeze()
-    Ty = T[1, :, :].squeeze()
-    Ttheta = T[2, :, :].squeeze()
-    save_posneg_matrix(path + [prefix + 'Tx'], Tx)
-    save_posneg_matrix(path + [prefix + 'Ty'], Ty)
-    save_posneg_matrix(path + [prefix + 'Ttheta'], Ttheta)
- 
+    T = state.result.T.get_value()
+    save_posneg_matrix(path + [prefix + 'Tx'], T[0, :, :].squeeze())
+    save_posneg_matrix(path + [prefix + 'Ty'], T[1, :, :].squeeze())
+    save_posneg_matrix(path + [prefix + 'Ttheta'], T[2, :, :].squeeze())
+    # plot tensor bT
+    bT = state.result.bT.get_value()
+    save_posneg_matrix(path + [prefix + 'bTx'], bT[0, :, :].squeeze())
+    save_posneg_matrix(path + [prefix + 'bTy'], bT[1, :, :].squeeze())
+    save_posneg_matrix(path + [prefix + 'bTtheta'], bT[2, :, :].squeeze())
+    bTn = state.result.bTn.get_value()
+    save_posneg_matrix(path + [prefix + 'bTnx'], bTn[0, :, :].squeeze())
+    save_posneg_matrix(path + [prefix + 'bTny'], bTn[1, :, :].squeeze())
+    save_posneg_matrix(path + [prefix + 'bTntheta'], bTn[2, :, :].squeeze())
+    
     # plot tensor N
     
     filename = get_filename(path + [prefix + 'N'], 'png')
@@ -179,6 +195,21 @@ def affine_plot(state, path, prefix=''):
         \\subfloat[cap4]{
             \\fbox{\\includegraphics[height=image_height]{pic4}}
         }
+
+         \\hfill
+        \\subfloat[cap5]{\\fbox{\\includegraphics[height=image_height]{pic5}}}
+         \\hfill
+        \\subfloat[cap6]{\\fbox{\\includegraphics[height=image_height]{pic6}}}
+         \\hfill
+        \\subfloat[cap7]{\\fbox{\\includegraphics[height=image_height]{pic7}}}
+        
+         \\hfill
+        \\subfloat[cap8]{\\fbox{\\includegraphics[height=image_height]{pic8}}}
+         \\hfill
+        \\subfloat[cap9]{\\fbox{\\includegraphics[height=image_height]{pic9}}}
+         \\hfill
+        \\subfloat[capA]{\\fbox{\\includegraphics[height=image_height]{picA}}}
+        
         \\end{figure}
         
         
@@ -190,11 +221,17 @@ def affine_plot(state, path, prefix=''):
         'tex1': prefix + 'y.tex',
         'tex2': prefix + 'y_dot.tex',
         'tex3': prefix + 'u.tex',
-        'pic1': prefix + 'N',
-        'pic2': prefix + 'Tx',
-        'pic3': prefix + 'Ty',
-        'pic4': prefix + 'Ttheta',
+        'pic1': prefix + 'N', 'cap1': 'N',
+        'pic2': prefix + 'Tx', 'cap2': '$T_x$',
+        'pic3': prefix + 'Ty', 'cap3': '$T_y$',
+        'pic4': prefix + 'Ttheta', 'cap4': '$T_\\theta$',
         
+        'pic5': prefix + 'bTx', 'cap5': '$bT_x$',
+        'pic6': prefix + 'bTy', 'cap6': '$bT_y$',
+        'pic7': prefix + 'bTtheta', 'cap7': '$bT_\\theta$',
+        'pic8': prefix + 'bTnx', 'cap8': '$bTn_x$',
+        'pic9': prefix + 'bTny', 'cap9': '$bTn_y$',
+        'picA': prefix + 'bTntheta', 'capA': '$bTn_\\theta$',
     }
 
     #sub.update(**kwargs)

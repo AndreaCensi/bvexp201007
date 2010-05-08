@@ -58,7 +58,7 @@ def vehicles_list_A():
     vehicle.set_dynamics(kin)
     sensor = create_uniform_sensor(Optics(),
                         fov_deg=360, num_rays=180,
-                        spatial_sigma_deg=0.5, sigma=0.01)
+                        spatial_sigma_deg=2, sigma=0.01)
     vehicle.add_sensor(sensor)
     vlist.append(('v_optic_unif', vehicle))
     
@@ -72,7 +72,7 @@ def vehicles_list_A():
     vehicle.set_dynamics(kin)
     sensor = create_uniform_sensor(Rangefinder(),
                         fov_deg=360, num_rays=180,
-                        spatial_sigma_deg=0.5, sigma=0.01)
+                        spatial_sigma_deg=2, sigma=0.01)
     vehicle.add_sensor(sensor)
     vlist.append(('v_rangefinder_unif', vehicle))
 
@@ -80,7 +80,7 @@ def vehicles_list_A():
     vehicle.set_dynamics(kin)
     sensor = create_uniform_sensor(Nearnessfinder(),
                         fov_deg=360, num_rays=180,
-                        spatial_sigma_deg=0.5, sigma=0.01)
+                        spatial_sigma_deg=2, sigma=0.01)
     vehicle.add_sensor(sensor)
     vlist.append(('v_nearness_unif', vehicle))
 

@@ -18,7 +18,7 @@ from pybv_experiments.covariance.first_order_sensels_normalize import  \
     FirstorderSenselsNormalizeUnif
  
 def my_world_gen():
-    return create_random_world(radius=10, num_lines=0, num_circles=0)
+    return create_random_world(radius=10, num_lines=10, num_circles=10)
 
 class MyPoseGen:
     def set_map(self, world):
@@ -101,7 +101,7 @@ for vname, vehicle in vehicle_list:
         figure_caption='%s-normalized fields' % vname_tex,
          extra_dep=nfields_plot)
     
-if True:
+def write_tex():
     fn = get_filename(['all_vehicles'], 'tex')
     print "Writing %s" % fn 
     f = open(fn, 'w')
@@ -123,3 +123,6 @@ if True:
         """.replace('vname', vname).replace('vdesc', texname))
         
     f.close()
+
+comp_prefix()
+comp(write_tex)
