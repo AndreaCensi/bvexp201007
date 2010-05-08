@@ -8,23 +8,8 @@ from pybv.utils.misc import cov2corr
 from numpy.lib.polynomial import polyfit, polyval, polyder
 from numpy.lib.function_base import linspace
 from numpy.core.numeric import dot
+from pybv.utils.numpy_utils import gt, require_shape
 
-
-class gt:
-    def __init__(self, n):
-        self.n = n
-    def __eq__(self, other):
-        return other > self.n 
-
-class square_shape:
-    def __eq__(self, other):
-        return len(other) == 2  and other[0] == other[1] 
-
-def require_shape(expected_shape, v):
-    if not expected_shape == v.shape:
-        raise ValueError('Expecting shape %s, got %s' % 
-                         (expected_shape, v.shape))  
-    
 
 def create_distance_matrix(positions):
     ''' Returns the corresponding distance matrix 
