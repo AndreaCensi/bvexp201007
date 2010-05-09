@@ -90,7 +90,7 @@ def compute_fields(firstorder_result, world_gen, spacing_xy=1, spacing_theta=90,
         raytracer = TexturedRaytracer()
         raytracer.set_map(world)
         result.ref_poses.append(
-                get_safe_pose(raytracer, world_radius=7, safe_zone=1)) # TODO: bounding box
+                get_safe_pose(raytracer, world_radius=7, safe_zone=1, num_tries=1000)) # TODO: bounding box
         del raytracer
     ref_pose = result.ref_poses[-1]
         
