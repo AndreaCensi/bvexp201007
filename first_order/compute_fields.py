@@ -7,6 +7,7 @@ from pybv.sensors import TexturedRaytracer
 
 from pybv_experiments.visualization import save_posneg_matrix, get_filename
 import numpy
+from pybv.utils.numpy_utils import assert_reasonable_value
 
 
 def compute_command_fields(vehicle, T, reference_pose, vehicle_poses):
@@ -16,8 +17,9 @@ def compute_command_fields(vehicle, T, reference_pose, vehicle_poses):
      returns: list of list of command arrays
     """
     reference_data = vehicle.compute_observations(reference_pose)
-    goal = reference_data.sensels
-    # FIXME: unused world???       
+    goal = reference_data.sensels 
+    assert_reasonable_value(goal)
+        
     results = []
     for row in vehicle_poses:
         results_row = []
@@ -25,16 +27,12 @@ def compute_command_fields(vehicle, T, reference_pose, vehicle_poses):
             pose = reference_pose.oplus(pose_diff)
             data = vehicle.compute_observations(pose)
             y = data.sensels
-            if isnan(y).any():
-                raise BVException('Found NaN in sensels')
+            assert_reasonable_value(y)
             commands = dot(dot(T, y), (goal - y)) 
             assert(len(commands) == vehicle.config.num_commands)
             results_row.append(commands)
             
-            #sys.stderr.write('.')
-        results.append(results_row)
-        #sys.stderr.write('\n')
-    #sys.stderr.write('\n\n')
+        results.append(results_row) 
     return array(results)
     
     

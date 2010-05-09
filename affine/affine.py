@@ -1,10 +1,13 @@
 from pybv.utils.misc import outer, weighted_average
 from numpy.linalg.linalg import pinv
-from numpy import dot
+from numpy import dot, zeros
 import pylab
 from pybv_experiments.visualization.saving import get_filename, save_posneg_matrix
 from numpy.lib.scimath import sqrt
-import numpy
+import numpy 
+from tempfile import NamedTemporaryFile
+import pickle
+from compmake.structures import JobFailed
 
 class Expectation:
     ''' A class to compute the mean of a quantity over time '''
@@ -54,7 +57,15 @@ class MeanCovariance:
         P = outer(value_norm, value_norm)
         self.covariance_accum.update(P)
         self.covariance = self.covariance_accum.get_value()
-        self.information = pinv(self.covariance, rcond=1e-2)
+        try:
+            self.information = pinv(self.covariance, rcond=1e-2)
+        except:
+            filename = 'pinv-failure'
+            with  open(filename + '.pickle', 'w') as f:
+                self.last_value = value
+                pickle.dump(self, f)
+            
+            raise JobFailed('Did not converge; saved on %s' % filename)
 
 
 class AffineModel:
@@ -146,11 +157,13 @@ def affine_plot(state, path, prefix=''):
     save_posneg_matrix(path + [prefix + 'Tx'], T[0, :, :].squeeze())
     save_posneg_matrix(path + [prefix + 'Ty'], T[1, :, :].squeeze())
     save_posneg_matrix(path + [prefix + 'Ttheta'], T[2, :, :].squeeze())
+    
     # plot tensor bT
     bT = state.result.bT.get_value()
     save_posneg_matrix(path + [prefix + 'bTx'], bT[0, :, :].squeeze())
     save_posneg_matrix(path + [prefix + 'bTy'], bT[1, :, :].squeeze())
     save_posneg_matrix(path + [prefix + 'bTtheta'], bT[2, :, :].squeeze())
+    
     bTn = state.result.bTn.get_value()
     save_posneg_matrix(path + [prefix + 'bTnx'], bTn[0, :, :].squeeze())
     save_posneg_matrix(path + [prefix + 'bTny'], bTn[1, :, :].squeeze())
