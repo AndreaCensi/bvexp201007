@@ -1,5 +1,5 @@
 from pybv.utils.misc import outer, weighted_average
-from numpy.linalg.linalg import pinv
+from numpy.linalg.linalg import pinv, LinAlgError
 from numpy import dot, zeros
 import pylab
 from pybv_experiments.visualization.saving import get_filename, save_posneg_matrix
@@ -59,7 +59,7 @@ class MeanCovariance:
         self.covariance = self.covariance_accum.get_value()
         try:
             self.information = pinv(self.covariance, rcond=1e-2)
-        except:
+        except LinAlgError:
             filename = 'pinv-failure'
             with  open(filename + '.pickle', 'w') as f:
                 self.last_value = value
