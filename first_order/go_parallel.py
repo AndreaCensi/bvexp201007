@@ -8,7 +8,7 @@ from pybv_experiments.first_order.plot_parallel import plot_tensors, \
     plot_covariance, plot_tensors_tex, plot_covariance_tex
 from pybv_experiments.first_order.normalize_tensor import normalize_tensor
 from pybv_experiments.first_order.compute_fields import compute_fields, \
-    draw_fields, draw_fields_tex
+    draw_fields
 from pybv_experiments.covariance import SenselCovariance
 from compmake import comp, comp_prefix 
 
@@ -29,7 +29,7 @@ class MyPoseGen:
         return get_safe_pose(
                              raytracer=self.raytracer,
                              world_radius=9,
-                             safe_zone=0.5, num_tries=200)
+                             safe_zone=0.5, num_tries=1000)
 
 random_pose_gen = MyPoseGen() 
 
@@ -89,17 +89,11 @@ for vname, vehicle in vehicle_list:
     fields_result = comp(compute_fields, firstorder_result,
                          world_gen=my_world_gen, job_id='fields')
     fields_plot = comp(draw_fields, fields_result, path=[vname],
-                       prefix='natural_')
-    comp(draw_fields_tex, path=[vname], prefix='natural_',
-         figure_caption='%s-natural fields' % vname_tex,
-         extra_dep=fields_plot)
+                       prefix='natural_') 
     nfields_result = comp(compute_fields, normalization_result,
                           world_gen=my_world_gen, job_id='nfields')
     nfields_plot = comp(draw_fields, nfields_result, path=[vname],
-                        prefix='normalized_')
-    comp(draw_fields_tex, path=[vname], prefix='normalized_',
-        figure_caption='%s-normalized fields' % vname_tex,
-         extra_dep=nfields_plot)
+                        prefix='normalized_') 
     
 def write_tex():
     fn = get_filename(['all_vehicles'], 'tex')
@@ -116,9 +110,11 @@ def write_tex():
         
         \\subimport{vname/}{covariance.tex}
         \\subimport{vname/}{natural_tensors.tex}
-        \\subimport{vname/}{natural_fields.tex}
         \\subimport{vname/}{normalized_tensors.tex}
+        \\subimport{vname/}{natural_fields.tex}
+        \\subimport{vname/}{natural_inner.tex}
         \\subimport{vname/}{normalized_fields.tex}
+        \\subimport{vname/}{normalized_inner.tex}
         
         """.replace('vname', vname).replace('vdesc', texname))
         
