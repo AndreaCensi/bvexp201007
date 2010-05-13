@@ -110,12 +110,15 @@ def save_posneg_matrix(path, value, maxvalue=None):
     if isnan(value).any():
         raise ValueError('Found NAN in image %s ' % os.path.join(path))
 
-    filename = get_filename(path, 'png')
+    if isinstance(path, list):
+        # XXX remove this eventually
+        filename = get_filename(path, 'png')
+    else:
+        filename = path
 
     converted = posneg(value, depth=4, maxval=maxvalue)
     Image_from_array(converted).save(filename)
-
-    print "Printing %s " % '/'.join(path)
+ 
     
 
 def save_probability_matrix(filename, value):
@@ -124,8 +127,7 @@ def save_probability_matrix(filename, value):
 
     value = value * 255
     
-    Image_from_array(value).save(filename)
-    print "Printing %s " % filename
+    Image_from_array(value).save(filename) 
     
     # TODO draw colorscale
     
@@ -143,30 +145,4 @@ def save_success_matrix(filename, value):
               (0.25, 0.50, orange), (0.5, 0.75, blue), (0.75, 0.95, bluegreen),
               (0.95, 0.99, darkgreen), (0.99, 1, green) ]
     rgba = colormap_rgba(value, colors)
-    Image_from_array(rgba).save(filename)
-
-def save_probability_matrix(filename, value):
-    if isnan(value).any():
-        raise ValueError('Found NAN in image %s ' % os.path.join(path))
-
-    value = value * 255
-    
-    Image_from_array(value).save(filename)
-    print "Printing %s " % filename
-    
-    # TODO draw colorscale
-    
-
-
-    if isnan(value).any():
-        raise ValueError('Found NAN in image %s ' % os.path.join(path))
-
-    value = value * 255
-    
-    Image_from_array(value).save(filename)
-    print "Printing %s " % filename
-    
-    # TODO draw colorscale
-    
-    
-    
+    Image_from_array(rgba).save(filename) 

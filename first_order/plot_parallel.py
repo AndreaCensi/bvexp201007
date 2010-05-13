@@ -1,109 +1,62 @@
 from pybv_experiments.visualization import save_posneg_matrix
 from pybv.utils import cov2corr
-from pybv_experiments.visualization.saving import get_filename
+from report_tools.figures import MultiFigure
+from report_tools.node import ReportNode
 
-def plot_tensors(state, path, prefix=''):
-    T = state.result.T
-    Tx = T[0, :, :].squeeze()
-    Ty = T[1, :, :].squeeze()
-    Ttheta = T[2, :, :].squeeze()
-    
-    save_posneg_matrix(path + [prefix + 'Tx'], Tx)
-    save_posneg_matrix(path + [prefix + 'Ty'], Ty)
-    save_posneg_matrix(path + [prefix + 'Ttheta'], Ttheta)
-
-    # normalize everything to the same absolute value
-    maxvalue = abs(T).max()
-    save_posneg_matrix(path + [prefix + 'Tx_samescale'], Tx, maxvalue=maxvalue)
-    save_posneg_matrix(path + [prefix + 'Ty_samescale'], Ty, maxvalue=maxvalue)
-    save_posneg_matrix(path + [prefix + 'Ttheta_samescale'], Ttheta,
-                       maxvalue=maxvalue)
-
-    n = state.total_iterations
-    f = get_filename(path + [prefix + 'n'], 'txt')
-    with open(f, 'w') as file:
-        file.write('%s iterations\n' % n)
-
-def plot_tensors_tex(path, prefix='', **kwargs):
-    ''' Creates support TeX files for displaying the images 
-        created by plot_tensors(). 
-    
-    Arguments:
-    
-        path, prefix:  the arguments you gave to plot_tensors
-        
-    Optional arguments:
-    
-        figure_label, figure_caption, image_width
-    '''
-    
-    f = get_filename(path + [prefix + 'n'], 'txt')
-    txt = open(f).read()
-
-    
-    tex = """
-    \\begin{figure}
-        \\setlength\\fboxsep{0pt} 
-        \\caption{\\label{fig:figure_label} figure_caption iterations }
-        \\hfill        
-        \\subfloat[cap1]{\\fbox{\\includegraphics[width=image_width]{pic1}}}
-        \\hfill
-        \\subfloat[cap2]{\\fbox{\\includegraphics[width=image_width]{pic2}}}
-        \\hfill    
-        \\subfloat[cap3]{\\fbox{\\includegraphics[width=image_width]{pic3}}}
-        \\hfill 
-    \\end{figure}
-"""
-    sub = {'image_width': '3cm', 'figure_label': 'unknown', 'figure_caption': '',
-           'iterations': txt,
-           'cap1': '$T_x$', 'cap2': '$T_y$', 'cap3':'$T_\\theta$',
-           'pic1': prefix + 'Tx', 'pic2': prefix + 'Ty', 'pic3': prefix + 'Ttheta'}
-    sub.update(**kwargs)
-    for k, v in sub.items():
-        tex = tex.replace(k, v)
-
-    filename = get_filename(path + [prefix + 'tensors'], 'tex')
-    with open(filename, 'w') as f:
-        f.write(tex)
-        
-    
-
-def plot_covariance(state, path, prefix=''):
+def create_report_covariance(state, report_id):
     covariance = state.result.cov_sensels
-    save_posneg_matrix(path + [prefix + 'covariance'], covariance)
-    save_posneg_matrix(path + [prefix + 'correlation'], cov2corr(covariance), maxvalue=1)
+    vname = ""
     
+    figure = MultiFigure(id=report_id, nodeclass='covariance',
+                        caption='Covariance %s' % vname)
     
-def plot_covariance_tex(path, prefix='', **kwargs):
-    ''' Creates support TeX files for displaying the images 
-        created by plot_covariance(). 
-    
-    Arguments:
-    
-        path, prefix:  the arguments you gave to plot_tensors
-        
-    Optional arguments:
-    
-        figure_label, figure_caption, image_width
-    '''
-    tex = """
-    \\begin{figure}
-        \\setlength\\fboxsep{0pt} 
-        \\caption{\\label{fig:figure_label} figure_caption  }
-        
-        \\fbox{\\includegraphics[width=image_width]{pic1}}
-         
-    \\end{figure}
-"""
-    sub = {'image_width': '3cm', 'figure_label': 'unknown', 'figure_caption': 'Correlation2',
-           'pic1': prefix + 'correlation'}
-    
-    sub.update(**kwargs)
-    for k, v in sub.items():
-        tex = tex.replace(k, v)
+    with figure.attach_file('covariance.png') as f:
+        save_posneg_matrix(f, covariance)
 
-    filename = get_filename(path + [prefix + 'covariance'], 'tex')
-    with open(filename, 'w') as f:
-        f.write(tex)
-        
+    with figure.attach_file('correlation.png') as f:
+        save_posneg_matrix(f, cov2corr(covariance), maxvalue=1)
+
+    figure.add_subfigure('covariance', caption='Covariance')
+    figure.add_subfigure('correlation', caption='Correlation')
+    
+    return figure
+
+def create_report_figure_tensors(T, report_id, same_scale=False, caption=None):
+    figure = MultiFigure(id=report_id, nodeclass='tensors', caption=caption)
+
+    if same_scale:
+        maxvalue = abs(T).max()
+    else:
+        maxvalue = None
+
+    components = [(0, 'Tx', '$T_x$'),
+                  (1, 'Ty', '$T_y$'),
+                  (2, 'Ttheta', '$T_{\\theta}$')]
+    
+    for component, figname, caption in components:
+        with figure.attach_file('%s.png' % figname) as f:
+            save_posneg_matrix(f, T[component, :, :].squeeze(),
+                               maxvalue=maxvalue)
+        figure.add_subfigure(figname, caption=caption)
+   
+    return figure
+
+def create_report_tensors(state, report_id):
+    T = state.result.T
+    vname = "" #TODO
+    
+    caption = '%s learned tensors, %d iterations' % \
+        (vname, state.total_iterations)
+    
+    A = create_report_figure_tensors(T, same_scale=False, report_id='tensors',
+        caption=caption)
+    
+    B = create_report_figure_tensors(T, same_scale=True, report_id='tensors-ss',
+        caption='%s  (on the same scale)' % caption)
+     
+    return  ReportNode(id=report_id, nodeclass='tensor-father', children=[A, B])
+ 
+
+
+
     

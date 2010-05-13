@@ -8,6 +8,9 @@ import numpy
 from tempfile import NamedTemporaryFile
 import pickle
 from compmake.structures import JobFailed
+from report_tools.node import ReportNode
+from pybv_experiments.first_order.plot_parallel import create_report_figure_tensors
+from report_tools.figures import MultiFigure
 
 class Expectation:
     ''' A class to compute the mean of a quantity over time '''
@@ -121,7 +124,7 @@ class AffineModel:
         bTn = outer(u_norm, outer(y_norm, y_dot))        
         self.bTn.update(bTn)
 
-def affine_plot(state, path, prefix=''):
+def create_report_affine(state, report_id):
     y_dot_mean = state.result.y_dot_stats.mean
     y_dot_cov = state.result.y_dot_stats.covariance
     y_dot_inf = state.result.y_dot_stats.information
@@ -139,186 +142,74 @@ def affine_plot(state, path, prefix=''):
     u_cov = state.result.u_stats.covariance
     
     N = state.result.N.get_value()
- 
-    plot_var_stats(path, name=prefix + 'y_dot', \
-                              mean=y_dot_mean, cov=y_dot_cov, inf=y_dot_inf, \
-                              minimum=y_dot_min, maximum=y_dot_max)
+     
     
-    plot_var_stats(path, name=prefix + 'y', \
+    report_y_dot = create_report_var(name='y_dot', \
+                              mean=y_dot_mean, cov=y_dot_cov, inf=y_dot_inf, \
+                              minimum=y_dot_min, maximum=y_dot_max)  
+    
+    report_y = create_report_var(name='y', \
                               mean=y_mean, cov=y_cov, inf=y_inf,
                               minimum=y_min, maximum=y_max)
     
-    plot_var_stats(path, name=prefix + 'u', \
+    report_u = create_report_var(name='u', \
                               mean=u_mean, cov=u_cov, inf=u_inf)
     
-    
-    # plot tensor T
     T = state.result.T.get_value()
-    save_posneg_matrix(path + [prefix + 'Tx'], T[0, :, :].squeeze())
-    save_posneg_matrix(path + [prefix + 'Ty'], T[1, :, :].squeeze())
-    save_posneg_matrix(path + [prefix + 'Ttheta'], T[2, :, :].squeeze())
+    report_T = create_report_figure_tensors(T, report_id='T',
+                                            caption='Learned T')
     
-    # plot tensor bT
+    with report_T.attach_file('N.png') as filename:        
+        pylab.ioff()
+        f = pylab.figure()
+        for i in range(N.shape[1]):
+            v = N[:, i].squeeze()
+            pylab.plot(v)
+    
+        pylab.savefig(filename)
+        pylab.close(f)
+        
+    report_T.add_subfigure('N', caption='Linear part')
+
     bT = state.result.bT.get_value()
-    save_posneg_matrix(path + [prefix + 'bTx'], bT[0, :, :].squeeze())
-    save_posneg_matrix(path + [prefix + 'bTy'], bT[1, :, :].squeeze())
-    save_posneg_matrix(path + [prefix + 'bTtheta'], bT[2, :, :].squeeze())
+    report_bT = create_report_figure_tensors(bT, report_id='bT',
+                                            caption='Learned bT')
     
     bTn = state.result.bTn.get_value()
-    save_posneg_matrix(path + [prefix + 'bTnx'], bTn[0, :, :].squeeze())
-    save_posneg_matrix(path + [prefix + 'bTny'], bTn[1, :, :].squeeze())
-    save_posneg_matrix(path + [prefix + 'bTntheta'], bTn[2, :, :].squeeze())
-    
-    # plot tensor N
-    
-    filename = get_filename(path + [prefix + 'N'], 'png')
-    
-    pylab.ioff()
-    f = pylab.figure()
-    for i in range(N.shape[1]):
-        v = N[:, i].squeeze()
-        pylab.plot(v)
-
-    pylab.savefig(filename)
-    pylab.close(f)
-
+    report_bTn = create_report_figure_tensors(bTn, report_id='bTn',
+                                            caption='Learned bTn')
     
     
-    tex = """
-        \\subimport{.}{tex1}
-        \\subimport{.}{tex2}
-        \\subimport{.}{tex3}
-        
-        \\begin{figure}[h!]
-        \\setlength\\fboxsep{0pt} 
-        \\caption{\\label{fig:figure_label} figure_caption  }
-        
-        \\subfloat[cap1]{
-            \\fbox{\\includegraphics[height=image_height]{pic1}}
-        }
-        \\hfill
-        \\subfloat[cap2]{
-            \\fbox{\\includegraphics[height=image_height]{pic2}}
-        }
-        \\hfill
-        \\subfloat[cap3]{
-            \\fbox{\\includegraphics[height=image_height]{pic3}}
-        }
-        \\hfill
-        \\subfloat[cap4]{
-            \\fbox{\\includegraphics[height=image_height]{pic4}}
-        }
+    node = ReportNode(id=report_id)
+    node.children = [report_y, report_y_dot, report_u, report_T, report_bT,
+                    report_bTn]
+    return node
 
-         \\hfill
-        \\subfloat[cap5]{\\fbox{\\includegraphics[height=image_height]{pic5}}}
-         \\hfill
-        \\subfloat[cap6]{\\fbox{\\includegraphics[height=image_height]{pic6}}}
-         \\hfill
-        \\subfloat[cap7]{\\fbox{\\includegraphics[height=image_height]{pic7}}}
-        
-         \\hfill
-        \\subfloat[cap8]{\\fbox{\\includegraphics[height=image_height]{pic8}}}
-         \\hfill
-        \\subfloat[cap9]{\\fbox{\\includegraphics[height=image_height]{pic9}}}
-         \\hfill
-        \\subfloat[capA]{\\fbox{\\includegraphics[height=image_height]{picA}}}
-        
-        \\end{figure}
-        
-        
-        """
-    sub = {
-           'image_height': '2.5cm',
-           'figure_label': 'unknown',
-           'figure_caption': '...',
-        'tex1': prefix + 'y.tex',
-        'tex2': prefix + 'y_dot.tex',
-        'tex3': prefix + 'u.tex',
-        'pic1': prefix + 'N', 'cap1': 'N',
-        'pic2': prefix + 'Tx', 'cap2': '$T_x$',
-        'pic3': prefix + 'Ty', 'cap3': '$T_y$',
-        'pic4': prefix + 'Ttheta', 'cap4': '$T_\\theta$',
-        
-        'pic5': prefix + 'bTx', 'cap5': '$bT_x$',
-        'pic6': prefix + 'bTy', 'cap6': '$bT_y$',
-        'pic7': prefix + 'bTtheta', 'cap7': '$bT_\\theta$',
-        'pic8': prefix + 'bTnx', 'cap8': '$bTn_x$',
-        'pic9': prefix + 'bTny', 'cap9': '$bTn_y$',
-        'picA': prefix + 'bTntheta', 'capA': '$bTn_\\theta$',
-    }
-
-    #sub.update(**kwargs)
-    for k, v in sub.items():
-        tex = tex.replace(k, v)
-
-    tex_filename = get_filename(path + [prefix + 'index'], 'tex')
-    with open(tex_filename, 'w') as f:
-        f.write(tex)
-
-
-def plot_var_stats(path, name, mean, cov, inf, minimum=None, maximum=None):
-    '''Writes on path/name.tex'''
+def create_report_var(name, mean, cov, inf, minimum=None, maximum=None):
     
-    save_posneg_matrix(path + [name + '_covariance'], cov)
-    save_posneg_matrix(path + [name + '_information'], inf)
+    figure = MultiFigure(id=name, nodeclass='var')
 
-    filename = get_filename(path + [name + '_mean'], 'png')
-    e = 3 * sqrt(cov.diagonal())
-    
-    pylab.ioff()
+    with figure.attach_file('covariance.png') as filename:        
+        save_posneg_matrix(filename, cov)
 
-    f = pylab.figure()
-    x = range(len(mean))
-    pylab.errorbar(x, mean, yerr=e)
-    
-    if minimum is not None:
-        pylab.plot(x, minimum, 'b-')
-    if maximum is not None:
-        pylab.plot(x, maximum, 'b-')
-        
-    
-    pylab.savefig(filename)
-    pylab.close(f)
-    
-    tex_filename = get_filename(path + [name], 'tex')
+    with figure.attach_file('information.png') as filename:        
+        save_posneg_matrix(filename, inf)
 
-    tex = """
-    \\begin{figure}[h!]
-        \\setlength\\fboxsep{0pt} 
-        \\caption{\\label{fig:figure_label} figure_caption  }
-        
-        \\subfloat[cap1]{
-            \\fbox{\\includegraphics[height=image_height]{pic1}}
-        }
-        \\hfill
-        \\subfloat[cap2]{
-            \\fbox{\\includegraphics[height=image_height]{pic2}}
-        }
-        \\hfill
-        \\subfloat[cap3]{
-            \\fbox{\\includegraphics[height=image_height]{pic3}}
-        }
-         
-    \\end{figure}
-"""
-    sub = {'image_height': '2.5cm', 'figure_label': 'unknown',
-            'figure_caption': 'Statistics for %s' % tex_friendly(name),
-           'pic1': name + '_mean', 'cap1': 'mean',
-           'pic2': name + '_covariance', 'cap2': 'covariance',
-           'pic3': name + '_information', 'cap3': 'information',
-           }
+    with figure.attach_file('mean.png') as filename:        
+        e = 3 * sqrt(cov.diagonal())
+        pylab.ioff()    
+        f = pylab.figure()
+        x = range(len(mean))
+        pylab.errorbar(x, mean, yerr=e)
+        if minimum is not None:
+            pylab.plot(x, minimum, 'b-')
+        if maximum is not None:
+            pylab.plot(x, maximum, 'b-')
+        pylab.savefig(filename)
+        pylab.close(f)
     
-    #sub.update(**kwargs)
-    for k, v in sub.items():
-        tex = tex.replace(k, v)
+    figure.add_subfigure('mean', caption='Mean')
+    figure.add_subfigure('covariance', caption='Covariance')
+    figure.add_subfigure('information', caption='Information')
 
-    with open(tex_filename, 'w') as f:
-        f.write(tex)
-
-
-def tex_friendly(s):
-    ''' escapes a string to tex '''
-    # TODO: many more other substitutions
-    return s.replace('_', '-')
-    
-    
+    return figure

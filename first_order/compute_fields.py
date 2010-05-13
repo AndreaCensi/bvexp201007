@@ -1,18 +1,17 @@
 from numpy import linspace, deg2rad, isnan, array, dot
-
-from pybv import BVException
 from pybv.utils import OpenStruct, RigidBodyState
 from pybv.worlds import get_safe_pose
 from pybv.sensors import TexturedRaytracer
 
-from pybv_experiments.visualization import save_posneg_matrix, get_filename
+from pybv_experiments.visualization import save_posneg_matrix
 import numpy
 from pybv.utils.numpy_utils import assert_reasonable_value, gt, require_shape
-from copy import deepcopy
 import math
 from numpy.core.numeric import sign
 from pybv_experiments.visualization.saving import save_probability_matrix, \
     save_success_matrix
+from report_tools.figures import MultiFigure
+from report_tools.node import ReportNode
 
 
 def compute_command_fields(vehicle, T, reference_pose, vehicle_poses):
@@ -124,23 +123,35 @@ def compute_fields(firstorder_result, world_gen, spacing_xy=1, spacing_theta=90,
     num += 1
     yield (result, num, total)
 
-def draw_fields(result, path, prefix=''):
+def create_report_fields(result, report_id=None):
     fields = [('x_y', result.lattice_x_y, result.fields_x_y),
               ('x_theta', result.lattice_x_theta, result.fields_x_theta),
               ('theta_y', result.lattice_theta_y, result.fields_theta_y) ]
 
-    fig_fields = MultiFigure(figclass='fields', caption='Inner products', shape=(1, 3))
+    fig_fields = MultiFigure(id='fields', nodeclass='slices',
+                             caption='Inner products', shape=(3, 3))
+    # Compute inner product w/ right direction
+    fig_inner = MultiFigure(id='inner', nodeclass='slices',
+                            caption='Inner products')
+
+    fig_success = MultiFigure(id='success', nodeclass='slices',
+                               caption='Success')
+
+    node = ReportNode(id=report_id, nodeclass='fields',
+                      children=[fig_fields, # fig_inner, 
+                                fig_success])
+        
+    
     for field_name, lattice, field in fields:
         field = array(field)
         average = numpy.mean(field, 0)
-        print "List  shape: %s " % str(field.shape)
-        print "Mean shape: %s " % str(average.shape)
+        #print "List  shape: %s " % str(field.shape)
+        #print "Mean shape: %s " % str(average.shape)
         require_shape((gt(0), gt(0), 3), average)
 
         for i, cmd_name in [(0, 'vx'), (1, 'vy'), (2, 'vtheta')]:
-            image_name = prefix + '%s-%s' % (field_name, cmd_name)
-            impath = path + [   image_name ]
-            
+            image_name = '%s-%s' % (field_name, cmd_name)
+
             fi = average[:, :, i].squeeze()
             require_shape((gt(0), gt(0)), fi)
             
@@ -148,12 +159,12 @@ def draw_fields(result, path, prefix=''):
             # let's allow a matrix with all 0
             if max_value == 0:
                 max_value = 1
-            save_posneg_matrix(impath, fi, maxvalue=max_value) 
+             
+            with fig_fields.attach_file(image_name + '.png') as f:
+                save_posneg_matrix(f, fi, maxvalue=max_value)
+
             fig_fields.add_subfigure(image_name, caption=field_name)
     
-    filename = get_filename(path + [ prefix + 'fields' ], 'tex')
-    with open(filename, 'w') as f:
-        fig_fields.tolatex(f)
     
     def lattice2pose(lattice):
         def rbs2pose(rbs):
@@ -162,9 +173,6 @@ def draw_fields(result, path, prefix=''):
             return array([p[0, 0], p[1, 0], theta])
         return map(lambda x: map(rbs2pose, x), lattice)
         
-    # Compute inner product w/ right direction
-    fig_inner = MultiFigure(figclass='inner', caption='Inner products',
-                            shape=(1, 6))
     for field_name, lattice, field in fields:
         lattice = array(lattice2pose(lattice))
         inners = []
@@ -180,129 +188,27 @@ def draw_fields(result, path, prefix=''):
         success = numpy.mean(array(inners) > 0, 0) # XXX should be < 0
         require_shape((gt(0), gt(0)), success)
             
-        image_name = prefix + 'inner-%s' % (field_name)
-        impath = path + [ image_name ]
+        image_name = 'inner-%s' % (field_name)
         
         max_value = abs(fi).max()
         # let's allow a matrix with all 0
         if max_value == 0:
             max_value = 1
-        save_posneg_matrix(impath, average_inner, maxvalue=max_value) 
         
+        with fig_inner.attach_file(image_name + '.png') as f:
+            save_posneg_matrix(f, average_inner, maxvalue=max_value)
         fig_inner.add_subfigure(image_name, caption=field_name)
 
 
-        image_name = prefix + 'success-%s' % (field_name)
-        impath = path + [ image_name ]
-        filename = get_filename(impath, 'png') 
-        save_success_matrix(filename, success) 
-        fig_inner.add_subfigure(image_name, caption='success')
+        image_name = 'success-%s' % (field_name)
+        
+        
+        with fig_success.attach_file(image_name + '.png') as f:
+            save_success_matrix(f, success)
+        fig_success.add_subfigure(image_name, caption='success')
 
-        
-    filename = get_filename(path + [ prefix + 'inner' ], 'tex')
-    with open(filename, 'w') as f:
-        fig_inner.tolatex(f)
-    #filename = get_filename(path + [ prefix + 'inner' ], 'html')
-    #with open(filename, 'w') as f:
-    #    mf.tohtml(f)
+         
 
-def latexify(s):
-    # XXX TO WRITE and use
-    return s.replace('_', '\\_')
+    return node
 
-class MultiFigure:
-    def __init__(self, label=None, caption=None, shape=None, figclass=None):
-        self.caption = caption
-        self.shape = shape
-        self.label = label
-        self.subfigures = []
-        self.figclass = figclass
-        
-    def add_subfigure(self, image, image_size="3cm", caption=None, label=None):
-        sub = OpenStruct(image=image, image_size=image_size,
-                         caption=caption, label=label)
-        self.subfigures.append(sub)  
-      
-    def tohtml(self, file):
-        pass
-          
-    def tolatex(self, file):
-        file.write('''
-        \\begin{figure}
-        \\setlength\\fboxsep{0pt} 
-        \\caption{\\label{fig:%s} %s  }
-''' % (latexify(self.caption), self.label))
-        
-        if self.shape is None:
-            self.shape = (1, len(self.subfigures))
-        nrows, ncols = self.shape  
-        for i, sub in enumerate(self.subfigures):
-            # row = int(math.floor(i / ncols))
-            col = i % ncols
-            last_col = col == ncols - 1
-            
-            file.write('\\hfill')
-            self.tolatex_subfigure(file, sub)
-            
-            if last_col:
-                file.write('\n\n')
-            
-        
-        file.write('''
-        \\end{figure}''')
-        
-    def tolatex_subfigure(self, file, sub):
-        file.write('\\subfloat[%s]{' % latexify(sub.caption))
-        file.write('\\includegraphics[width=%s]{%s}' % (sub.image_size, sub.image))
-        file.write('}\n')
-#        
-#def draw_fields_tex(path, prefix='', **kwargs):
-#    ''' Creates support TeX files for displaying the images 
-#        created by draw_fields(). Figure name is prefix+'fields.tex' 
-#    
-#    Arguments:
-#    
-#        path, prefix:  the arguments you gave to draw_fields
-#        
-#    Optional arguments:
-#    
-#        figure_label, figure_caption, image_width
-#    '''
-#    tex = """
-#    
-#    \\begin{figure}
-#        \\setlength\\fboxsep{0pt} 
-#        \\caption{\\label{fig:figure_label} figure_caption  }
-#        \\hfill
-#        \\subfloat[x,y vx]{\\fbox{\\includegraphics[width=image_width]{PREFIXx_y-vx}}}
-#        \\subfloat[x,y vy]{\\fbox{\\includegraphics[width=image_width]{PREFIXx_y-vy}}}
-#        \\subfloat[x,y vt]{\\fbox{\\includegraphics[width=image_width]{PREFIXx_y-vtheta}}}
-#        \\hfill
-#
-#        \\hfill        
-#        \\subfloat[x,theta vx]{\\fbox{\\includegraphics[width=image_width]{PREFIXx_theta-vx}}}
-#        \\subfloat[x,theta vy]{\\fbox{\\includegraphics[width=image_width]{PREFIXx_theta-vy}}}
-#        \\subfloat[x,theta vt]{\\fbox{\\includegraphics[width=image_width]{PREFIXx_theta-vtheta}}}
-#        \\hfill
-#
-#        \\hfill
-#        \\subfloat[theta,y vx]{\\fbox{\includegraphics[width=image_width]{PREFIXtheta_y-vx}}}
-#        \\subfloat[theta,y vy]{\\fbox{\includegraphics[width=image_width]{PREFIXtheta_y-vy}}}
-#        \\subfloat[theta,y vt]{\\fbox{\includegraphics[width=image_width]{PREFIXtheta_y-vtheta}}}
-#        \\hfill
-# 
-#    \\end{figure}
-#    
-#"""
-#    sub = {'image_width': '3cm', 'figure_label': 'unknown', 'figure_caption': '',
-#           'PREFIX': prefix}
-#    sub.update(**kwargs)
-#    for k, v in sub.items():
-#        tex = tex.replace(k, v)
-#
-#    filename = get_filename(path + [prefix + 'fields'], 'tex')
-#    with open(filename, 'w') as f:
-#        f.write(tex)
-#        
-    
      

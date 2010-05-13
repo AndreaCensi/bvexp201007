@@ -1,15 +1,17 @@
 from numpy import floor, zeros, random
 
+from compmake import comp, comp_prefix
+
+from report_tools.node import ReportNode
+
 
 from pybv.worlds import create_random_world, get_safe_pose
 from pybv.simulation import random_motion_simulation 
 from pybv_experiments import vehicles_list_A 
-from compmake import comp, comp_prefix
-
-
 from pybv.sensors.textured_raytracer import TexturedRaytracer
-from pybv_experiments.visualization.saving import get_filename 
-from pybv_experiments.affine.affine import affine_plot, AffineModel
+from pybv_experiments.affine.affine import AffineModel, \
+    create_report_affine
+
   
 def my_world_gen():
     return create_random_world(radius=10)
@@ -47,7 +49,7 @@ num_iterations = 500
 dt = 0.1
  
 vehicle_list = vehicles_list_A()
-
+all_vehicle_report = []
 for vname, vehicle in vehicle_list:
     vname_tex = vname.replace('_', '-')
     comp_prefix(vname)
@@ -60,28 +62,22 @@ for vname, vehicle in vehicle_list:
         processing_class=AffineModel,
         job_id='affine')
 
-    comp(affine_plot, state=result, path=[vname], prefix='affine_')
-comp_prefix('')
+    vehicle_report = comp(create_report_affine, state=result, report_id=vname)
+    all_vehicle_report.append(vehicle_report)
+comp_prefix()
 
 
-def write_index():
-    fn = get_filename(['affine'], 'tex')
-    print "Writing %s" % fn 
-    f = open(fn, 'w')
-    for vname, vehicle in vehicle_list:
-        texname = vname.replace('_', '-')
-        #vname = vname.replace('_','\\_')
-        f.write("""
-        
-        \\cleardoublepage
-        \\subsection{vdesc}
-        
-        \\subimport{vname/}{affine_index.tex}
-        
-        """.replace('vname', vname).replace('vdesc', texname))
-        
-    f.close()
+def create_report(id, children):
+    return ReportNode(id=id, children=children)
+
+affine_report = comp(create_report, id='affine',
+                          children=all_vehicle_report)
     
+def write_report(report, filename):
+    print report.children
+    report.to_latex_document(filename)
     
-comp(write_index)
+
+comp(write_report, affine_report, "reports/affine.tex") 
+
 

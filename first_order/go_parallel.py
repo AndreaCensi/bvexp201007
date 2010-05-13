@@ -3,19 +3,19 @@ from numpy import  random
 from pybv.worlds import create_random_world, get_safe_pose
 from pybv.simulation import random_motion_simulation, random_pose_simulation
 
-from pybv_experiments import vehicles_list_A
-from pybv_experiments.first_order.plot_parallel import plot_tensors, \
-    plot_covariance, plot_tensors_tex, plot_covariance_tex
+from pybv_experiments import vehicles_list_A 
 from pybv_experiments.first_order.normalize_tensor import normalize_tensor
 from pybv_experiments.first_order.compute_fields import compute_fields, \
-    draw_fields
+    create_report_fields
 from pybv_experiments.covariance import SenselCovariance
 from compmake import comp, comp_prefix 
 
-from pybv.sensors.textured_raytracer import TexturedRaytracer
-from pybv_experiments.visualization.saving import get_filename
+from pybv.sensors.textured_raytracer import TexturedRaytracer 
 from pybv_experiments.covariance.first_order_sensels_normalize import  \
     FirstorderSenselsNormalizeUnif
+from report_tools.node import ReportNode
+from pybv_experiments.first_order.plot_parallel import create_report_tensors, \
+    create_report_covariance
  
 def my_world_gen():
     return create_random_world(radius=10, num_lines=10, num_circles=10)
@@ -43,6 +43,7 @@ num_iterations = 500
 dt = 0.1
  
 vehicle_list = vehicles_list_A()
+all_vehicles_report = []
 
 for vname, vehicle in vehicle_list:
     vname_tex = vname.replace('_', '-')
@@ -57,12 +58,8 @@ for vname, vehicle in vehicle_list:
         processing_class=FirstorderSenselsNormalizeUnif,
         job_id='first_order')
 
-    plotting = comp(plot_tensors, state=firstorder_result,
-         path=[vname], prefix='natural_')
-    comp(plot_tensors_tex, path=[vname], prefix='natural_',
-         figure_label='%s-first_order' % vname_tex,
-         figure_caption='%s-natural' % vname_tex,
-         extra_dep=plotting)
+    report_tensors = comp(create_report_tensors, state=firstorder_result,
+         report_id='natural')
 
     covariance_result = comp(random_pose_simulation,
         world_gen=my_world_gen, vehicle=vehicle,
@@ -70,55 +67,46 @@ for vname, vehicle in vehicle_list:
         num_iterations=num_iterations,
         processing_class=SenselCovariance)
 
-    comp(plot_covariance, state=covariance_result,
-         path=[vname])
-    comp(plot_covariance_tex, path=[vname],
-         figure_caption='%s correlation' % vname_tex)
+    report_covariance = comp(create_report_covariance, state=covariance_result,
+                             report_id='covariance')
     
     normalization_result = \
         comp(normalize_tensor, covariance_result, firstorder_result)
 
-    plotting = comp(plot_tensors, state=normalization_result,
-         path=[vname], prefix='normalized_')
-    comp(plot_tensors_tex, path=[vname], prefix='normalized_',
-         figure_label='%s-first_order-normalized' % vname_tex,
-         figure_caption='%s-normalized' % vname_tex,
-         extra_dep=plotting)
-
+    report_tensors_normalized = comp(create_report_tensors, state=normalization_result,
+                    report_id='normalized')
+     
 
     fields_result = comp(compute_fields, firstorder_result,
                          world_gen=my_world_gen, job_id='fields')
-    fields_plot = comp(draw_fields, fields_result, path=[vname],
-                       prefix='natural_') 
+    
+    report_fields = comp(create_report_fields, fields_result,
+                         report_id='natural') 
+    
     nfields_result = comp(compute_fields, normalization_result,
                           world_gen=my_world_gen, job_id='nfields')
-    nfields_plot = comp(draw_fields, nfields_result, path=[vname],
-                        prefix='normalized_') 
     
-def write_tex():
-    fn = get_filename(['all_vehicles'], 'tex')
-    print "Writing %s" % fn 
-    f = open(fn, 'w')
-    for vname, vehicle in vehicle_list:
-        
-        texname = vname.replace('_', '-')
-        #vname = vname.replace('_','\\_')
-        f.write("""
-        
-        \\cleardoublepage
-        \\subsection{vdesc}
-        
-        \\subimport{vname/}{covariance.tex}
-        \\subimport{vname/}{natural_tensors.tex}
-        \\subimport{vname/}{normalized_tensors.tex}
-        \\subimport{vname/}{natural_fields.tex}
-        \\subimport{vname/}{natural_inner.tex}
-        \\subimport{vname/}{normalized_fields.tex}
-        \\subimport{vname/}{normalized_inner.tex}
-        
-        """.replace('vname', vname).replace('vdesc', texname))
-        
-    f.close()
+    report_nfields = comp(create_report_fields, nfields_result,
+                          report_id='normalized')
+    
+    vehicle_report = comp(ReportNode, id=vname, nodeclass='vehicle',
+            children=[report_covariance, report_tensors, report_tensors_normalized,
+                      report_fields, report_nfields])
+    all_vehicles_report.append(vehicle_report)
+    
 
 comp_prefix()
-comp(write_tex)
+def create_report(id, children):
+    print children
+    return ReportNode(id=id, children=children)
+
+first_order_report = comp(create_report, id='first_order',
+                          children=all_vehicles_report)
+    
+def write_report(report, filename):
+    print report.children
+    report.to_latex_document(filename)
+    
+
+comp(write_report, first_order_report, "reports/first_order.tex") 
+
