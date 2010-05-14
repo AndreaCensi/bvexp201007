@@ -16,6 +16,7 @@ from pybv_experiments.covariance.first_order_sensels_normalize import  \
 from report_tools.node import ReportNode
 from pybv_experiments.first_order.plot_parallel import create_report_tensors, \
     create_report_covariance
+from pybv_experiments.analysis.olfaction_tensors import analyze_olfaction_covariance_job
  
 def my_world_gen():
     return create_random_world(radius=10, num_lines=10, num_circles=10)
@@ -89,9 +90,16 @@ for vname, vehicle in vehicle_list:
     report_nfields = comp(create_report_fields, nfields_result,
                           report_id='normalized')
     
+    children = [report_covariance, report_tensors, report_tensors_normalized,
+                      report_fields, report_nfields]
+    
+    if vehicle.config.sensors[0].sensor_type_string() == 'olfaction':
+        expectation = comp(analyze_olfaction_covariance_job, covariance_result)
+        children.append(expectation)
+    
+    
     vehicle_report = comp(ReportNode, id=vname, nodeclass='vehicle',
-            children=[report_covariance, report_tensors, report_tensors_normalized,
-                      report_fields, report_nfields])
+            children=children)
     all_vehicles_report.append(vehicle_report)
     
 

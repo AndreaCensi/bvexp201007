@@ -8,7 +8,11 @@ from pybv.utils.misc import cov2corr
 from numpy.lib.polynomial import polyfit, polyval, polyder
 from numpy.lib.function_base import linspace
 from numpy.core.numeric import dot
-from pybv.utils.numpy_utils import gt, require_shape
+from pybv.utils.numpy_utils import gt, require_shape, square_shape
+from report_tools.node import ReportNode
+from report_tools.figures import MultiFigure
+import numpy
+from pybv_experiments.first_order.plot_parallel import create_report_figure_tensors
 
 
 def create_distance_matrix(positions):
@@ -82,7 +86,7 @@ def create_olfaction_Txy(positions, fder, distances):
     
     
 
-def analyze_olfaction_covariance(path, covariance, receptors, prefix=''):
+def analyze_olfaction_covariance(covariance, receptors):
     ''' Covariance: n x n covariance matrix.
         Positions:  list of n  positions '''
     
@@ -112,43 +116,64 @@ def analyze_olfaction_covariance(path, covariance, receptors, prefix=''):
     Ttheta = create_olfaction_Ttheta(positions, fder)
     Tx, Ty = create_olfaction_Txy(positions, fder, distances)
     
-    pylab.figure()
-    pylab.plot(flat_distances, flat_correlation, '.')
-    pylab.plot(knots, poly_int, 'r-')
-    pylab.xlabel('distance')
-    pylab.ylabel('correlation')
-    pylab.title('Correlation vs distance')
-    pylab.legend(['data', 'interpolation deg = %s' % deg])
-    figfile = get_filename(path + [prefix + 'dist_vs_corr'], 'png') 
-    pylab.savefig(figfile)
-    pylab.close()
     
-    pylab.figure()
-    pylab.plot(knots, polyval(poly_fder, knots), 'r-')
-    pylab.title('f der')
-    figfile = get_filename(path + [prefix + 'fder'], 'png') 
-    pylab.savefig(figfile)
-    pylab.close()
+ 
+    fig1 = MultiFigure(id='cor-vs-distnace', caption='Estimated kernels',
+                       shape=(3, 3))
+
+    pylab.ioff()
+    with fig1.attach_file('dist_vs_corr.png') as filename:
+        pylab.figure()
+        pylab.plot(flat_distances, flat_correlation, '.')
+        pylab.plot(knots, poly_int, 'r-')
+        pylab.xlabel('distance')
+        pylab.ylabel('correlation')
+        pylab.title('Correlation vs distance')
+        pylab.legend(['data', 'interpolation deg = %s' % deg]) 
+        pylab.savefig(filename)
+        pylab.close()
     
+    with fig1.attach_file('fder.png') as filename:
+        pylab.figure()
+        pylab.plot(knots, polyval(poly_fder, knots), 'r-')
+        pylab.title('f der')
+        pylab.savefig(filename)
+        pylab.close() 
+    
+    with fig1.attach_file('distances.png') as f:
+        save_posneg_matrix(f, distances)   
+    fig1.add_subfigure('distances', caption='Distances')
      
-    save_posneg_matrix(path + [prefix + 'distances'], distances)
-    save_posneg_matrix(path + [prefix + 'correlation'], correlation)
-    save_posneg_matrix(path + [prefix + 'covariance'], covariance)
-    save_posneg_matrix(path + [prefix + 'f'], polyval(poly, distances))
-    save_posneg_matrix(path + [prefix + 'fder'], fder)
-    save_posneg_matrix(path + [prefix + 'Ttheta'], Ttheta)
-    save_posneg_matrix(path + [prefix + 'Tx'], Tx)
-    save_posneg_matrix(path + [prefix + 'Ty'], Ty)
+    with fig1.attach_file('correlation.png') as f:
+        save_posneg_matrix(f, correlation)   
+    fig1.add_subfigure('correlation', caption='Correlation')
+     
+    with fig1.attach_file('covariance.png') as f:
+        save_posneg_matrix(f, covariance)   
+    fig1.add_subfigure('covariance', caption='covariance')
+    
+    with fig1.attach_file('f.png') as f:
+        save_posneg_matrix(f, polyval(poly, distances))   
+    fig1.add_subfigure('f', caption='f')
+    
+    with fig1.attach_file('fder.png') as f:
+        save_posneg_matrix(f, fder)    
+    fig1.add_subfigure('fder', caption='f der')
+    
+    T = numpy.zeros(shape=(3, Tx.shape[0], Tx.shape[1]))
+    T[0, :, :] = Tx
+    T[1, :, :] = Ty
+    T[2, :, :] = Ttheta
+    
+    T_report = create_report_figure_tensors(T, report_id='tensors',
+        caption="Predicted learned tensors")
+    
+    children = [fig1, T_report]
+    return ReportNode(id='olfaction-theory', children=children)
 
 
-def analyze_olfaction_covariance_wrap(job, path, prefix):
+def analyze_olfaction_covariance_job(job):
     P = job.result.cov_sensels
     receptors = job.vehicle.config.olfaction[0].receptors
-    analyze_olfaction_covariance(path, P, receptors, prefix=prefix)
-
-if __name__ == '__main__':
-    covariance_file = sys.argv[1]
-    job = pickle.load(open(covariance_file))
-    path = ['olfaction_cov_test']
-    prefix = ''
-    analyze_olfaction_covariance_wrap(job)
+    return analyze_olfaction_covariance(P, receptors)
+ 
