@@ -111,10 +111,13 @@ def create_report(id, children):
 first_order_report = comp(create_report, id='first_order',
                           children=all_vehicles_report)
     
-def write_report(report, filename):
+    
+def write_report(report, basename):
     print report.children
-    report.to_latex_document(filename)
+    report.to_latex_document(basename + '.tex')
+    report.to_html_document(basename + '.html')
+    
     
 
-comp(write_report, first_order_report, "reports/first_order.tex") 
+comp(write_report, first_order_report, "reports/first_order") 
 

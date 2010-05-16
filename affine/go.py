@@ -73,11 +73,12 @@ def create_report(id, children):
 affine_report = comp(create_report, id='affine',
                           children=all_vehicle_report)
     
-def write_report(report, filename):
+def write_report(report, basename):
     print report.children
-    report.to_latex_document(filename)
+    report.to_latex_document(basename + '.tex')
+    report.to_html_document(basename + '.html')
     
 
-comp(write_report, affine_report, "reports/affine.tex") 
+comp(write_report, affine_report, "reports/affine") 
 
 
