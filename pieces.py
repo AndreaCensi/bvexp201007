@@ -1,8 +1,12 @@
 """ Standard pieces used in the experiments """
-from numpy import deg2rad
+from numpy import deg2rad, linspace, array, sin, cos
 
-from pybv.sensors import *
+
 from pybv.vehicle import Vehicle, OmnidirectionalKinematics
+from pybv.sensors.olfaction import OlfactionSensor
+from pybv.utils.rigid_body_state import RigidBodyState
+from pybv.sensors.image_range_sensor import Optics, Rangefinder, Nearnessfinder
+from pybv.sensors.polarized_light_sensor import PolarizedLightSensor
 
 def create_uniform_sensor(sensor, fov_deg, num_rays, spatial_sigma_deg=0.5,
                           sigma=0.01):
@@ -89,6 +93,25 @@ def vehicles_list_A():
     sensor = create_example_nonuniform(Rangefinder())
     vehicle.add_sensor(sensor)
     vlist.append(('v_rangefinder_nonunif', vehicle))
+
+  
+    mountpoints = [
+        ('center', RigidBodyState([0, 0], 0)),
+        ('left30', RigidBodyState([0, 0.30], 0)),
+        ('front30', RigidBodyState([0.30, 0], 0)),
+        ('rot45', RigidBodyState([0, 0], deg2rad(45)))]
+        
+    for name, mountpoint in mountpoints:
+        vehicle = Vehicle()
+        vehicle.set_dynamics(kin)
+        sensor = create_uniform_sensor(Rangefinder(),
+                            fov_deg=180, num_rays=180,
+                            spatial_sigma_deg=0.1, sigma=0.01)
+        
+        vehicle.add_sensor(sensor, mountpoint)
+        vname = 'v_rangefinder180_%s' % name
+        vlist.append((vname, vehicle))
+
 
     olfaction_radius = 0.5
     vehicle = Vehicle()
