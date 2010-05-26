@@ -1,6 +1,6 @@
 from numpy import floor, zeros, random
 
-from compmake import comp, comp_prefix
+from compmake import comp, comp_prefix, batch_command
 
 from report_tools.node import ReportNode
 
@@ -29,6 +29,10 @@ class MyPoseGen:
                              safe_zone=1, num_tries=100)
         #print "Found pose %s" % pose
         return pose
+    
+    def __eq__(self, other):
+        ''' Without parameters, they will always compare true ''' 
+        return isinstance(other, MyPoseGen)
 
 random_pose_gen = MyPoseGen() 
 
@@ -81,4 +85,7 @@ def write_report(report, basename):
 
 comp(write_report, affine_report, "reports/affine") 
 
+
+
+batch_command('make all')
 

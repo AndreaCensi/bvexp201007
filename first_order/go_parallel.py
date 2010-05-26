@@ -8,7 +8,7 @@ from pybv_experiments.first_order.normalize_tensor import normalize_tensor
 from pybv_experiments.first_order.compute_fields import compute_fields, \
     create_report_fields
 from pybv_experiments.covariance import SenselCovariance
-from compmake import comp, comp_prefix 
+from compmake import comp, comp_prefix , batch_command
 
 from pybv.sensors.textured_raytracer import TexturedRaytracer 
 from pybv_experiments.covariance.first_order_sensels_normalize import  \
@@ -21,7 +21,7 @@ from pybv_experiments.analysis.olfaction_tensors import analyze_olfaction_covari
 def my_world_gen():
     return create_random_world(radius=10, num_lines=10, num_circles=10)
 
-class MyPoseGen:
+class MyPoseGen2:
     def set_map(self, world):
         self.raytracer = TexturedRaytracer()
         self.raytracer.set_map(world)
@@ -31,8 +31,14 @@ class MyPoseGen:
                              raytracer=self.raytracer,
                              world_radius=9,
                              safe_zone=0.5, num_tries=1000)
+    def __eq__(self, other):
+        ''' Without parameters, they will always compare true ''' 
+        return True
+    #return isinstance(other, MyPoseGen)
 
-random_pose_gen = MyPoseGen() 
+#assert MyPoseGen() == MyPoseGen()
+
+random_pose_gen = MyPoseGen2() 
 
 # Generate commands uniformly between -1,1
 def my_random_commands_gen(ninteration, vehicle): #@UnusedVariable
@@ -117,7 +123,7 @@ def write_report(report, basename):
     report.to_latex_document(basename + '.tex')
     report.to_html_document(basename + '.html')
     
-    
-
 comp(write_report, first_order_report, "reports/first_order") 
 
+
+batch_command('make all')
