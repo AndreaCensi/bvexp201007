@@ -1,9 +1,8 @@
 from numpy import floor, zeros, random
 
-from compmake import comp, comp_prefix, batch_command
+from compmake import comp, comp_prefix, batch_command, set_namespace
 
 from report_tools.node import ReportNode
-
 
 from pybv.worlds import create_random_world, get_safe_pose
 from pybv.simulation import random_motion_simulation 
@@ -12,6 +11,9 @@ from pybv.sensors.textured_raytracer import TexturedRaytracer
 from pybv_experiments.affine.affine import AffineModel, \
     create_report_affine
 
+
+
+set_namespace('affine')
   
 def my_world_gen():
     return create_random_world(radius=10)

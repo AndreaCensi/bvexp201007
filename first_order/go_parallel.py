@@ -8,7 +8,7 @@ from pybv_experiments.first_order.normalize_tensor import normalize_tensor
 from pybv_experiments.first_order.compute_fields import compute_fields, \
     create_report_fields
 from pybv_experiments.covariance import SenselCovariance
-from compmake import comp, comp_prefix , batch_command
+from compmake import comp, comp_prefix, batch_command, set_namespace
 
 from pybv.sensors.textured_raytracer import TexturedRaytracer 
 from pybv_experiments.covariance.first_order_sensels_normalize import  \
@@ -18,6 +18,9 @@ from pybv_experiments.first_order.plot_parallel import create_report_tensors, \
     create_report_covariance
 from pybv_experiments.analysis.olfaction_tensors import analyze_olfaction_covariance_job
  
+ 
+set_namespace('first_order')
+
 def my_world_gen():
     return create_random_world(radius=10, num_lines=10, num_circles=10)
 
