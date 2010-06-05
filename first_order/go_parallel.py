@@ -16,7 +16,8 @@ from pybv_experiments.covariance.first_order_sensels_normalize import  \
 from report_tools.node import ReportNode
 from pybv_experiments.first_order.plot_parallel import create_report_tensors, \
     create_report_covariance
-from pybv_experiments.analysis.olfaction_tensors import analyze_olfaction_covariance_job
+from pybv_experiments.analysis.olfaction_tensors \
+    import analyze_olfaction_covariance_job
  
  
 set_namespace('first_order')
