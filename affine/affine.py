@@ -2,10 +2,9 @@ from pybv.utils.misc import outer, weighted_average
 from numpy.linalg.linalg import pinv, LinAlgError
 from numpy import dot, zeros
 import pylab
-from pybv_experiments.visualization.saving import get_filename, save_posneg_matrix
+from pybv_experiments.visualization.saving import  save_posneg_matrix
 from numpy.lib.scimath import sqrt
 import numpy 
-from tempfile import NamedTemporaryFile
 import pickle
 from compmake.structures import JobFailed
 from report_tools.node import ReportNode

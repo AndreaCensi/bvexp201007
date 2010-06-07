@@ -58,31 +58,7 @@ def posneg(value, maxval=None, depth=3):
         result[:, :, 3] = 255
     
     return result
-
-
-
-# XXX make this configurable
-Basepath = '~/parsim_storage/'
-
-def get_filename(path, extension):
-    path = list(path)
-    path[-1] = path[-1] + ".%s" % extension
-    path2 = [Basepath] # XXX insert 
-    path2.extend(path)
-    filename = os.path.join(*path2)
-    filename = os.path.expanduser(filename)
-    dirname = os.path.dirname(filename)
-    if not os.path.exists(dirname):
-        os.makedirs(dirname)
-    return filename
-
-def image_newer_than_timestamp(path, timestamp):
-    for extension in ['eps', 'pdf', 'png']:
-        filename = get_filename(path, extension)
-        if os.path.exists(filename) and \
-            os.path.getmtime(filename) > timestamp:
-            return True
-    return False
+ 
     
 def Image_from_array(a):
     ''' Converts an image in a numpy array to an Image instance.
@@ -106,15 +82,9 @@ def Image_from_array(a):
                            "raw", "RGBA", 0, 1)
     return im
 
-def save_posneg_matrix(path, value, maxvalue=None):
-    if isnan(value).any():
-        raise ValueError('Found NAN in image %s ' % os.path.join(path))
-
-    if isinstance(path, list):
-        # XXX remove this eventually
-        filename = get_filename(path, 'png')
-    else:
-        filename = path
+def save_posneg_matrix(filename, value, maxvalue=None):
+    if not numpy.isfinite(value).all():
+        raise ValueError('Found invalid data in image %s ' % os.path.join(path))
 
     converted = posneg(value, depth=4, maxval=maxvalue)
     Image_from_array(converted).save(filename)
