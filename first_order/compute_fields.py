@@ -10,8 +10,8 @@ import math
 from numpy.core.numeric import sign
 from pybv_experiments.visualization.saving import save_probability_matrix, \
     save_success_matrix
-from report_tools.figures import MultiFigure
-from report_tools.node import ReportNode
+from reprep.node import Node
+
 
 
 def compute_command_fields(vehicle, T, reference_pose, vehicle_poses):
@@ -124,23 +124,18 @@ def compute_fields(firstorder_result, world_gen, spacing_xy=1, spacing_theta=90,
     yield (result, num, total)
 
 def create_report_fields(result, report_id=None):
+    report = Node(report_id)
+    
     fields = [('x_y', result.lattice_x_y, result.fields_x_y),
               ('x_theta', result.lattice_x_theta, result.fields_x_theta),
               ('theta_y', result.lattice_theta_y, result.fields_theta_y) ]
 
-    fig_fields = MultiFigure(id='fields', nodeclass='slices',
-                             caption='Inner products', shape=(3, 3))
+    fig_fields = report.figure('fields', caption='Inner products', shape=(3, 3))
     # Compute inner product w/ right direction
-    fig_inner = MultiFigure(id='inner', nodeclass='slices',
-                            caption='Inner products')
+    fig_inner = report.figure(id='inner', caption='Inner products')
 
-    fig_success = MultiFigure(id='success', nodeclass='slices',
-                               caption='Success')
-
-    node = ReportNode(id=report_id, nodeclass='fields',
-                      children=[fig_fields, # fig_inner, 
-                                fig_success])
-        
+    fig_success = report.figure(id='success', caption='Success')
+ 
     
     for field_name, lattice, field in fields:
         field = array(field)
@@ -159,12 +154,10 @@ def create_report_fields(result, report_id=None):
             # let's allow a matrix with all 0
             if max_value == 0:
                 max_value = 1
-             
-            with fig_fields.attach_file(image_name + '.png') as f:
-                save_posneg_matrix(f, fi, maxvalue=max_value)
 
-            fig_fields.add_subfigure(image_name, caption=field_name)
-    
+            report.data(image_name, fi)
+            fig_fields.sub(image_name, display='posneg', max_value=max_value,
+                           caption=field_name)
     
     def lattice2pose(lattice):
         def rbs2pose(rbs):
@@ -195,20 +188,17 @@ def create_report_fields(result, report_id=None):
         if max_value == 0:
             max_value = 1
         
-        with fig_inner.attach_file(image_name + '.png') as f:
-            save_posneg_matrix(f, average_inner, maxvalue=max_value)
-        fig_inner.add_subfigure(image_name, caption=field_name)
+        report.data(image_name, average_inner)
+        fig_inner.sub(image_name, display='posneg',
+                      max_value=max_value, caption=field_name)
 
 
         image_name = 'success-%s' % (field_name)
         
-        
-        with fig_success.attach_file(image_name + '.png') as f:
-            save_success_matrix(f, success)
-        fig_success.add_subfigure(image_name, caption='success')
+        report.data(image_name, success)
+        fig_success.sub(image_name, display='success')
 
-         
 
-    return node
+    return report
 
      

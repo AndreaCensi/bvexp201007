@@ -1,15 +1,13 @@
-from pybv.utils.misc import outer, weighted_average
-from numpy.linalg.linalg import pinv, LinAlgError
-from numpy import dot, zeros
-import pylab
-from pybv_experiments.visualization.saving import  save_posneg_matrix
-from numpy.lib.scimath import sqrt
 import numpy 
+from numpy.linalg.linalg import pinv, LinAlgError
+from numpy import dot, sqrt
 import pickle
-from compmake.structures import JobFailed
-from report_tools.node import ReportNode
+import pylab
+from pybv.utils.misc import outer, weighted_average 
+
+from compmake.structures import JobFailed 
 from pybv_experiments.first_order.plot_parallel import create_report_figure_tensors
-from report_tools.figures import MultiFigure
+from reprep import Node
 
 class Expectation:
     ''' A class to compute the mean of a quantity over time '''
@@ -158,17 +156,21 @@ def create_report_affine(state, report_id):
     report_T = create_report_figure_tensors(T, report_id='T',
                                             caption='Learned T')
     
-    with report_T.attach_file('N.png') as filename:        
-        pylab.ioff()
-        f = pylab.figure()
+    Nreport = Node('n-report')
+     
+    
+    with Nreport.data('N', N).data_file('N', 'image/png') as filename:        
+        pylab.figure()
         for i in range(N.shape[1]):
             v = N[:, i].squeeze()
             pylab.plot(v)
     
         pylab.savefig(filename)
-        pylab.close(f)
-        
-    report_T.add_subfigure('N', caption='Linear part')
+        pylab.close()
+    
+    f = Nreport.figure('nfig')
+    f.sub('N/N')
+    
 
     bT = state.result.bT.get_value()
     report_bT = create_report_figure_tensors(bT, report_id='bT',
@@ -179,22 +181,19 @@ def create_report_affine(state, report_id):
                                             caption='Learned bTn')
     
     
-    node = ReportNode(id=report_id)
-    node.children = [report_y, report_y_dot, report_u, report_T, report_bT,
-                    report_bTn]
+    node = Node(id=report_id,
+                children=[report_y, report_y_dot, report_u,
+                            report_T, Nreport, report_bT, report_bTn])
     return node
 
 def create_report_var(name, mean, cov, inf, minimum=None, maximum=None):
     
-    figure = MultiFigure(id=name, nodeclass='var')
+    report = Node(id=name)
+    report.data('covariance', cov)
+    report.data('information', inf)
+    node_mean = report.data('mean', mean)
 
-    with figure.attach_file('covariance.png') as filename:        
-        save_posneg_matrix(filename, cov)
-
-    with figure.attach_file('information.png') as filename:        
-        save_posneg_matrix(filename, inf)
-
-    with figure.attach_file('mean.png') as filename:        
+    with node_mean.data_file('bounds', 'image/png') as filename:
         e = 3 * sqrt(cov.diagonal())
         pylab.ioff()    
         f = pylab.figure()
@@ -207,8 +206,9 @@ def create_report_var(name, mean, cov, inf, minimum=None, maximum=None):
         pylab.savefig(filename)
         pylab.close(f)
     
-    figure.add_subfigure('mean', caption='Mean')
-    figure.add_subfigure('covariance', caption='Covariance')
-    figure.add_subfigure('information', caption='Information')
+    f = report.figure(name)
+    f.sub('mean/bounds', caption='Mean')
+    f.sub('covariance', caption='Covariance', display='posneg')
+    f.sub('information', caption='Information', display='posneg')
 
-    return figure
+    return report

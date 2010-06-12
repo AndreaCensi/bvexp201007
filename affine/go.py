@@ -1,15 +1,15 @@
 from numpy import floor, zeros, random
 
 from compmake import comp, comp_prefix, batch_command, set_namespace
-
-from report_tools.node import ReportNode
-
+ 
 from pybv.worlds import create_random_world, get_safe_pose
 from pybv.simulation import random_motion_simulation 
 from pybv_experiments import vehicles_list_A 
 from pybv.sensors.textured_raytracer import TexturedRaytracer
 from pybv_experiments.affine.affine import AffineModel, \
     create_report_affine
+from reprep.out.html import node_to_html_document
+from reprep.node import Node
 
 
 
@@ -74,16 +74,15 @@ comp_prefix()
 
 
 def create_report(id, children):
-    return ReportNode(id=id, children=children)
+    return Node(id=id, children=children)
 
 affine_report = comp(create_report, id='affine',
                           children=all_vehicle_report)
     
 def write_report(report, basename):
-    print report.children
-    report.to_latex_document(basename + '.tex')
-    report.to_html_document(basename + '.html')
-    
+    # report.to_latex_document(basename + '.tex')
+    node_to_html_document(report, basename + '.html')
+
 
 comp(write_report, affine_report, "reports/affine") 
 
