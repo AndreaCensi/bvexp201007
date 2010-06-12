@@ -62,8 +62,12 @@ def posneg(value, maxval=None, depth=3):
     
 def Image_from_array(a):
     ''' Converts an image in a numpy array to an Image instance.
-        Accepts:  h x w      255   grayscale 
-        Accepts:  h x w x 3  255  rgb '''
+        Accepts:  h x w      255  interpreted as grayscale 
+        Accepts:  h x w x 4  255  rgba '''
+
+    if not a.dtype == 'uint8':
+        raise ValueError()
+    
     if len(a.shape) == 2:
         height, width = a.shape
         rgba = numpy.zeros((height, width, 4), dtype='uint8')
@@ -84,7 +88,7 @@ def Image_from_array(a):
 
 def save_posneg_matrix(filename, value, maxvalue=None):
     if not numpy.isfinite(value).all():
-        raise ValueError('Found invalid data in image %s ' % os.path.join(path))
+        raise ValueError('Found invalid data in image %s ' % filename)
 
     converted = posneg(value, depth=4, maxval=maxvalue)
     Image_from_array(converted).save(filename)
