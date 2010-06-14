@@ -1,4 +1,5 @@
 from numpy import  random
+from compmake import comp, comp_prefix, set_namespace, time_to_define_jobs
 
 from pybv.worlds import create_random_world, get_safe_pose
 from pybv.simulation import random_motion_simulation, random_pose_simulation
@@ -8,7 +9,6 @@ from pybv_experiments.first_order.normalize_tensor import normalize_tensor
 from pybv_experiments.first_order.compute_fields import compute_fields, \
     create_report_fields
 from pybv_experiments.covariance import SenselCovariance
-from compmake import comp, comp_prefix, set_namespace, time_to_define_jobs
 
 from pybv.sensors.textured_raytracer import TexturedRaytracer 
 from pybv_experiments.covariance.first_order_sensels_normalize import  \
@@ -17,6 +17,7 @@ from pybv_experiments.first_order.plot_parallel import create_report_tensors, \
     create_report_covariance
 from reprep import Node
 from reprep.out.html import node_to_html_document
+from pybv_experiments.first_order.techreport_figures import create_techreport_figures
 from pybv_experiments.analysis.olfaction_tensors \
     import analyze_olfaction_covariance_job
  
@@ -36,10 +37,7 @@ class MyPoseGen2:
                              safe_zone=0.5, num_tries=1000)
     def __eq__(self, other):
         ''' Without parameters, they will always compare true ''' 
-        return True
-    #return isinstance(other, MyPoseGen)
-
-#assert MyPoseGen() == MyPoseGen()
+        return True 
 
 # Generate commands uniformly between -1,1
 def my_random_commands_gen(ninteration, vehicle): #@UnusedVariable
@@ -79,7 +77,7 @@ if time_to_define_jobs():
             job_id='first_order')
     
         report_tensors = comp(create_report_tensors, state=firstorder_result,
-             report_id='natural')
+             report_id='tensors-natural')
     
         covariance_result = comp(random_pose_simulation,
             world_gen=my_world_gen, vehicle=vehicle,
@@ -94,20 +92,20 @@ if time_to_define_jobs():
             comp(normalize_tensor, covariance_result, firstorder_result)
     
         report_tensors_normalized = comp(create_report_tensors, state=normalization_result,
-                        report_id='normalized')
+                        report_id='tensors-normalized')
          
     
         fields_result = comp(compute_fields, firstorder_result,
                              world_gen=my_world_gen, job_id='fields')
         
         report_fields = comp(create_report_fields, fields_result,
-                             report_id='natural') 
+                             report_id='fields-natural') 
         
         nfields_result = comp(compute_fields, normalization_result,
                               world_gen=my_world_gen, job_id='nfields')
         
         report_nfields = comp(create_report_fields, nfields_result,
-                              report_id='normalized')
+                              report_id='fields-normalized')
         
         children = [report_covariance, report_tensors, report_tensors_normalized,
                           report_fields, report_nfields]
@@ -130,5 +128,6 @@ if time_to_define_jobs():
         
     comp(write_report, first_order_report, "reports/first_order") 
 
+    comp(create_techreport_figures, 'techreport', all_vehicles_report)
 
 #batch_command('make all')
