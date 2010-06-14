@@ -9,6 +9,16 @@ from compmake.structures import JobFailed
 from pybv_experiments.first_order.plot_parallel import create_report_figure_tensors
 from reprep import Node
 
+#Here are a couple references on computing sample variance.
+#
+#Chan, Tony F.; Golub, Gene H.; LeVeque, Randall J. (1983). 
+#Algorithms for Computing the Sample Variance: Analysis and Recommendations. 
+#The American Statistician 37, 242-247.
+#
+#Ling, Robert F. (1974). Comparison of Several Algorithms for Computing Sample 
+#Means and Variances. Journal of the American Statistical Association,
+# Vol. 69, No. 348, 859-866. 
+ 
 class Expectation:
     ''' A class to compute the mean of a quantity over time '''
     def __init__(self, max_window=None):
