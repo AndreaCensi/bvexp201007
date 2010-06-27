@@ -1,54 +1,24 @@
-from numpy import  random
 from compmake import comp, comp_prefix, set_namespace, time_to_define_jobs
 
-from pybv.worlds import create_random_world, get_safe_pose
+from reprep import Node
 from pybv.simulation import random_motion_simulation, random_pose_simulation
 
 from pybv_experiments import vehicles_list_A 
 from pybv_experiments.first_order.normalize_tensor import normalize_tensor
 from pybv_experiments.first_order.compute_fields import compute_fields, \
     create_report_fields
-from pybv_experiments.covariance import SenselCovariance
-
-from pybv.sensors.textured_raytracer import TexturedRaytracer 
-from pybv_experiments.covariance.first_order_sensels_normalize import  \
-    FirstorderSenselsNormalizeUnif 
+ 
+from pybv_experiments.first_order.covariance import  \
+    FirstorderSenselsNormalizeUnif , SenselCovariance
 from pybv_experiments.first_order.plot_parallel import create_report_tensors, \
     create_report_covariance
-from reprep import Node
-from reprep.out.html import node_to_html_document
 from pybv_experiments.first_order.techreport_figures import create_techreport_figures
+from pybv_experiments.first_order.go_utils import create_report, write_report, my_world_gen, my_random_commands_gen,\
+    MyPoseGen2
 from pybv_experiments.analysis.olfaction_tensors \
     import analyze_olfaction_covariance_job
  
  
-def my_world_gen():
-    return create_random_world(radius=10, num_lines=10, num_circles=10)
-
-class MyPoseGen2:
-    def set_map(self, world):
-        self.raytracer = TexturedRaytracer()
-        self.raytracer.set_map(world)
-        
-    def generate_pose(self):
-        return get_safe_pose(
-                             raytracer=self.raytracer,
-                             world_radius=9,
-                             safe_zone=0.5, num_tries=1000)
-    def __eq__(self, other):
-        ''' Without parameters, they will always compare true ''' 
-        return True 
-
-# Generate commands uniformly between -1,1
-def my_random_commands_gen(ninteration, vehicle): #@UnusedVariable
-    return  (random.rand(3) - 0.5) * 2
-
-def create_report(id, children):
-    print children
-    return Node(id=id, children=children)
-    
-def write_report(report, basename):
-    node_to_html_document(report, basename + '.html')
 
 
 if time_to_define_jobs():
@@ -123,8 +93,6 @@ if time_to_define_jobs():
     
     first_order_report = comp(create_report, id='first_order',
                               children=all_vehicles_report)
-        
-        #report.to_latex_document(basename + '.tex')
         
     comp(write_report, first_order_report, "reports/first_order") 
 

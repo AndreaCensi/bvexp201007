@@ -3,13 +3,11 @@ from pybv.utils import OpenStruct, RigidBodyState
 from pybv.worlds import get_safe_pose
 from pybv.sensors import TexturedRaytracer
 
-from pybv_experiments.visualization import save_posneg_matrix
+
 import numpy
 from pybv.utils.numpy_utils import assert_reasonable_value, gt, require_shape
 import math
 from numpy.core.numeric import sign
-from pybv_experiments.visualization.saving import save_probability_matrix, \
-    save_success_matrix
 from reprep.node import Node
 
 
