@@ -27,7 +27,7 @@ if time_to_define_jobs():
     
     random_commands_gen = my_random_commands_gen
     
-    num_iterations = 100
+    num_iterations = 500
     dt = 0.1
      
     vehicle_list = vehicles_list_A()
@@ -44,7 +44,7 @@ if time_to_define_jobs():
             num_iterations=num_iterations,
             random_commands_gen=random_commands_gen, dt=dt,
             processing_class=FirstorderSenselsNormalizeUnif,
-            job_id='first_order')
+            job_id='tensors')
     
         report_tensors = comp(create_report_tensors, state=firstorder_result,
              report_id='tensors-natural')
@@ -53,7 +53,8 @@ if time_to_define_jobs():
             world_gen=my_world_gen, vehicle=vehicle,
             random_pose_gen=random_pose_gen,
             num_iterations=num_iterations,
-            processing_class=SenselCovariance)
+            processing_class=SenselCovariance,
+            job_id='covariance')
     
         report_covariance = comp(create_report_covariance, 
                                  state=covariance_result,
