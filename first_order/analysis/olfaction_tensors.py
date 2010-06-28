@@ -84,7 +84,7 @@ def analyze_olfaction_covariance(covariance, receptors):
     ''' Covariance: n x n covariance matrix.
         Positions:  list of n  positions '''
     
-    positions = [pose.get_2d_position() for pose, sens in receptors]
+    positions = [pose.get_2d_position() for pose, sens in receptors] #@UnusedVariable
     positions = array(positions).transpose().squeeze()
     
     require_shape(square_shape(), covariance)
@@ -145,10 +145,10 @@ def analyze_olfaction_covariance(covariance, receptors):
                        shape=(3, 3))
     f.sub('dist_vs_corr')
     f.sub('fder')
-    f.sub('f')
-    f.sub('distances')
-    f.sub('correlation')
-    f.sub('covariance')
+    f.sub('f', display='scale')
+    f.sub('distances', display='scale')
+    f.sub('correlation', display='posneg')
+    f.sub('covariance', display='posneg')
     
     T = numpy.zeros(shape=(3, Tx.shape[0], Tx.shape[1]))
     T[0, :, :] = Tx

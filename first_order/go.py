@@ -17,7 +17,7 @@ from pybv_experiments.first_order.go_utils import MyPoseGen2, \
     create_report, write_report, my_world_gen, my_random_commands_gen,\
     create_icon_report
     
-from pybv_experiments.analysis.olfaction_tensors \
+from pybv_experiments.first_order.analysis.olfaction_tensors \
     import analyze_olfaction_covariance_job
  
 
