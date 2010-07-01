@@ -28,7 +28,7 @@ if time_to_define_jobs():
     random_commands_gen = my_random_commands_gen
     
     num_iterations = 500
-    dt = 0.1
+    dt = 0.5
      
     vehicle_list = vehicles_list_A()
     all_vehicles_report = []
