@@ -1,5 +1,6 @@
 from pybv.utils import cov2corr
 from reprep import Node
+from numpy.linalg import pinv
 
 def create_report_covariance(state, report_id):
     covariance = state.result.cov_sensels
@@ -7,10 +8,12 @@ def create_report_covariance(state, report_id):
     report = Node(report_id)
     report.data('covariance', covariance)
     report.data('correlation', cov2corr(covariance))
+    report.data('information', pinv(covariance))
     
     f = report.figure('matrices')
     f.sub('covariance', caption='Covariance matrix', display='posneg')
     f.sub('correlation', caption='Correlation matrix', display='posneg')
+    f.sub('information', caption='Information matrix', display='posneg')
     
     return report
 

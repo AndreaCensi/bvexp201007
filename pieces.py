@@ -145,7 +145,6 @@ def vehicles_list_A():
     sensor.normalize_sum = True
     vehicle.add_sensor(sensor)
     vlist.append(('v_olfaction360n', vehicle))
-
     
     vehicle = Vehicle()
     vehicle.set_dynamics(kin)

@@ -1,4 +1,4 @@
-from numpy import floor, zeros, random
+from numpy import random
 
 from compmake import comp, comp_prefix, batch_command, set_namespace
  
@@ -41,13 +41,13 @@ random_pose_gen = MyPoseGen()
 # Generate commands uniformly between -1,1
 def my_random_commands_gen(ninteration, vehicle): #@UnusedVariable
     return  (random.rand(3) - 0.5) * 2
-
-def my_random_commands_gen_special(ninteration, vehicle): #@UnusedVariable
-    val = (random.rand(1) - 0.5) * 2
-    i = int(floor(random.rand(1) * 2.99))
-    u = zeros(3)
-    u[i] = val
-    return u
+#
+#def my_random_commands_gen_special(ninteration, vehicle): #@UnusedVariable
+#    val = (random.rand(1) - 0.5) * 2
+#    i = int(floor(random.rand(1) * 2.99))
+#    u = zeros(3)
+#    u[i] = val
+#    return u
 
 random_commands_gen = my_random_commands_gen
 

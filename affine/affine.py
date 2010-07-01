@@ -1,13 +1,14 @@
+import pickle
+import pylab
 import numpy 
 from numpy.linalg.linalg import pinv, LinAlgError
 from numpy import dot, sqrt
-import pickle
-import pylab
 from pybv.utils.misc import outer, weighted_average 
 
 from compmake.structures import JobFailed 
-from pybv_experiments.first_order.plot_parallel import create_report_figure_tensors
 from reprep import Node
+
+from pybv_experiments.first_order.plot_parallel import create_report_figure_tensors
 
 #Here are a couple references on computing sample variance.
 #
