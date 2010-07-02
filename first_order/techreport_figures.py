@@ -42,6 +42,7 @@ def create_techreport_figures(directory, reports):
             icon = report.resolve_url('vehicle-icon/icon')
             covfig = report.resolve_url('covariance/posneg')
             corrfig = report.resolve_url('correlation/posneg')
+            inffig =  report.resolve_url('information/posneg')
             # TODO: add information
             label = "%s:covariance" % vname
             frag.pagebreak()
@@ -55,6 +56,8 @@ def create_techreport_figures(directory, reports):
                 fig.hfill()
                 with fig.subfigure(caption="Correlation matrix") as sub:
                     graphics(sub, corrfig, W)
+                with fig.subfigure(caption="Information matrix") as sub:
+                    graphics(sub, inffig, W)
                 fig.hfill()
 
     learned_tensors = os.path.join(directory, 'learned_tensors.tex')

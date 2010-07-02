@@ -8,7 +8,7 @@ def create_report_covariance(state, report_id):
     report = Node(report_id)
     report.data('covariance', covariance)
     report.data('correlation', cov2corr(covariance))
-    report.data('information', pinv(covariance))
+    report.data('information', pinv(covariance, rcond=1e-2))
     
     f = report.figure('matrices')
     f.sub('covariance', caption='Covariance matrix', display='posneg')
