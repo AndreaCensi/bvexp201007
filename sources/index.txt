@@ -2,7 +2,7 @@
 bvexp201007
 ===========
 
-This contains contains the scripts I used for the bootstrapping simulations
+This package contains the scripts I used for the bootstrapping simulations
 contained in the paper that can be found at the page http://purl.org/censi/2010/boot.
 
 Right now, there is probably not enough documentation for this to be useful to someone else; but if you're interested, let me_ know, and I'll be happy to write more.
