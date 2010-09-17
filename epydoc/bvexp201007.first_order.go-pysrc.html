@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>bvexp201007.first_order.go</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="bvexp201007-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+      <th class="navbar" width="100%"></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        <a href="bvexp201007-module.html">Package&nbsp;bvexp201007</a> ::
+        <a href="bvexp201007.first_order-module.html">Package&nbsp;first_order</a> ::
+        Module&nbsp;go
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript:void(0);" class="privatelink"
+    onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
+        <tr><td align="right"><span class="options"
+            >[<a href="frames.html" target="_top">frames</a
+            >]&nbsp;|&nbsp;<a href="bvexp201007.first_order.go-pysrc.html"
+            target="_top">no&nbsp;frames</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<h1 class="epydoc">Source Code for <a href="bvexp201007.first_order.go-module.html">Module bvexp201007.first_order.go</a></h1>
+<pre class="py-src">
+<a name="L1"></a><tt class="py-lineno">  1</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt class="py-name">compmake</tt> <tt class="py-keyword">import</tt> <tt class="py-name">comp</tt><tt class="py-op">,</tt> <tt class="py-name">comp_prefix</tt><tt class="py-op">,</tt> <tt class="py-name">set_namespace</tt><tt class="py-op">,</tt> <tt class="py-name">time_to_define_jobs</tt> </tt>
+<a name="L2"></a><tt class="py-lineno">  2</tt>  <tt class="py-line">  </tt>
+<a name="L3"></a><tt class="py-lineno">  3</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt class="py-name">pybv</tt><tt class="py-op">.</tt><tt class="py-name">simulation</tt> <tt class="py-keyword">import</tt> <tt class="py-name">random_motion_simulation</tt><tt class="py-op">,</tt> <tt class="py-name">random_pose_simulation</tt> </tt>
+<a name="L4"></a><tt class="py-lineno">  4</tt>  <tt class="py-line"> </tt>
+<a name="L5"></a><tt class="py-lineno">  5</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt class="py-name">pybv_experiments</tt> <tt class="py-keyword">import</tt> <tt id="link-0" class="py-name" targets="Function bvexp201007.pieces.vehicles_list_A()=bvexp201007.pieces-module.html#vehicles_list_A"><a title="bvexp201007.pieces.vehicles_list_A" class="py-name" href="#" onclick="return doclink('link-0', 'vehicles_list_A', 'link-0');">vehicles_list_A</a></tt>  </tt>
+<a name="L6"></a><tt class="py-lineno">  6</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt class="py-name">pybv_experiments</tt><tt class="py-op">.</tt><tt id="link-1" class="py-name" targets="Package bvexp201007.first_order=bvexp201007.first_order-module.html"><a title="bvexp201007.first_order" class="py-name" href="#" onclick="return doclink('link-1', 'first_order', 'link-1');">first_order</a></tt><tt class="py-op">.</tt><tt id="link-2" class="py-name" targets="Module bvexp201007.first_order.normalize_tensor=bvexp201007.first_order.normalize_tensor-module.html,Function bvexp201007.first_order.normalize_tensor.normalize_tensor()=bvexp201007.first_order.normalize_tensor-module.html#normalize_tensor"><a title="bvexp201007.first_order.normalize_tensor
+bvexp201007.first_order.normalize_tensor.normalize_tensor" class="py-name" href="#" onclick="return doclink('link-2', 'normalize_tensor', 'link-2');">normalize_tensor</a></tt> <tt class="py-keyword">import</tt> <tt id="link-3" class="py-name"><a title="bvexp201007.first_order.normalize_tensor
+bvexp201007.first_order.normalize_tensor.normalize_tensor" class="py-name" href="#" onclick="return doclink('link-3', 'normalize_tensor', 'link-2');">normalize_tensor</a></tt> </tt>
+<a name="L7"></a><tt class="py-lineno">  7</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt class="py-name">pybv_experiments</tt><tt class="py-op">.</tt><tt id="link-4" class="py-name"><a title="bvexp201007.first_order" class="py-name" href="#" onclick="return doclink('link-4', 'first_order', 'link-1');">first_order</a></tt><tt class="py-op">.</tt><tt id="link-5" class="py-name" targets="Module bvexp201007.first_order.compute_fields=bvexp201007.first_order.compute_fields-module.html,Function bvexp201007.first_order.compute_fields.compute_fields()=bvexp201007.first_order.compute_fields-module.html#compute_fields"><a title="bvexp201007.first_order.compute_fields
+bvexp201007.first_order.compute_fields.compute_fields" class="py-name" href="#" onclick="return doclink('link-5', 'compute_fields', 'link-5');">compute_fields</a></tt> <tt class="py-keyword">import</tt> <tt id="link-6" class="py-name"><a title="bvexp201007.first_order.compute_fields
+bvexp201007.first_order.compute_fields.compute_fields" class="py-name" href="#" onclick="return doclink('link-6', 'compute_fields', 'link-5');">compute_fields</a></tt><tt class="py-op">,</tt> \ </tt>
+<a name="L8"></a><tt class="py-lineno">  8</tt>  <tt class="py-line">    <tt id="link-7" class="py-name" targets="Function bvexp201007.first_order.compute_fields.create_report_fields()=bvexp201007.first_order.compute_fields-module.html#create_report_fields"><a title="bvexp201007.first_order.compute_fields.create_report_fields" class="py-name" href="#" onclick="return doclink('link-7', 'create_report_fields', 'link-7');">create_report_fields</a></tt> </tt>
+<a name="L9"></a><tt class="py-lineno">  9</tt>  <tt class="py-line">  </tt>
+<a name="L10"></a><tt class="py-lineno"> 10</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt class="py-name">pybv_experiments</tt><tt class="py-op">.</tt><tt id="link-8" class="py-name"><a title="bvexp201007.first_order" class="py-name" href="#" onclick="return doclink('link-8', 'first_order', 'link-1');">first_order</a></tt><tt class="py-op">.</tt><tt id="link-9" class="py-name" targets="Package bvexp201007.first_order.covariance=bvexp201007.first_order.covariance-module.html"><a title="bvexp201007.first_order.covariance" class="py-name" href="#" onclick="return doclink('link-9', 'covariance', 'link-9');">covariance</a></tt> <tt class="py-keyword">import</tt>  \ </tt>
+<a name="L11"></a><tt class="py-lineno"> 11</tt>  <tt class="py-line">    <tt id="link-10" class="py-name" targets="Class bvexp201007.first_order.covariance.first_order_sensels_normalize.FirstorderSenselsNormalizeUnif=bvexp201007.first_order.covariance.first_order_sensels_normalize.FirstorderSenselsNormalizeUnif-class.html"><a title="bvexp201007.first_order.covariance.first_order_sensels_normalize.FirstorderSenselsNormalizeUnif" class="py-name" href="#" onclick="return doclink('link-10', 'FirstorderSenselsNormalizeUnif', 'link-10');">FirstorderSenselsNormalizeUnif</a></tt> <tt class="py-op">,</tt> <tt id="link-11" class="py-name" targets="Class bvexp201007.first_order.covariance.sensel_covariance.SenselCovariance=bvexp201007.first_order.covariance.sensel_covariance.SenselCovariance-class.html"><a title="bvexp201007.first_order.covariance.sensel_covariance.SenselCovariance" class="py-name" href="#" onclick="return doclink('link-11', 'SenselCovariance', 'link-11');">SenselCovariance</a></tt> </tt>
+<a name="L12"></a><tt class="py-lineno"> 12</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt class="py-name">pybv_experiments</tt><tt class="py-op">.</tt><tt id="link-12" class="py-name"><a title="bvexp201007.first_order" class="py-name" href="#" onclick="return doclink('link-12', 'first_order', 'link-1');">first_order</a></tt><tt class="py-op">.</tt><tt id="link-13" class="py-name" targets="Module bvexp201007.first_order.plot_parallel=bvexp201007.first_order.plot_parallel-module.html"><a title="bvexp201007.first_order.plot_parallel" class="py-name" href="#" onclick="return doclink('link-13', 'plot_parallel', 'link-13');">plot_parallel</a></tt> <tt class="py-keyword">import</tt> \ </tt>
+<a name="L13"></a><tt class="py-lineno"> 13</tt>  <tt class="py-line">    <tt id="link-14" class="py-name" targets="Function bvexp201007.first_order.plot_parallel.create_report_tensors()=bvexp201007.first_order.plot_parallel-module.html#create_report_tensors"><a title="bvexp201007.first_order.plot_parallel.create_report_tensors" class="py-name" href="#" onclick="return doclink('link-14', 'create_report_tensors', 'link-14');">create_report_tensors</a></tt><tt class="py-op">,</tt> <tt id="link-15" class="py-name" targets="Function bvexp201007.first_order.plot_parallel.create_report_covariance()=bvexp201007.first_order.plot_parallel-module.html#create_report_covariance"><a title="bvexp201007.first_order.plot_parallel.create_report_covariance" class="py-name" href="#" onclick="return doclink('link-15', 'create_report_covariance', 'link-15');">create_report_covariance</a></tt> </tt>
+<a name="L14"></a><tt class="py-lineno"> 14</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt class="py-name">pybv_experiments</tt><tt class="py-op">.</tt><tt id="link-16" class="py-name"><a title="bvexp201007.first_order" class="py-name" href="#" onclick="return doclink('link-16', 'first_order', 'link-1');">first_order</a></tt><tt class="py-op">.</tt><tt id="link-17" class="py-name" targets="Module bvexp201007.first_order.techreport_figures=bvexp201007.first_order.techreport_figures-module.html"><a title="bvexp201007.first_order.techreport_figures" class="py-name" href="#" onclick="return doclink('link-17', 'techreport_figures', 'link-17');">techreport_figures</a></tt> <tt class="py-keyword">import</tt> \ </tt>
+<a name="L15"></a><tt class="py-lineno"> 15</tt>  <tt class="py-line">    <tt id="link-18" class="py-name" targets="Function bvexp201007.first_order.techreport_figures.create_techreport_figures()=bvexp201007.first_order.techreport_figures-module.html#create_techreport_figures"><a title="bvexp201007.first_order.techreport_figures.create_techreport_figures" class="py-name" href="#" onclick="return doclink('link-18', 'create_techreport_figures', 'link-18');">create_techreport_figures</a></tt> </tt>
+<a name="L16"></a><tt class="py-lineno"> 16</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt class="py-name">pybv_experiments</tt><tt class="py-op">.</tt><tt id="link-19" class="py-name"><a title="bvexp201007.first_order" class="py-name" href="#" onclick="return doclink('link-19', 'first_order', 'link-1');">first_order</a></tt><tt class="py-op">.</tt><tt id="link-20" class="py-name" targets="Module bvexp201007.first_order.go_utils=bvexp201007.first_order.go_utils-module.html"><a title="bvexp201007.first_order.go_utils" class="py-name" href="#" onclick="return doclink('link-20', 'go_utils', 'link-20');">go_utils</a></tt> <tt class="py-keyword">import</tt> <tt id="link-21" class="py-name" targets="Class bvexp201007.first_order.go_utils.MyPoseGen2=bvexp201007.first_order.go_utils.MyPoseGen2-class.html"><a title="bvexp201007.first_order.go_utils.MyPoseGen2" class="py-name" href="#" onclick="return doclink('link-21', 'MyPoseGen2', 'link-21');">MyPoseGen2</a></tt><tt class="py-op">,</tt> \ </tt>
+<a name="L17"></a><tt class="py-lineno"> 17</tt>  <tt class="py-line">    <tt id="link-22" class="py-name" targets="Function bvexp201007.affine.go.create_report()=bvexp201007.affine.go-module.html#create_report,Function bvexp201007.first_order.go_utils.create_report()=bvexp201007.first_order.go_utils-module.html#create_report"><a title="bvexp201007.affine.go.create_report
+bvexp201007.first_order.go_utils.create_report" class="py-name" href="#" onclick="return doclink('link-22', 'create_report', 'link-22');">create_report</a></tt><tt class="py-op">,</tt> <tt id="link-23" class="py-name" targets="Function bvexp201007.affine.go.write_report()=bvexp201007.affine.go-module.html#write_report,Function bvexp201007.first_order.go_utils.write_report()=bvexp201007.first_order.go_utils-module.html#write_report"><a title="bvexp201007.affine.go.write_report
+bvexp201007.first_order.go_utils.write_report" class="py-name" href="#" onclick="return doclink('link-23', 'write_report', 'link-23');">write_report</a></tt><tt class="py-op">,</tt> <tt id="link-24" class="py-name" targets="Function bvexp201007.affine.go.my_world_gen()=bvexp201007.affine.go-module.html#my_world_gen,Function bvexp201007.first_order.go_utils.my_world_gen()=bvexp201007.first_order.go_utils-module.html#my_world_gen"><a title="bvexp201007.affine.go.my_world_gen
+bvexp201007.first_order.go_utils.my_world_gen" class="py-name" href="#" onclick="return doclink('link-24', 'my_world_gen', 'link-24');">my_world_gen</a></tt><tt class="py-op">,</tt> <tt id="link-25" class="py-name" targets="Function bvexp201007.affine.go.my_random_commands_gen()=bvexp201007.affine.go-module.html#my_random_commands_gen,Function bvexp201007.first_order.go_utils.my_random_commands_gen()=bvexp201007.first_order.go_utils-module.html#my_random_commands_gen"><a title="bvexp201007.affine.go.my_random_commands_gen
+bvexp201007.first_order.go_utils.my_random_commands_gen" class="py-name" href="#" onclick="return doclink('link-25', 'my_random_commands_gen', 'link-25');">my_random_commands_gen</a></tt><tt class="py-op">,</tt>\ </tt>
+<a name="L18"></a><tt class="py-lineno"> 18</tt>  <tt class="py-line">    <tt id="link-26" class="py-name" targets="Function bvexp201007.first_order.go_utils.create_icon_report()=bvexp201007.first_order.go_utils-module.html#create_icon_report"><a title="bvexp201007.first_order.go_utils.create_icon_report" class="py-name" href="#" onclick="return doclink('link-26', 'create_icon_report', 'link-26');">create_icon_report</a></tt> </tt>
+<a name="L19"></a><tt class="py-lineno"> 19</tt>  <tt class="py-line">     </tt>
+<a name="L20"></a><tt class="py-lineno"> 20</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt class="py-name">pybv_experiments</tt><tt class="py-op">.</tt><tt id="link-27" class="py-name"><a title="bvexp201007.first_order" class="py-name" href="#" onclick="return doclink('link-27', 'first_order', 'link-1');">first_order</a></tt><tt class="py-op">.</tt><tt id="link-28" class="py-name" targets="Package bvexp201007.first_order.analysis=bvexp201007.first_order.analysis-module.html"><a title="bvexp201007.first_order.analysis" class="py-name" href="#" onclick="return doclink('link-28', 'analysis', 'link-28');">analysis</a></tt><tt class="py-op">.</tt><tt id="link-29" class="py-name" targets="Module bvexp201007.first_order.analysis.olfaction_tensors=bvexp201007.first_order.analysis.olfaction_tensors-module.html"><a title="bvexp201007.first_order.analysis.olfaction_tensors" class="py-name" href="#" onclick="return doclink('link-29', 'olfaction_tensors', 'link-29');">olfaction_tensors</a></tt> \ </tt>
+<a name="L21"></a><tt class="py-lineno"> 21</tt>  <tt class="py-line">    <tt class="py-keyword">import</tt> <tt id="link-30" class="py-name" targets="Function bvexp201007.first_order.analysis.olfaction_tensors.analyze_olfaction_covariance_job()=bvexp201007.first_order.analysis.olfaction_tensors-module.html#analyze_olfaction_covariance_job"><a title="bvexp201007.first_order.analysis.olfaction_tensors.analyze_olfaction_covariance_job" class="py-name" href="#" onclick="return doclink('link-30', 'analyze_olfaction_covariance_job', 'link-30');">analyze_olfaction_covariance_job</a></tt> </tt>
+<a name="L22"></a><tt class="py-lineno"> 22</tt>  <tt class="py-line">  </tt>
+<a name="L23"></a><tt class="py-lineno"> 23</tt>  <tt class="py-line"> </tt>
+<a name="L24"></a><tt class="py-lineno"> 24</tt>  <tt class="py-line"><tt class="py-keyword">if</tt> <tt class="py-name">time_to_define_jobs</tt><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+<a name="L25"></a><tt class="py-lineno"> 25</tt>  <tt class="py-line">    <tt class="py-name">set_namespace</tt><tt class="py-op">(</tt><tt class="py-string">'first_order'</tt><tt class="py-op">)</tt> </tt>
+<a name="L26"></a><tt class="py-lineno"> 26</tt>  <tt class="py-line">    <tt id="link-31" class="py-name" targets="Variable bvexp201007.affine.go.random_pose_gen=bvexp201007.affine.go-module.html#random_pose_gen,Variable bvexp201007.first_order.go.random_pose_gen=bvexp201007.first_order.go-module.html#random_pose_gen"><a title="bvexp201007.affine.go.random_pose_gen
+bvexp201007.first_order.go.random_pose_gen" class="py-name" href="#" onclick="return doclink('link-31', 'random_pose_gen', 'link-31');">random_pose_gen</a></tt> <tt class="py-op">=</tt> <tt id="link-32" class="py-name"><a title="bvexp201007.first_order.go_utils.MyPoseGen2" class="py-name" href="#" onclick="return doclink('link-32', 'MyPoseGen2', 'link-21');">MyPoseGen2</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt>  </tt>
+<a name="L27"></a><tt class="py-lineno"> 27</tt>  <tt class="py-line">     </tt>
+<a name="L28"></a><tt class="py-lineno"> 28</tt>  <tt class="py-line">    <tt id="link-33" class="py-name" targets="Variable bvexp201007.first_order.go.random_commands_gen=bvexp201007.first_order.go-module.html#random_commands_gen"><a title="bvexp201007.first_order.go.random_commands_gen" class="py-name" href="#" onclick="return doclink('link-33', 'random_commands_gen', 'link-33');">random_commands_gen</a></tt> <tt class="py-op">=</tt> <tt id="link-34" class="py-name"><a title="bvexp201007.affine.go.my_random_commands_gen
+bvexp201007.first_order.go_utils.my_random_commands_gen" class="py-name" href="#" onclick="return doclink('link-34', 'my_random_commands_gen', 'link-25');">my_random_commands_gen</a></tt> </tt>
+<a name="L29"></a><tt class="py-lineno"> 29</tt>  <tt class="py-line">     </tt>
+<a name="L30"></a><tt class="py-lineno"> 30</tt>  <tt class="py-line">    <tt id="link-35" class="py-name" targets="Variable bvexp201007.affine.go.num_iterations=bvexp201007.affine.go-module.html#num_iterations,Variable bvexp201007.first_order.go.num_iterations=bvexp201007.first_order.go-module.html#num_iterations"><a title="bvexp201007.affine.go.num_iterations
+bvexp201007.first_order.go.num_iterations" class="py-name" href="#" onclick="return doclink('link-35', 'num_iterations', 'link-35');">num_iterations</a></tt> <tt class="py-op">=</tt> <tt class="py-number">500</tt> </tt>
+<a name="L31"></a><tt class="py-lineno"> 31</tt>  <tt class="py-line">    <tt id="link-36" class="py-name" targets="Variable bvexp201007.affine.go.dt=bvexp201007.affine.go-module.html#dt,Variable bvexp201007.first_order.go.dt=bvexp201007.first_order.go-module.html#dt"><a title="bvexp201007.affine.go.dt
+bvexp201007.first_order.go.dt" class="py-name" href="#" onclick="return doclink('link-36', 'dt', 'link-36');">dt</a></tt> <tt class="py-op">=</tt> <tt class="py-number">0.5</tt> </tt>
+<a name="L32"></a><tt class="py-lineno"> 32</tt>  <tt class="py-line">      </tt>
+<a name="L33"></a><tt class="py-lineno"> 33</tt>  <tt class="py-line">    <tt id="link-37" class="py-name" targets="Variable bvexp201007.affine.go.vehicle_list=bvexp201007.affine.go-module.html#vehicle_list,Variable bvexp201007.first_order.go.vehicle_list=bvexp201007.first_order.go-module.html#vehicle_list,Variable bvexp201007.first_order.icons_test.vehicle_list=bvexp201007.first_order.icons_test-module.html#vehicle_list"><a title="bvexp201007.affine.go.vehicle_list
+bvexp201007.first_order.go.vehicle_list
+bvexp201007.first_order.icons_test.vehicle_list" class="py-name" href="#" onclick="return doclink('link-37', 'vehicle_list', 'link-37');">vehicle_list</a></tt> <tt class="py-op">=</tt> <tt id="link-38" class="py-name"><a title="bvexp201007.pieces.vehicles_list_A" class="py-name" href="#" onclick="return doclink('link-38', 'vehicles_list_A', 'link-0');">vehicles_list_A</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L34"></a><tt class="py-lineno"> 34</tt>  <tt class="py-line">    <tt id="link-39" class="py-name" targets="Variable bvexp201007.first_order.go.all_vehicles_report=bvexp201007.first_order.go-module.html#all_vehicles_report"><a title="bvexp201007.first_order.go.all_vehicles_report" class="py-name" href="#" onclick="return doclink('link-39', 'all_vehicles_report', 'link-39');">all_vehicles_report</a></tt> <tt class="py-op">=</tt> <tt class="py-op">[</tt><tt class="py-op">]</tt> </tt>
+<a name="L35"></a><tt class="py-lineno"> 35</tt>  <tt class="py-line">     </tt>
+<a name="L36"></a><tt class="py-lineno"> 36</tt>  <tt class="py-line">    <tt class="py-keyword">for</tt> <tt id="link-40" class="py-name" targets="Variable bvexp201007.affine.go.vname=bvexp201007.affine.go-module.html#vname,Variable bvexp201007.first_order.icons_test.vname=bvexp201007.first_order.icons_test-module.html#vname"><a title="bvexp201007.affine.go.vname
+bvexp201007.first_order.icons_test.vname" class="py-name" href="#" onclick="return doclink('link-40', 'vname', 'link-40');">vname</a></tt><tt class="py-op">,</tt> <tt id="link-41" class="py-name" targets="Variable bvexp201007.affine.go.vehicle=bvexp201007.affine.go-module.html#vehicle,Variable bvexp201007.first_order.icons_test.vehicle=bvexp201007.first_order.icons_test-module.html#vehicle"><a title="bvexp201007.affine.go.vehicle
+bvexp201007.first_order.icons_test.vehicle" class="py-name" href="#" onclick="return doclink('link-41', 'vehicle', 'link-41');">vehicle</a></tt> <tt class="py-keyword">in</tt> <tt id="link-42" class="py-name"><a title="bvexp201007.affine.go.vehicle_list
+bvexp201007.first_order.go.vehicle_list
+bvexp201007.first_order.icons_test.vehicle_list" class="py-name" href="#" onclick="return doclink('link-42', 'vehicle_list', 'link-37');">vehicle_list</a></tt><tt class="py-op">:</tt> </tt>
+<a name="L37"></a><tt class="py-lineno"> 37</tt>  <tt class="py-line">        <tt id="link-43" class="py-name" targets="Variable bvexp201007.affine.go.vname_tex=bvexp201007.affine.go-module.html#vname_tex"><a title="bvexp201007.affine.go.vname_tex" class="py-name" href="#" onclick="return doclink('link-43', 'vname_tex', 'link-43');">vname_tex</a></tt> <tt class="py-op">=</tt> <tt id="link-44" class="py-name"><a title="bvexp201007.affine.go.vname
+bvexp201007.first_order.icons_test.vname" class="py-name" href="#" onclick="return doclink('link-44', 'vname', 'link-40');">vname</a></tt><tt class="py-op">.</tt><tt class="py-name">replace</tt><tt class="py-op">(</tt><tt class="py-string">'_'</tt><tt class="py-op">,</tt> <tt class="py-string">'-'</tt><tt class="py-op">)</tt> </tt>
+<a name="L38"></a><tt class="py-lineno"> 38</tt>  <tt class="py-line">        <tt class="py-name">comp_prefix</tt><tt class="py-op">(</tt><tt id="link-45" class="py-name"><a title="bvexp201007.affine.go.vname
+bvexp201007.first_order.icons_test.vname" class="py-name" href="#" onclick="return doclink('link-45', 'vname', 'link-40');">vname</a></tt><tt class="py-op">)</tt> </tt>
+<a name="L39"></a><tt class="py-lineno"> 39</tt>  <tt class="py-line">     </tt>
+<a name="L40"></a><tt class="py-lineno"> 40</tt>  <tt class="py-line">        <tt class="py-name">firstorder_result</tt> <tt class="py-op">=</tt> <tt class="py-name">comp</tt><tt class="py-op">(</tt> </tt>
+<a name="L41"></a><tt class="py-lineno"> 41</tt>  <tt class="py-line">            <tt class="py-name">command</tt><tt class="py-op">=</tt><tt class="py-name">random_motion_simulation</tt><tt class="py-op">,</tt> </tt>
+<a name="L42"></a><tt class="py-lineno"> 42</tt>  <tt class="py-line">            <tt class="py-name">world_gen</tt><tt class="py-op">=</tt><tt id="link-46" class="py-name"><a title="bvexp201007.affine.go.my_world_gen
+bvexp201007.first_order.go_utils.my_world_gen" class="py-name" href="#" onclick="return doclink('link-46', 'my_world_gen', 'link-24');">my_world_gen</a></tt><tt class="py-op">,</tt> <tt id="link-47" class="py-name"><a title="bvexp201007.affine.go.vehicle
+bvexp201007.first_order.icons_test.vehicle" class="py-name" href="#" onclick="return doclink('link-47', 'vehicle', 'link-41');">vehicle</a></tt><tt class="py-op">=</tt><tt id="link-48" class="py-name"><a title="bvexp201007.affine.go.vehicle
+bvexp201007.first_order.icons_test.vehicle" class="py-name" href="#" onclick="return doclink('link-48', 'vehicle', 'link-41');">vehicle</a></tt><tt class="py-op">,</tt> </tt>
+<a name="L43"></a><tt class="py-lineno"> 43</tt>  <tt class="py-line">            <tt id="link-49" class="py-name"><a title="bvexp201007.affine.go.random_pose_gen
+bvexp201007.first_order.go.random_pose_gen" class="py-name" href="#" onclick="return doclink('link-49', 'random_pose_gen', 'link-31');">random_pose_gen</a></tt><tt class="py-op">=</tt><tt id="link-50" class="py-name"><a title="bvexp201007.affine.go.random_pose_gen
+bvexp201007.first_order.go.random_pose_gen" class="py-name" href="#" onclick="return doclink('link-50', 'random_pose_gen', 'link-31');">random_pose_gen</a></tt><tt class="py-op">,</tt> </tt>
+<a name="L44"></a><tt class="py-lineno"> 44</tt>  <tt class="py-line">            <tt id="link-51" class="py-name"><a title="bvexp201007.affine.go.num_iterations
+bvexp201007.first_order.go.num_iterations" class="py-name" href="#" onclick="return doclink('link-51', 'num_iterations', 'link-35');">num_iterations</a></tt><tt class="py-op">=</tt><tt id="link-52" class="py-name"><a title="bvexp201007.affine.go.num_iterations
+bvexp201007.first_order.go.num_iterations" class="py-name" href="#" onclick="return doclink('link-52', 'num_iterations', 'link-35');">num_iterations</a></tt><tt class="py-op">,</tt> </tt>
+<a name="L45"></a><tt class="py-lineno"> 45</tt>  <tt class="py-line">            <tt id="link-53" class="py-name"><a title="bvexp201007.first_order.go.random_commands_gen" class="py-name" href="#" onclick="return doclink('link-53', 'random_commands_gen', 'link-33');">random_commands_gen</a></tt><tt class="py-op">=</tt><tt id="link-54" class="py-name"><a title="bvexp201007.first_order.go.random_commands_gen" class="py-name" href="#" onclick="return doclink('link-54', 'random_commands_gen', 'link-33');">random_commands_gen</a></tt><tt class="py-op">,</tt> <tt id="link-55" class="py-name"><a title="bvexp201007.affine.go.dt
+bvexp201007.first_order.go.dt" class="py-name" href="#" onclick="return doclink('link-55', 'dt', 'link-36');">dt</a></tt><tt class="py-op">=</tt><tt id="link-56" class="py-name"><a title="bvexp201007.affine.go.dt
+bvexp201007.first_order.go.dt" class="py-name" href="#" onclick="return doclink('link-56', 'dt', 'link-36');">dt</a></tt><tt class="py-op">,</tt> </tt>
+<a name="L46"></a><tt class="py-lineno"> 46</tt>  <tt class="py-line">            <tt class="py-name">processing_class</tt><tt class="py-op">=</tt><tt id="link-57" class="py-name"><a title="bvexp201007.first_order.covariance.first_order_sensels_normalize.FirstorderSenselsNormalizeUnif" class="py-name" href="#" onclick="return doclink('link-57', 'FirstorderSenselsNormalizeUnif', 'link-10');">FirstorderSenselsNormalizeUnif</a></tt><tt class="py-op">,</tt> </tt>
+<a name="L47"></a><tt class="py-lineno"> 47</tt>  <tt class="py-line">            <tt class="py-name">job_id</tt><tt class="py-op">=</tt><tt class="py-string">'tensors'</tt><tt class="py-op">)</tt> </tt>
+<a name="L48"></a><tt class="py-lineno"> 48</tt>  <tt class="py-line">     </tt>
+<a name="L49"></a><tt class="py-lineno"> 49</tt>  <tt class="py-line">        <tt class="py-name">report_tensors</tt> <tt class="py-op">=</tt> <tt class="py-name">comp</tt><tt class="py-op">(</tt><tt id="link-58" class="py-name"><a title="bvexp201007.first_order.plot_parallel.create_report_tensors" class="py-name" href="#" onclick="return doclink('link-58', 'create_report_tensors', 'link-14');">create_report_tensors</a></tt><tt class="py-op">,</tt> <tt class="py-name">state</tt><tt class="py-op">=</tt><tt class="py-name">firstorder_result</tt><tt class="py-op">,</tt> </tt>
+<a name="L50"></a><tt class="py-lineno"> 50</tt>  <tt class="py-line">             <tt class="py-name">report_id</tt><tt class="py-op">=</tt><tt class="py-string">'tensors-natural'</tt><tt class="py-op">)</tt> </tt>
+<a name="L51"></a><tt class="py-lineno"> 51</tt>  <tt class="py-line">     </tt>
+<a name="L52"></a><tt class="py-lineno"> 52</tt>  <tt class="py-line">        <tt class="py-name">covariance_result</tt> <tt class="py-op">=</tt> <tt class="py-name">comp</tt><tt class="py-op">(</tt><tt class="py-name">random_pose_simulation</tt><tt class="py-op">,</tt> </tt>
+<a name="L53"></a><tt class="py-lineno"> 53</tt>  <tt class="py-line">            <tt class="py-name">world_gen</tt><tt class="py-op">=</tt><tt id="link-59" class="py-name"><a title="bvexp201007.affine.go.my_world_gen
+bvexp201007.first_order.go_utils.my_world_gen" class="py-name" href="#" onclick="return doclink('link-59', 'my_world_gen', 'link-24');">my_world_gen</a></tt><tt class="py-op">,</tt> <tt id="link-60" class="py-name"><a title="bvexp201007.affine.go.vehicle
+bvexp201007.first_order.icons_test.vehicle" class="py-name" href="#" onclick="return doclink('link-60', 'vehicle', 'link-41');">vehicle</a></tt><tt class="py-op">=</tt><tt id="link-61" class="py-name"><a title="bvexp201007.affine.go.vehicle
+bvexp201007.first_order.icons_test.vehicle" class="py-name" href="#" onclick="return doclink('link-61', 'vehicle', 'link-41');">vehicle</a></tt><tt class="py-op">,</tt> </tt>
+<a name="L54"></a><tt class="py-lineno"> 54</tt>  <tt class="py-line">            <tt id="link-62" class="py-name"><a title="bvexp201007.affine.go.random_pose_gen
+bvexp201007.first_order.go.random_pose_gen" class="py-name" href="#" onclick="return doclink('link-62', 'random_pose_gen', 'link-31');">random_pose_gen</a></tt><tt class="py-op">=</tt><tt id="link-63" class="py-name"><a title="bvexp201007.affine.go.random_pose_gen
+bvexp201007.first_order.go.random_pose_gen" class="py-name" href="#" onclick="return doclink('link-63', 'random_pose_gen', 'link-31');">random_pose_gen</a></tt><tt class="py-op">,</tt> </tt>
+<a name="L55"></a><tt class="py-lineno"> 55</tt>  <tt class="py-line">            <tt id="link-64" class="py-name"><a title="bvexp201007.affine.go.num_iterations
+bvexp201007.first_order.go.num_iterations" class="py-name" href="#" onclick="return doclink('link-64', 'num_iterations', 'link-35');">num_iterations</a></tt><tt class="py-op">=</tt><tt id="link-65" class="py-name"><a title="bvexp201007.affine.go.num_iterations
+bvexp201007.first_order.go.num_iterations" class="py-name" href="#" onclick="return doclink('link-65', 'num_iterations', 'link-35');">num_iterations</a></tt><tt class="py-op">,</tt> </tt>
+<a name="L56"></a><tt class="py-lineno"> 56</tt>  <tt class="py-line">            <tt class="py-name">processing_class</tt><tt class="py-op">=</tt><tt id="link-66" class="py-name"><a title="bvexp201007.first_order.covariance.sensel_covariance.SenselCovariance" class="py-name" href="#" onclick="return doclink('link-66', 'SenselCovariance', 'link-11');">SenselCovariance</a></tt><tt class="py-op">,</tt> </tt>
+<a name="L57"></a><tt class="py-lineno"> 57</tt>  <tt class="py-line">            <tt class="py-name">job_id</tt><tt class="py-op">=</tt><tt class="py-string">'covariance'</tt><tt class="py-op">)</tt> </tt>
+<a name="L58"></a><tt class="py-lineno"> 58</tt>  <tt class="py-line">     </tt>
+<a name="L59"></a><tt class="py-lineno"> 59</tt>  <tt class="py-line">        <tt class="py-name">report_covariance</tt> <tt class="py-op">=</tt> <tt class="py-name">comp</tt><tt class="py-op">(</tt><tt id="link-67" class="py-name"><a title="bvexp201007.first_order.plot_parallel.create_report_covariance" class="py-name" href="#" onclick="return doclink('link-67', 'create_report_covariance', 'link-15');">create_report_covariance</a></tt><tt class="py-op">,</tt>  </tt>
+<a name="L60"></a><tt class="py-lineno"> 60</tt>  <tt class="py-line">                                 <tt class="py-name">state</tt><tt class="py-op">=</tt><tt class="py-name">covariance_result</tt><tt class="py-op">,</tt> </tt>
+<a name="L61"></a><tt class="py-lineno"> 61</tt>  <tt class="py-line">                                 <tt class="py-name">report_id</tt><tt class="py-op">=</tt><tt class="py-string">'covariance'</tt><tt class="py-op">)</tt> </tt>
+<a name="L62"></a><tt class="py-lineno"> 62</tt>  <tt class="py-line">         </tt>
+<a name="L63"></a><tt class="py-lineno"> 63</tt>  <tt class="py-line">        <tt class="py-name">normalization_result</tt> <tt class="py-op">=</tt> \ </tt>
+<a name="L64"></a><tt class="py-lineno"> 64</tt>  <tt class="py-line">            <tt class="py-name">comp</tt><tt class="py-op">(</tt><tt id="link-68" class="py-name"><a title="bvexp201007.first_order.normalize_tensor
+bvexp201007.first_order.normalize_tensor.normalize_tensor" class="py-name" href="#" onclick="return doclink('link-68', 'normalize_tensor', 'link-2');">normalize_tensor</a></tt><tt class="py-op">,</tt> <tt class="py-name">covariance_result</tt><tt class="py-op">,</tt> <tt class="py-name">firstorder_result</tt><tt class="py-op">)</tt> </tt>
+<a name="L65"></a><tt class="py-lineno"> 65</tt>  <tt class="py-line">     </tt>
+<a name="L66"></a><tt class="py-lineno"> 66</tt>  <tt class="py-line">        <tt class="py-name">report_tensors_normalized</tt> <tt class="py-op">=</tt> <tt class="py-name">comp</tt><tt class="py-op">(</tt><tt id="link-69" class="py-name"><a title="bvexp201007.first_order.plot_parallel.create_report_tensors" class="py-name" href="#" onclick="return doclink('link-69', 'create_report_tensors', 'link-14');">create_report_tensors</a></tt><tt class="py-op">,</tt>  </tt>
+<a name="L67"></a><tt class="py-lineno"> 67</tt>  <tt class="py-line">                                         <tt class="py-name">state</tt><tt class="py-op">=</tt><tt class="py-name">normalization_result</tt><tt class="py-op">,</tt> </tt>
+<a name="L68"></a><tt class="py-lineno"> 68</tt>  <tt class="py-line">                        <tt class="py-name">report_id</tt><tt class="py-op">=</tt><tt class="py-string">'tensors-normalized'</tt><tt class="py-op">)</tt> </tt>
+<a name="L69"></a><tt class="py-lineno"> 69</tt>  <tt class="py-line">          </tt>
+<a name="L70"></a><tt class="py-lineno"> 70</tt>  <tt class="py-line">     </tt>
+<a name="L71"></a><tt class="py-lineno"> 71</tt>  <tt class="py-line">        <tt class="py-name">fields_result</tt> <tt class="py-op">=</tt> <tt class="py-name">comp</tt><tt class="py-op">(</tt><tt id="link-70" class="py-name"><a title="bvexp201007.first_order.compute_fields
+bvexp201007.first_order.compute_fields.compute_fields" class="py-name" href="#" onclick="return doclink('link-70', 'compute_fields', 'link-5');">compute_fields</a></tt><tt class="py-op">,</tt> <tt class="py-name">firstorder_result</tt><tt class="py-op">,</tt> </tt>
+<a name="L72"></a><tt class="py-lineno"> 72</tt>  <tt class="py-line">                             <tt class="py-name">world_gen</tt><tt class="py-op">=</tt><tt id="link-71" class="py-name"><a title="bvexp201007.affine.go.my_world_gen
+bvexp201007.first_order.go_utils.my_world_gen" class="py-name" href="#" onclick="return doclink('link-71', 'my_world_gen', 'link-24');">my_world_gen</a></tt><tt class="py-op">,</tt> <tt class="py-name">job_id</tt><tt class="py-op">=</tt><tt class="py-string">'fields'</tt><tt class="py-op">)</tt> </tt>
+<a name="L73"></a><tt class="py-lineno"> 73</tt>  <tt class="py-line">         </tt>
+<a name="L74"></a><tt class="py-lineno"> 74</tt>  <tt class="py-line">        <tt class="py-name">report_fields</tt> <tt class="py-op">=</tt> <tt class="py-name">comp</tt><tt class="py-op">(</tt><tt id="link-72" class="py-name"><a title="bvexp201007.first_order.compute_fields.create_report_fields" class="py-name" href="#" onclick="return doclink('link-72', 'create_report_fields', 'link-7');">create_report_fields</a></tt><tt class="py-op">,</tt> <tt class="py-name">fields_result</tt><tt class="py-op">,</tt> </tt>
+<a name="L75"></a><tt class="py-lineno"> 75</tt>  <tt class="py-line">                             <tt class="py-name">report_id</tt><tt class="py-op">=</tt><tt class="py-string">'fields-natural'</tt><tt class="py-op">)</tt>  </tt>
+<a name="L76"></a><tt class="py-lineno"> 76</tt>  <tt class="py-line">         </tt>
+<a name="L77"></a><tt class="py-lineno"> 77</tt>  <tt class="py-line">        <tt class="py-name">nfields_result</tt> <tt class="py-op">=</tt> <tt class="py-name">comp</tt><tt class="py-op">(</tt><tt id="link-73" class="py-name"><a title="bvexp201007.first_order.compute_fields
+bvexp201007.first_order.compute_fields.compute_fields" class="py-name" href="#" onclick="return doclink('link-73', 'compute_fields', 'link-5');">compute_fields</a></tt><tt class="py-op">,</tt> <tt class="py-name">normalization_result</tt><tt class="py-op">,</tt> </tt>
+<a name="L78"></a><tt class="py-lineno"> 78</tt>  <tt class="py-line">                              <tt class="py-name">world_gen</tt><tt class="py-op">=</tt><tt id="link-74" class="py-name"><a title="bvexp201007.affine.go.my_world_gen
+bvexp201007.first_order.go_utils.my_world_gen" class="py-name" href="#" onclick="return doclink('link-74', 'my_world_gen', 'link-24');">my_world_gen</a></tt><tt class="py-op">,</tt> <tt class="py-name">job_id</tt><tt class="py-op">=</tt><tt class="py-string">'nfields'</tt><tt class="py-op">)</tt> </tt>
+<a name="L79"></a><tt class="py-lineno"> 79</tt>  <tt class="py-line">         </tt>
+<a name="L80"></a><tt class="py-lineno"> 80</tt>  <tt class="py-line">        <tt class="py-name">report_nfields</tt> <tt class="py-op">=</tt> <tt class="py-name">comp</tt><tt class="py-op">(</tt><tt id="link-75" class="py-name"><a title="bvexp201007.first_order.compute_fields.create_report_fields" class="py-name" href="#" onclick="return doclink('link-75', 'create_report_fields', 'link-7');">create_report_fields</a></tt><tt class="py-op">,</tt> <tt class="py-name">nfields_result</tt><tt class="py-op">,</tt> </tt>
+<a name="L81"></a><tt class="py-lineno"> 81</tt>  <tt class="py-line">                              <tt class="py-name">report_id</tt><tt class="py-op">=</tt><tt class="py-string">'fields-normalized'</tt><tt class="py-op">)</tt> </tt>
+<a name="L82"></a><tt class="py-lineno"> 82</tt>  <tt class="py-line">         </tt>
+<a name="L83"></a><tt class="py-lineno"> 83</tt>  <tt class="py-line">        <tt class="py-name">report_icon</tt> <tt class="py-op">=</tt> <tt class="py-name">comp</tt><tt class="py-op">(</tt><tt id="link-76" class="py-name"><a title="bvexp201007.first_order.go_utils.create_icon_report" class="py-name" href="#" onclick="return doclink('link-76', 'create_icon_report', 'link-26');">create_icon_report</a></tt><tt class="py-op">,</tt> <tt id="link-77" class="py-name"><a title="bvexp201007.affine.go.vehicle
+bvexp201007.first_order.icons_test.vehicle" class="py-name" href="#" onclick="return doclink('link-77', 'vehicle', 'link-41');">vehicle</a></tt><tt class="py-op">)</tt> </tt>
+<a name="L84"></a><tt class="py-lineno"> 84</tt>  <tt class="py-line">         </tt>
+<a name="L85"></a><tt class="py-lineno"> 85</tt>  <tt class="py-line">        <tt class="py-name">children</tt> <tt class="py-op">=</tt> <tt class="py-op">[</tt><tt class="py-name">report_covariance</tt><tt class="py-op">,</tt> <tt class="py-name">report_tensors</tt><tt class="py-op">,</tt>  </tt>
+<a name="L86"></a><tt class="py-lineno"> 86</tt>  <tt class="py-line">                    <tt class="py-name">report_tensors_normalized</tt><tt class="py-op">,</tt> </tt>
+<a name="L87"></a><tt class="py-lineno"> 87</tt>  <tt class="py-line">                    <tt class="py-name">report_fields</tt><tt class="py-op">,</tt> <tt class="py-name">report_nfields</tt><tt class="py-op">,</tt> <tt class="py-name">report_icon</tt><tt class="py-op">]</tt> </tt>
+<a name="L88"></a><tt class="py-lineno"> 88</tt>  <tt class="py-line">         </tt>
+<a name="L89"></a><tt class="py-lineno"> 89</tt>  <tt class="py-line">        <tt class="py-keyword">if</tt> <tt id="link-78" class="py-name"><a title="bvexp201007.affine.go.vehicle
+bvexp201007.first_order.icons_test.vehicle" class="py-name" href="#" onclick="return doclink('link-78', 'vehicle', 'link-41');">vehicle</a></tt><tt class="py-op">.</tt><tt class="py-name">config</tt><tt class="py-op">.</tt><tt class="py-name">sensors</tt><tt class="py-op">[</tt><tt class="py-number">0</tt><tt class="py-op">]</tt><tt class="py-op">.</tt><tt class="py-name">sensor_type_string</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> <tt class="py-op">==</tt> <tt class="py-string">'olfaction'</tt><tt class="py-op">:</tt> </tt>
+<a name="L90"></a><tt class="py-lineno"> 90</tt>  <tt class="py-line">            <tt class="py-name">expectation</tt> <tt class="py-op">=</tt> <tt class="py-name">comp</tt><tt class="py-op">(</tt><tt id="link-79" class="py-name"><a title="bvexp201007.first_order.analysis.olfaction_tensors.analyze_olfaction_covariance_job" class="py-name" href="#" onclick="return doclink('link-79', 'analyze_olfaction_covariance_job', 'link-30');">analyze_olfaction_covariance_job</a></tt><tt class="py-op">,</tt>  </tt>
+<a name="L91"></a><tt class="py-lineno"> 91</tt>  <tt class="py-line">                               <tt class="py-name">covariance_result</tt><tt class="py-op">)</tt> </tt>
+<a name="L92"></a><tt class="py-lineno"> 92</tt>  <tt class="py-line">            <tt class="py-name">children</tt><tt class="py-op">.</tt><tt class="py-name">append</tt><tt class="py-op">(</tt><tt class="py-name">expectation</tt><tt class="py-op">)</tt> </tt>
+<a name="L93"></a><tt class="py-lineno"> 93</tt>  <tt class="py-line">         </tt>
+<a name="L94"></a><tt class="py-lineno"> 94</tt>  <tt class="py-line">         </tt>
+<a name="L95"></a><tt class="py-lineno"> 95</tt>  <tt class="py-line">        <tt id="link-80" class="py-name" targets="Variable bvexp201007.affine.go.vehicle_report=bvexp201007.affine.go-module.html#vehicle_report"><a title="bvexp201007.affine.go.vehicle_report" class="py-name" href="#" onclick="return doclink('link-80', 'vehicle_report', 'link-80');">vehicle_report</a></tt> <tt class="py-op">=</tt> <tt class="py-name">comp</tt><tt class="py-op">(</tt><tt id="link-81" class="py-name"><a title="bvexp201007.affine.go.create_report
+bvexp201007.first_order.go_utils.create_report" class="py-name" href="#" onclick="return doclink('link-81', 'create_report', 'link-22');">create_report</a></tt><tt class="py-op">,</tt> <tt class="py-name">id</tt><tt class="py-op">=</tt><tt id="link-82" class="py-name"><a title="bvexp201007.affine.go.vname
+bvexp201007.first_order.icons_test.vname" class="py-name" href="#" onclick="return doclink('link-82', 'vname', 'link-40');">vname</a></tt><tt class="py-op">,</tt> <tt class="py-name">children</tt><tt class="py-op">=</tt><tt class="py-name">children</tt><tt class="py-op">)</tt> </tt>
+<a name="L96"></a><tt class="py-lineno"> 96</tt>  <tt class="py-line">        <tt id="link-83" class="py-name"><a title="bvexp201007.first_order.go.all_vehicles_report" class="py-name" href="#" onclick="return doclink('link-83', 'all_vehicles_report', 'link-39');">all_vehicles_report</a></tt><tt class="py-op">.</tt><tt class="py-name">append</tt><tt class="py-op">(</tt><tt id="link-84" class="py-name"><a title="bvexp201007.affine.go.vehicle_report" class="py-name" href="#" onclick="return doclink('link-84', 'vehicle_report', 'link-80');">vehicle_report</a></tt><tt class="py-op">)</tt> </tt>
+<a name="L97"></a><tt class="py-lineno"> 97</tt>  <tt class="py-line">         </tt>
+<a name="L98"></a><tt class="py-lineno"> 98</tt>  <tt class="py-line">     </tt>
+<a name="L99"></a><tt class="py-lineno"> 99</tt>  <tt class="py-line">    <tt class="py-name">comp_prefix</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L100"></a><tt class="py-lineno">100</tt>  <tt class="py-line">     </tt>
+<a name="L101"></a><tt class="py-lineno">101</tt>  <tt class="py-line">    <tt id="link-85" class="py-name" targets="Variable bvexp201007.first_order.go.first_order_report=bvexp201007.first_order.go-module.html#first_order_report"><a title="bvexp201007.first_order.go.first_order_report" class="py-name" href="#" onclick="return doclink('link-85', 'first_order_report', 'link-85');">first_order_report</a></tt> <tt class="py-op">=</tt> <tt class="py-name">comp</tt><tt class="py-op">(</tt><tt id="link-86" class="py-name"><a title="bvexp201007.affine.go.create_report
+bvexp201007.first_order.go_utils.create_report" class="py-name" href="#" onclick="return doclink('link-86', 'create_report', 'link-22');">create_report</a></tt><tt class="py-op">,</tt> <tt class="py-name">id</tt><tt class="py-op">=</tt><tt class="py-string">'first_order'</tt><tt class="py-op">,</tt> </tt>
+<a name="L102"></a><tt class="py-lineno">102</tt>  <tt class="py-line">                              <tt class="py-name">children</tt><tt class="py-op">=</tt><tt id="link-87" class="py-name"><a title="bvexp201007.first_order.go.all_vehicles_report" class="py-name" href="#" onclick="return doclink('link-87', 'all_vehicles_report', 'link-39');">all_vehicles_report</a></tt><tt class="py-op">)</tt> </tt>
+<a name="L103"></a><tt class="py-lineno">103</tt>  <tt class="py-line">         </tt>
+<a name="L104"></a><tt class="py-lineno">104</tt>  <tt class="py-line">    <tt class="py-name">comp</tt><tt class="py-op">(</tt><tt id="link-88" class="py-name"><a title="bvexp201007.affine.go.write_report
+bvexp201007.first_order.go_utils.write_report" class="py-name" href="#" onclick="return doclink('link-88', 'write_report', 'link-23');">write_report</a></tt><tt class="py-op">,</tt> <tt id="link-89" class="py-name"><a title="bvexp201007.first_order.go.first_order_report" class="py-name" href="#" onclick="return doclink('link-89', 'first_order_report', 'link-85');">first_order_report</a></tt><tt class="py-op">,</tt> <tt class="py-string">"reports/first_order"</tt><tt class="py-op">)</tt>  </tt>
+<a name="L105"></a><tt class="py-lineno">105</tt>  <tt class="py-line"> </tt>
+<a name="L106"></a><tt class="py-lineno">106</tt>  <tt class="py-line">    <tt class="py-name">comp</tt><tt class="py-op">(</tt><tt id="link-90" class="py-name"><a title="bvexp201007.first_order.techreport_figures.create_techreport_figures" class="py-name" href="#" onclick="return doclink('link-90', 'create_techreport_figures', 'link-18');">create_techreport_figures</a></tt><tt class="py-op">,</tt> <tt class="py-string">'techreport'</tt><tt class="py-op">,</tt> <tt id="link-91" class="py-name"><a title="bvexp201007.first_order.go.all_vehicles_report" class="py-name" href="#" onclick="return doclink('link-91', 'all_vehicles_report', 'link-39');">all_vehicles_report</a></tt><tt class="py-op">)</tt> </tt>
+<a name="L107"></a><tt class="py-lineno">107</tt>  <tt class="py-line"> </tt>
+<a name="L108"></a><tt class="py-lineno">108</tt>  <tt class="py-line"><tt class="py-comment">#batch_command('make all')</tt> </tt>
+<a name="L109"></a><tt class="py-lineno">109</tt>  <tt class="py-line"> </tt><script type="text/javascript">
+<!--
+expandto(location.href);
+// -->
+</script>
+</pre>
+<br />
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="bvexp201007-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+      <th class="navbar" width="100%"></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">
+    Generated by Epydoc 3.0.1 on Thu Sep 16 18:33:40 2010
+    </td>
+    <td align="right" class="footer">
+      <a target="mainFrame" href="http://epydoc.sourceforge.net"
+        >http://epydoc.sourceforge.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie();
+  // -->
+</script>
+</body>
+</html>

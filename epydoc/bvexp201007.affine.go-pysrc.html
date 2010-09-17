@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="ascii"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>bvexp201007.affine.go</title>
+  <link rel="stylesheet" href="epydoc.css" type="text/css" />
+  <script type="text/javascript" src="epydoc.js"></script>
+</head>
+
+<body bgcolor="white" text="black" link="blue" vlink="#204080"
+      alink="#204080">
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="bvexp201007-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+      <th class="navbar" width="100%"></th>
+  </tr>
+</table>
+<table width="100%" cellpadding="0" cellspacing="0">
+  <tr valign="top">
+    <td width="100%">
+      <span class="breadcrumbs">
+        <a href="bvexp201007-module.html">Package&nbsp;bvexp201007</a> ::
+        <a href="bvexp201007.affine-module.html">Package&nbsp;affine</a> ::
+        Module&nbsp;go
+      </span>
+    </td>
+    <td>
+      <table cellpadding="0" cellspacing="0">
+        <!-- hide/show private -->
+        <tr><td align="right"><span class="options">[<a href="javascript:void(0);" class="privatelink"
+    onclick="toggle_private();">hide&nbsp;private</a>]</span></td></tr>
+        <tr><td align="right"><span class="options"
+            >[<a href="frames.html" target="_top">frames</a
+            >]&nbsp;|&nbsp;<a href="bvexp201007.affine.go-pysrc.html"
+            target="_top">no&nbsp;frames</a>]</span></td></tr>
+      </table>
+    </td>
+  </tr>
+</table>
+<h1 class="epydoc">Source Code for <a href="bvexp201007.affine.go-module.html">Module bvexp201007.affine.go</a></h1>
+<pre class="py-src">
+<a name="L1"></a><tt class="py-lineno"> 1</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt class="py-name">numpy</tt> <tt class="py-keyword">import</tt> <tt class="py-name">random</tt> </tt>
+<a name="L2"></a><tt class="py-lineno"> 2</tt>  <tt class="py-line"> </tt>
+<a name="L3"></a><tt class="py-lineno"> 3</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt class="py-name">compmake</tt> <tt class="py-keyword">import</tt> <tt class="py-name">comp</tt><tt class="py-op">,</tt> <tt class="py-name">comp_prefix</tt><tt class="py-op">,</tt> <tt class="py-name">batch_command</tt><tt class="py-op">,</tt> <tt class="py-name">set_namespace</tt> </tt>
+<a name="L4"></a><tt class="py-lineno"> 4</tt>  <tt class="py-line">  </tt>
+<a name="L5"></a><tt class="py-lineno"> 5</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt class="py-name">pybv</tt><tt class="py-op">.</tt><tt class="py-name">worlds</tt> <tt class="py-keyword">import</tt> <tt class="py-name">create_random_world</tt><tt class="py-op">,</tt> <tt class="py-name">get_safe_pose</tt> </tt>
+<a name="L6"></a><tt class="py-lineno"> 6</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt class="py-name">pybv</tt><tt class="py-op">.</tt><tt class="py-name">simulation</tt> <tt class="py-keyword">import</tt> <tt class="py-name">random_motion_simulation</tt>  </tt>
+<a name="L7"></a><tt class="py-lineno"> 7</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt class="py-name">pybv_experiments</tt> <tt class="py-keyword">import</tt> <tt id="link-0" class="py-name" targets="Function bvexp201007.pieces.vehicles_list_A()=bvexp201007.pieces-module.html#vehicles_list_A"><a title="bvexp201007.pieces.vehicles_list_A" class="py-name" href="#" onclick="return doclink('link-0', 'vehicles_list_A', 'link-0');">vehicles_list_A</a></tt>  </tt>
+<a name="L8"></a><tt class="py-lineno"> 8</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt class="py-name">pybv</tt><tt class="py-op">.</tt><tt class="py-name">sensors</tt><tt class="py-op">.</tt><tt class="py-name">textured_raytracer</tt> <tt class="py-keyword">import</tt> <tt class="py-name">TexturedRaytracer</tt> </tt>
+<a name="L9"></a><tt class="py-lineno"> 9</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt class="py-name">pybv_experiments</tt><tt class="py-op">.</tt><tt id="link-1" class="py-name" targets="Package bvexp201007.affine=bvexp201007.affine-module.html,Module bvexp201007.affine.affine=bvexp201007.affine.affine-module.html"><a title="bvexp201007.affine
+bvexp201007.affine.affine" class="py-name" href="#" onclick="return doclink('link-1', 'affine', 'link-1');">affine</a></tt><tt class="py-op">.</tt><tt id="link-2" class="py-name"><a title="bvexp201007.affine
+bvexp201007.affine.affine" class="py-name" href="#" onclick="return doclink('link-2', 'affine', 'link-1');">affine</a></tt> <tt class="py-keyword">import</tt> <tt id="link-3" class="py-name" targets="Class bvexp201007.affine.affine.AffineModel=bvexp201007.affine.affine.AffineModel-class.html"><a title="bvexp201007.affine.affine.AffineModel" class="py-name" href="#" onclick="return doclink('link-3', 'AffineModel', 'link-3');">AffineModel</a></tt><tt class="py-op">,</tt> \ </tt>
+<a name="L10"></a><tt class="py-lineno">10</tt>  <tt class="py-line">    <tt id="link-4" class="py-name" targets="Function bvexp201007.affine.affine.create_report_affine()=bvexp201007.affine.affine-module.html#create_report_affine"><a title="bvexp201007.affine.affine.create_report_affine" class="py-name" href="#" onclick="return doclink('link-4', 'create_report_affine', 'link-4');">create_report_affine</a></tt> </tt>
+<a name="L11"></a><tt class="py-lineno">11</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt class="py-name">reprep</tt><tt class="py-op">.</tt><tt class="py-name">out</tt><tt class="py-op">.</tt><tt class="py-name">html</tt> <tt class="py-keyword">import</tt> <tt class="py-name">node_to_html_document</tt> </tt>
+<a name="L12"></a><tt class="py-lineno">12</tt>  <tt class="py-line"><tt class="py-keyword">from</tt> <tt class="py-name">reprep</tt><tt class="py-op">.</tt><tt class="py-name">node</tt> <tt class="py-keyword">import</tt> <tt class="py-name">Node</tt> </tt>
+<a name="L13"></a><tt class="py-lineno">13</tt>  <tt class="py-line"> </tt>
+<a name="L14"></a><tt class="py-lineno">14</tt>  <tt class="py-line"> </tt>
+<a name="L15"></a><tt class="py-lineno">15</tt>  <tt class="py-line"> </tt>
+<a name="L16"></a><tt class="py-lineno">16</tt>  <tt class="py-line"><tt class="py-name">set_namespace</tt><tt class="py-op">(</tt><tt class="py-string">'affine'</tt><tt class="py-op">)</tt> </tt>
+<a name="L17"></a><tt class="py-lineno">17</tt>  <tt class="py-line">   </tt>
+<a name="my_world_gen"></a><div id="my_world_gen-def"><a name="L18"></a><tt class="py-lineno">18</tt> <a class="py-toggle" href="#" id="my_world_gen-toggle" onclick="return toggle('my_world_gen');">-</a><tt class="py-line"><tt class="py-keyword">def</tt> <a class="py-def-name" href="bvexp201007.affine.go-module.html#my_world_gen">my_world_gen</a><tt class="py-op">(</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="my_world_gen-collapsed" style="display:none;" pad="++" indent="++++"></div><div id="my_world_gen-expanded"><a name="L19"></a><tt class="py-lineno">19</tt>  <tt class="py-line">    <tt class="py-keyword">return</tt> <tt class="py-name">create_random_world</tt><tt class="py-op">(</tt><tt class="py-name">radius</tt><tt class="py-op">=</tt><tt class="py-number">10</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L20"></a><tt class="py-lineno">20</tt>  <tt class="py-line"> </tt>
+<a name="MyPoseGen"></a><div id="MyPoseGen-def"><a name="L21"></a><tt class="py-lineno">21</tt> <a class="py-toggle" href="#" id="MyPoseGen-toggle" onclick="return toggle('MyPoseGen');">-</a><tt class="py-line"><tt class="py-keyword">class</tt> <a class="py-def-name" href="bvexp201007.affine.go.MyPoseGen-class.html">MyPoseGen</a><tt class="py-op">:</tt> </tt>
+</div><div id="MyPoseGen-collapsed" style="display:none;" pad="++" indent="++++"></div><div id="MyPoseGen-expanded"><a name="L22"></a><tt class="py-lineno">22</tt>  <tt class="py-line">     </tt>
+<a name="MyPoseGen.set_map"></a><div id="MyPoseGen.set_map-def"><a name="L23"></a><tt class="py-lineno">23</tt> <a class="py-toggle" href="#" id="MyPoseGen.set_map-toggle" onclick="return toggle('MyPoseGen.set_map');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="bvexp201007.affine.go.MyPoseGen-class.html#set_map">set_map</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">,</tt> <tt class="py-param">world</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="MyPoseGen.set_map-collapsed" style="display:none;" pad="++" indent="++++++++"></div><div id="MyPoseGen.set_map-expanded"><a name="L24"></a><tt class="py-lineno">24</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">raytracer</tt> <tt class="py-op">=</tt> <tt class="py-name">TexturedRaytracer</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L25"></a><tt class="py-lineno">25</tt>  <tt class="py-line">        <tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">raytracer</tt><tt class="py-op">.</tt><tt id="link-5" class="py-name" targets="Method bvexp201007.affine.go.MyPoseGen.set_map()=bvexp201007.affine.go.MyPoseGen-class.html#set_map,Method bvexp201007.first_order.go_utils.MyPoseGen2.set_map()=bvexp201007.first_order.go_utils.MyPoseGen2-class.html#set_map"><a title="bvexp201007.affine.go.MyPoseGen.set_map
+bvexp201007.first_order.go_utils.MyPoseGen2.set_map" class="py-name" href="#" onclick="return doclink('link-5', 'set_map', 'link-5');">set_map</a></tt><tt class="py-op">(</tt><tt class="py-name">world</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L26"></a><tt class="py-lineno">26</tt>  <tt class="py-line">         </tt>
+<a name="MyPoseGen.generate_pose"></a><div id="MyPoseGen.generate_pose-def"><a name="L27"></a><tt class="py-lineno">27</tt> <a class="py-toggle" href="#" id="MyPoseGen.generate_pose-toggle" onclick="return toggle('MyPoseGen.generate_pose');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="bvexp201007.affine.go.MyPoseGen-class.html#generate_pose">generate_pose</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="MyPoseGen.generate_pose-collapsed" style="display:none;" pad="++" indent="++++++++"></div><div id="MyPoseGen.generate_pose-expanded"><a name="L28"></a><tt class="py-lineno">28</tt>  <tt class="py-line">        <tt class="py-name">pose</tt> <tt class="py-op">=</tt> <tt class="py-name">get_safe_pose</tt><tt class="py-op">(</tt> </tt>
+<a name="L29"></a><tt class="py-lineno">29</tt>  <tt class="py-line">                             <tt class="py-name">raytracer</tt><tt class="py-op">=</tt><tt class="py-name">self</tt><tt class="py-op">.</tt><tt class="py-name">raytracer</tt><tt class="py-op">,</tt> </tt>
+<a name="L30"></a><tt class="py-lineno">30</tt>  <tt class="py-line">                             <tt class="py-name">world_radius</tt><tt class="py-op">=</tt><tt class="py-number">9</tt><tt class="py-op">,</tt> </tt>
+<a name="L31"></a><tt class="py-lineno">31</tt>  <tt class="py-line">                             <tt class="py-name">safe_zone</tt><tt class="py-op">=</tt><tt class="py-number">1</tt><tt class="py-op">,</tt> <tt class="py-name">num_tries</tt><tt class="py-op">=</tt><tt class="py-number">100</tt><tt class="py-op">)</tt> </tt>
+<a name="L32"></a><tt class="py-lineno">32</tt>  <tt class="py-line">        <tt class="py-comment">#print "Found pose %s" % pose</tt> </tt>
+<a name="L33"></a><tt class="py-lineno">33</tt>  <tt class="py-line">        <tt class="py-keyword">return</tt> <tt class="py-name">pose</tt> </tt>
+</div><a name="L34"></a><tt class="py-lineno">34</tt>  <tt class="py-line">     </tt>
+<a name="MyPoseGen.__eq__"></a><div id="MyPoseGen.__eq__-def"><a name="L35"></a><tt class="py-lineno">35</tt> <a class="py-toggle" href="#" id="MyPoseGen.__eq__-toggle" onclick="return toggle('MyPoseGen.__eq__');">-</a><tt class="py-line">    <tt class="py-keyword">def</tt> <a class="py-def-name" href="bvexp201007.affine.go.MyPoseGen-class.html#__eq__">__eq__</a><tt class="py-op">(</tt><tt class="py-param">self</tt><tt class="py-op">,</tt> <tt class="py-param">other</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="MyPoseGen.__eq__-collapsed" style="display:none;" pad="++" indent="++++++++"></div><div id="MyPoseGen.__eq__-expanded"><a name="L36"></a><tt class="py-lineno">36</tt>  <tt class="py-line">        <tt class="py-docstring">''' Without parameters, they will always compare true '''</tt>  </tt>
+<a name="L37"></a><tt class="py-lineno">37</tt>  <tt class="py-line">        <tt class="py-keyword">return</tt> <tt class="py-name">isinstance</tt><tt class="py-op">(</tt><tt class="py-name">other</tt><tt class="py-op">,</tt> <tt id="link-6" class="py-name" targets="Class bvexp201007.affine.go.MyPoseGen=bvexp201007.affine.go.MyPoseGen-class.html"><a title="bvexp201007.affine.go.MyPoseGen" class="py-name" href="#" onclick="return doclink('link-6', 'MyPoseGen', 'link-6');">MyPoseGen</a></tt><tt class="py-op">)</tt> </tt>
+</div></div><a name="L38"></a><tt class="py-lineno">38</tt>  <tt class="py-line"> </tt>
+<a name="L39"></a><tt class="py-lineno">39</tt>  <tt class="py-line"><tt id="link-7" class="py-name" targets="Variable bvexp201007.affine.go.random_pose_gen=bvexp201007.affine.go-module.html#random_pose_gen,Variable bvexp201007.first_order.go.random_pose_gen=bvexp201007.first_order.go-module.html#random_pose_gen"><a title="bvexp201007.affine.go.random_pose_gen
+bvexp201007.first_order.go.random_pose_gen" class="py-name" href="#" onclick="return doclink('link-7', 'random_pose_gen', 'link-7');">random_pose_gen</a></tt> <tt class="py-op">=</tt> <tt id="link-8" class="py-name"><a title="bvexp201007.affine.go.MyPoseGen" class="py-name" href="#" onclick="return doclink('link-8', 'MyPoseGen', 'link-6');">MyPoseGen</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt>  </tt>
+<a name="L40"></a><tt class="py-lineno">40</tt>  <tt class="py-line"> </tt>
+<a name="L41"></a><tt class="py-lineno">41</tt>  <tt class="py-line"><tt class="py-comment"># Generate commands uniformly between -1,1</tt> </tt>
+<a name="my_random_commands_gen"></a><div id="my_random_commands_gen-def"><a name="L42"></a><tt class="py-lineno">42</tt> <a class="py-toggle" href="#" id="my_random_commands_gen-toggle" onclick="return toggle('my_random_commands_gen');">-</a><tt class="py-line"><tt class="py-keyword">def</tt> <a class="py-def-name" href="bvexp201007.affine.go-module.html#my_random_commands_gen">my_random_commands_gen</a><tt class="py-op">(</tt><tt class="py-param">ninteration</tt><tt class="py-op">,</tt> <tt class="py-param">vehicle</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> <tt class="py-comment">#@UnusedVariable</tt> </tt>
+</div><a name="L43"></a><tt class="py-lineno">43</tt>  <tt class="py-line">    <tt class="py-keyword">return</tt>  <tt class="py-op">(</tt><tt class="py-name">random</tt><tt class="py-op">.</tt><tt class="py-name">rand</tt><tt class="py-op">(</tt><tt class="py-number">3</tt><tt class="py-op">)</tt> <tt class="py-op">-</tt> <tt class="py-number">0.5</tt><tt class="py-op">)</tt> <tt class="py-op">*</tt> <tt class="py-number">2</tt> </tt>
+</div><a name="L44"></a><tt class="py-lineno">44</tt>  <tt class="py-line"><tt class="py-comment">#</tt> </tt>
+<a name="L45"></a><tt class="py-lineno">45</tt>  <tt class="py-line"><tt class="py-comment">#def my_random_commands_gen_special(ninteration, vehicle): #@UnusedVariable</tt> </tt>
+<a name="L46"></a><tt class="py-lineno">46</tt>  <tt class="py-line"><tt class="py-comment">#    val = (random.rand(1) - 0.5) * 2</tt> </tt>
+<a name="L47"></a><tt class="py-lineno">47</tt>  <tt class="py-line"><tt class="py-comment">#    i = int(floor(random.rand(1) * 2.99))</tt> </tt>
+<a name="L48"></a><tt class="py-lineno">48</tt>  <tt class="py-line"><tt class="py-comment">#    u = zeros(3)</tt> </tt>
+<a name="L49"></a><tt class="py-lineno">49</tt>  <tt class="py-line"><tt class="py-comment">#    u[i] = val</tt> </tt>
+<a name="L50"></a><tt class="py-lineno">50</tt>  <tt class="py-line"><tt class="py-comment">#    return u</tt> </tt>
+<a name="L51"></a><tt class="py-lineno">51</tt>  <tt class="py-line"> </tt>
+<a name="L52"></a><tt class="py-lineno">52</tt>  <tt class="py-line"><tt id="link-9" class="py-name" targets="Variable bvexp201007.first_order.go.random_commands_gen=bvexp201007.first_order.go-module.html#random_commands_gen"><a title="bvexp201007.first_order.go.random_commands_gen" class="py-name" href="#" onclick="return doclink('link-9', 'random_commands_gen', 'link-9');">random_commands_gen</a></tt> <tt class="py-op">=</tt> <tt id="link-10" class="py-name" targets="Function bvexp201007.affine.go.my_random_commands_gen()=bvexp201007.affine.go-module.html#my_random_commands_gen,Function bvexp201007.first_order.go_utils.my_random_commands_gen()=bvexp201007.first_order.go_utils-module.html#my_random_commands_gen"><a title="bvexp201007.affine.go.my_random_commands_gen
+bvexp201007.first_order.go_utils.my_random_commands_gen" class="py-name" href="#" onclick="return doclink('link-10', 'my_random_commands_gen', 'link-10');">my_random_commands_gen</a></tt> </tt>
+<a name="L53"></a><tt class="py-lineno">53</tt>  <tt class="py-line"> </tt>
+<a name="L54"></a><tt class="py-lineno">54</tt>  <tt class="py-line"><tt id="link-11" class="py-name" targets="Variable bvexp201007.affine.go.num_iterations=bvexp201007.affine.go-module.html#num_iterations,Variable bvexp201007.first_order.go.num_iterations=bvexp201007.first_order.go-module.html#num_iterations"><a title="bvexp201007.affine.go.num_iterations
+bvexp201007.first_order.go.num_iterations" class="py-name" href="#" onclick="return doclink('link-11', 'num_iterations', 'link-11');">num_iterations</a></tt> <tt class="py-op">=</tt> <tt class="py-number">500</tt> </tt>
+<a name="L55"></a><tt class="py-lineno">55</tt>  <tt class="py-line"><tt id="link-12" class="py-name" targets="Variable bvexp201007.affine.go.dt=bvexp201007.affine.go-module.html#dt,Variable bvexp201007.first_order.go.dt=bvexp201007.first_order.go-module.html#dt"><a title="bvexp201007.affine.go.dt
+bvexp201007.first_order.go.dt" class="py-name" href="#" onclick="return doclink('link-12', 'dt', 'link-12');">dt</a></tt> <tt class="py-op">=</tt> <tt class="py-number">0.1</tt> </tt>
+<a name="L56"></a><tt class="py-lineno">56</tt>  <tt class="py-line">  </tt>
+<a name="L57"></a><tt class="py-lineno">57</tt>  <tt class="py-line"><tt id="link-13" class="py-name" targets="Variable bvexp201007.affine.go.vehicle_list=bvexp201007.affine.go-module.html#vehicle_list,Variable bvexp201007.first_order.go.vehicle_list=bvexp201007.first_order.go-module.html#vehicle_list,Variable bvexp201007.first_order.icons_test.vehicle_list=bvexp201007.first_order.icons_test-module.html#vehicle_list"><a title="bvexp201007.affine.go.vehicle_list
+bvexp201007.first_order.go.vehicle_list
+bvexp201007.first_order.icons_test.vehicle_list" class="py-name" href="#" onclick="return doclink('link-13', 'vehicle_list', 'link-13');">vehicle_list</a></tt> <tt class="py-op">=</tt> <tt id="link-14" class="py-name"><a title="bvexp201007.pieces.vehicles_list_A" class="py-name" href="#" onclick="return doclink('link-14', 'vehicles_list_A', 'link-0');">vehicles_list_A</a></tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L58"></a><tt class="py-lineno">58</tt>  <tt class="py-line"><tt id="link-15" class="py-name" targets="Variable bvexp201007.affine.go.all_vehicle_report=bvexp201007.affine.go-module.html#all_vehicle_report"><a title="bvexp201007.affine.go.all_vehicle_report" class="py-name" href="#" onclick="return doclink('link-15', 'all_vehicle_report', 'link-15');">all_vehicle_report</a></tt> <tt class="py-op">=</tt> <tt class="py-op">[</tt><tt class="py-op">]</tt> </tt>
+<a name="L59"></a><tt class="py-lineno">59</tt>  <tt class="py-line"><tt class="py-keyword">for</tt> <tt id="link-16" class="py-name" targets="Variable bvexp201007.affine.go.vname=bvexp201007.affine.go-module.html#vname,Variable bvexp201007.first_order.icons_test.vname=bvexp201007.first_order.icons_test-module.html#vname"><a title="bvexp201007.affine.go.vname
+bvexp201007.first_order.icons_test.vname" class="py-name" href="#" onclick="return doclink('link-16', 'vname', 'link-16');">vname</a></tt><tt class="py-op">,</tt> <tt id="link-17" class="py-name" targets="Variable bvexp201007.affine.go.vehicle=bvexp201007.affine.go-module.html#vehicle,Variable bvexp201007.first_order.icons_test.vehicle=bvexp201007.first_order.icons_test-module.html#vehicle"><a title="bvexp201007.affine.go.vehicle
+bvexp201007.first_order.icons_test.vehicle" class="py-name" href="#" onclick="return doclink('link-17', 'vehicle', 'link-17');">vehicle</a></tt> <tt class="py-keyword">in</tt> <tt id="link-18" class="py-name"><a title="bvexp201007.affine.go.vehicle_list
+bvexp201007.first_order.go.vehicle_list
+bvexp201007.first_order.icons_test.vehicle_list" class="py-name" href="#" onclick="return doclink('link-18', 'vehicle_list', 'link-13');">vehicle_list</a></tt><tt class="py-op">:</tt> </tt>
+<a name="L60"></a><tt class="py-lineno">60</tt>  <tt class="py-line">    <tt id="link-19" class="py-name" targets="Variable bvexp201007.affine.go.vname_tex=bvexp201007.affine.go-module.html#vname_tex"><a title="bvexp201007.affine.go.vname_tex" class="py-name" href="#" onclick="return doclink('link-19', 'vname_tex', 'link-19');">vname_tex</a></tt> <tt class="py-op">=</tt> <tt id="link-20" class="py-name"><a title="bvexp201007.affine.go.vname
+bvexp201007.first_order.icons_test.vname" class="py-name" href="#" onclick="return doclink('link-20', 'vname', 'link-16');">vname</a></tt><tt class="py-op">.</tt><tt class="py-name">replace</tt><tt class="py-op">(</tt><tt class="py-string">'_'</tt><tt class="py-op">,</tt> <tt class="py-string">'-'</tt><tt class="py-op">)</tt> </tt>
+<a name="L61"></a><tt class="py-lineno">61</tt>  <tt class="py-line">    <tt class="py-name">comp_prefix</tt><tt class="py-op">(</tt><tt id="link-21" class="py-name"><a title="bvexp201007.affine.go.vname
+bvexp201007.first_order.icons_test.vname" class="py-name" href="#" onclick="return doclink('link-21', 'vname', 'link-16');">vname</a></tt><tt class="py-op">)</tt> </tt>
+<a name="L62"></a><tt class="py-lineno">62</tt>  <tt class="py-line"> </tt>
+<a name="L63"></a><tt class="py-lineno">63</tt>  <tt class="py-line">    <tt id="link-22" class="py-name" targets="Variable bvexp201007.affine.go.result=bvexp201007.affine.go-module.html#result"><a title="bvexp201007.affine.go.result" class="py-name" href="#" onclick="return doclink('link-22', 'result', 'link-22');">result</a></tt> <tt class="py-op">=</tt> <tt class="py-name">comp</tt><tt class="py-op">(</tt><tt class="py-name">random_motion_simulation</tt><tt class="py-op">,</tt> </tt>
+<a name="L64"></a><tt class="py-lineno">64</tt>  <tt class="py-line">        <tt class="py-name">world_gen</tt><tt class="py-op">=</tt><tt id="link-23" class="py-name" targets="Function bvexp201007.affine.go.my_world_gen()=bvexp201007.affine.go-module.html#my_world_gen,Function bvexp201007.first_order.go_utils.my_world_gen()=bvexp201007.first_order.go_utils-module.html#my_world_gen"><a title="bvexp201007.affine.go.my_world_gen
+bvexp201007.first_order.go_utils.my_world_gen" class="py-name" href="#" onclick="return doclink('link-23', 'my_world_gen', 'link-23');">my_world_gen</a></tt><tt class="py-op">,</tt> <tt id="link-24" class="py-name"><a title="bvexp201007.affine.go.vehicle
+bvexp201007.first_order.icons_test.vehicle" class="py-name" href="#" onclick="return doclink('link-24', 'vehicle', 'link-17');">vehicle</a></tt><tt class="py-op">=</tt><tt id="link-25" class="py-name"><a title="bvexp201007.affine.go.vehicle
+bvexp201007.first_order.icons_test.vehicle" class="py-name" href="#" onclick="return doclink('link-25', 'vehicle', 'link-17');">vehicle</a></tt><tt class="py-op">,</tt> </tt>
+<a name="L65"></a><tt class="py-lineno">65</tt>  <tt class="py-line">        <tt id="link-26" class="py-name"><a title="bvexp201007.affine.go.random_pose_gen
+bvexp201007.first_order.go.random_pose_gen" class="py-name" href="#" onclick="return doclink('link-26', 'random_pose_gen', 'link-7');">random_pose_gen</a></tt><tt class="py-op">=</tt><tt id="link-27" class="py-name"><a title="bvexp201007.affine.go.random_pose_gen
+bvexp201007.first_order.go.random_pose_gen" class="py-name" href="#" onclick="return doclink('link-27', 'random_pose_gen', 'link-7');">random_pose_gen</a></tt><tt class="py-op">,</tt> </tt>
+<a name="L66"></a><tt class="py-lineno">66</tt>  <tt class="py-line">        <tt id="link-28" class="py-name"><a title="bvexp201007.affine.go.num_iterations
+bvexp201007.first_order.go.num_iterations" class="py-name" href="#" onclick="return doclink('link-28', 'num_iterations', 'link-11');">num_iterations</a></tt><tt class="py-op">=</tt><tt id="link-29" class="py-name"><a title="bvexp201007.affine.go.num_iterations
+bvexp201007.first_order.go.num_iterations" class="py-name" href="#" onclick="return doclink('link-29', 'num_iterations', 'link-11');">num_iterations</a></tt><tt class="py-op">,</tt> </tt>
+<a name="L67"></a><tt class="py-lineno">67</tt>  <tt class="py-line">        <tt id="link-30" class="py-name"><a title="bvexp201007.first_order.go.random_commands_gen" class="py-name" href="#" onclick="return doclink('link-30', 'random_commands_gen', 'link-9');">random_commands_gen</a></tt><tt class="py-op">=</tt><tt id="link-31" class="py-name"><a title="bvexp201007.first_order.go.random_commands_gen" class="py-name" href="#" onclick="return doclink('link-31', 'random_commands_gen', 'link-9');">random_commands_gen</a></tt><tt class="py-op">,</tt> <tt id="link-32" class="py-name"><a title="bvexp201007.affine.go.dt
+bvexp201007.first_order.go.dt" class="py-name" href="#" onclick="return doclink('link-32', 'dt', 'link-12');">dt</a></tt><tt class="py-op">=</tt><tt id="link-33" class="py-name"><a title="bvexp201007.affine.go.dt
+bvexp201007.first_order.go.dt" class="py-name" href="#" onclick="return doclink('link-33', 'dt', 'link-12');">dt</a></tt><tt class="py-op">,</tt> </tt>
+<a name="L68"></a><tt class="py-lineno">68</tt>  <tt class="py-line">        <tt class="py-name">processing_class</tt><tt class="py-op">=</tt><tt id="link-34" class="py-name"><a title="bvexp201007.affine.affine.AffineModel" class="py-name" href="#" onclick="return doclink('link-34', 'AffineModel', 'link-3');">AffineModel</a></tt><tt class="py-op">,</tt> </tt>
+<a name="L69"></a><tt class="py-lineno">69</tt>  <tt class="py-line">        <tt class="py-name">job_id</tt><tt class="py-op">=</tt><tt class="py-string">'affine'</tt><tt class="py-op">)</tt> </tt>
+<a name="L70"></a><tt class="py-lineno">70</tt>  <tt class="py-line"> </tt>
+<a name="L71"></a><tt class="py-lineno">71</tt>  <tt class="py-line">    <tt id="link-35" class="py-name" targets="Variable bvexp201007.affine.go.vehicle_report=bvexp201007.affine.go-module.html#vehicle_report"><a title="bvexp201007.affine.go.vehicle_report" class="py-name" href="#" onclick="return doclink('link-35', 'vehicle_report', 'link-35');">vehicle_report</a></tt> <tt class="py-op">=</tt> <tt class="py-name">comp</tt><tt class="py-op">(</tt><tt id="link-36" class="py-name"><a title="bvexp201007.affine.affine.create_report_affine" class="py-name" href="#" onclick="return doclink('link-36', 'create_report_affine', 'link-4');">create_report_affine</a></tt><tt class="py-op">,</tt> <tt class="py-name">state</tt><tt class="py-op">=</tt><tt id="link-37" class="py-name"><a title="bvexp201007.affine.go.result" class="py-name" href="#" onclick="return doclink('link-37', 'result', 'link-22');">result</a></tt><tt class="py-op">,</tt> <tt class="py-name">report_id</tt><tt class="py-op">=</tt><tt id="link-38" class="py-name"><a title="bvexp201007.affine.go.vname
+bvexp201007.first_order.icons_test.vname" class="py-name" href="#" onclick="return doclink('link-38', 'vname', 'link-16');">vname</a></tt><tt class="py-op">)</tt> </tt>
+<a name="L72"></a><tt class="py-lineno">72</tt>  <tt class="py-line">    <tt id="link-39" class="py-name"><a title="bvexp201007.affine.go.all_vehicle_report" class="py-name" href="#" onclick="return doclink('link-39', 'all_vehicle_report', 'link-15');">all_vehicle_report</a></tt><tt class="py-op">.</tt><tt class="py-name">append</tt><tt class="py-op">(</tt><tt id="link-40" class="py-name"><a title="bvexp201007.affine.go.vehicle_report" class="py-name" href="#" onclick="return doclink('link-40', 'vehicle_report', 'link-35');">vehicle_report</a></tt><tt class="py-op">)</tt> </tt>
+<a name="L73"></a><tt class="py-lineno">73</tt>  <tt class="py-line"><tt class="py-name">comp_prefix</tt><tt class="py-op">(</tt><tt class="py-op">)</tt> </tt>
+<a name="L74"></a><tt class="py-lineno">74</tt>  <tt class="py-line"> </tt>
+<a name="L75"></a><tt class="py-lineno">75</tt>  <tt class="py-line"> </tt>
+<a name="create_report"></a><div id="create_report-def"><a name="L76"></a><tt class="py-lineno">76</tt> <a class="py-toggle" href="#" id="create_report-toggle" onclick="return toggle('create_report');">-</a><tt class="py-line"><tt class="py-keyword">def</tt> <a class="py-def-name" href="bvexp201007.affine.go-module.html#create_report">create_report</a><tt class="py-op">(</tt><tt class="py-param">id</tt><tt class="py-op">,</tt> <tt class="py-param">children</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="create_report-collapsed" style="display:none;" pad="++" indent="++++"></div><div id="create_report-expanded"><a name="L77"></a><tt class="py-lineno">77</tt>  <tt class="py-line">    <tt class="py-keyword">return</tt> <tt class="py-name">Node</tt><tt class="py-op">(</tt><tt class="py-name">id</tt><tt class="py-op">=</tt><tt class="py-name">id</tt><tt class="py-op">,</tt> <tt class="py-name">children</tt><tt class="py-op">=</tt><tt class="py-name">children</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L78"></a><tt class="py-lineno">78</tt>  <tt class="py-line"> </tt>
+<a name="L79"></a><tt class="py-lineno">79</tt>  <tt class="py-line"><tt id="link-41" class="py-name" targets="Variable bvexp201007.affine.go.affine_report=bvexp201007.affine.go-module.html#affine_report"><a title="bvexp201007.affine.go.affine_report" class="py-name" href="#" onclick="return doclink('link-41', 'affine_report', 'link-41');">affine_report</a></tt> <tt class="py-op">=</tt> <tt class="py-name">comp</tt><tt class="py-op">(</tt><tt id="link-42" class="py-name" targets="Function bvexp201007.affine.go.create_report()=bvexp201007.affine.go-module.html#create_report,Function bvexp201007.first_order.go_utils.create_report()=bvexp201007.first_order.go_utils-module.html#create_report"><a title="bvexp201007.affine.go.create_report
+bvexp201007.first_order.go_utils.create_report" class="py-name" href="#" onclick="return doclink('link-42', 'create_report', 'link-42');">create_report</a></tt><tt class="py-op">,</tt> <tt class="py-name">id</tt><tt class="py-op">=</tt><tt class="py-string">'affine'</tt><tt class="py-op">,</tt> </tt>
+<a name="L80"></a><tt class="py-lineno">80</tt>  <tt class="py-line">                          <tt class="py-name">children</tt><tt class="py-op">=</tt><tt id="link-43" class="py-name"><a title="bvexp201007.affine.go.all_vehicle_report" class="py-name" href="#" onclick="return doclink('link-43', 'all_vehicle_report', 'link-15');">all_vehicle_report</a></tt><tt class="py-op">)</tt> </tt>
+<a name="L81"></a><tt class="py-lineno">81</tt>  <tt class="py-line">     </tt>
+<a name="write_report"></a><div id="write_report-def"><a name="L82"></a><tt class="py-lineno">82</tt> <a class="py-toggle" href="#" id="write_report-toggle" onclick="return toggle('write_report');">-</a><tt class="py-line"><tt class="py-keyword">def</tt> <a class="py-def-name" href="bvexp201007.affine.go-module.html#write_report">write_report</a><tt class="py-op">(</tt><tt class="py-param">report</tt><tt class="py-op">,</tt> <tt class="py-param">basename</tt><tt class="py-op">)</tt><tt class="py-op">:</tt> </tt>
+</div><div id="write_report-collapsed" style="display:none;" pad="++" indent="++++"></div><div id="write_report-expanded"><a name="L83"></a><tt class="py-lineno">83</tt>  <tt class="py-line">    <tt class="py-comment"># report.to_latex_document(basename + '.tex')</tt> </tt>
+<a name="L84"></a><tt class="py-lineno">84</tt>  <tt class="py-line">    <tt class="py-name">node_to_html_document</tt><tt class="py-op">(</tt><tt class="py-name">report</tt><tt class="py-op">,</tt> <tt class="py-name">basename</tt> <tt class="py-op">+</tt> <tt class="py-string">'.html'</tt><tt class="py-op">)</tt> </tt>
+</div><a name="L85"></a><tt class="py-lineno">85</tt>  <tt class="py-line"> </tt>
+<a name="L86"></a><tt class="py-lineno">86</tt>  <tt class="py-line"> </tt>
+<a name="L87"></a><tt class="py-lineno">87</tt>  <tt class="py-line"><tt class="py-name">comp</tt><tt class="py-op">(</tt><tt id="link-44" class="py-name" targets="Function bvexp201007.affine.go.write_report()=bvexp201007.affine.go-module.html#write_report,Function bvexp201007.first_order.go_utils.write_report()=bvexp201007.first_order.go_utils-module.html#write_report"><a title="bvexp201007.affine.go.write_report
+bvexp201007.first_order.go_utils.write_report" class="py-name" href="#" onclick="return doclink('link-44', 'write_report', 'link-44');">write_report</a></tt><tt class="py-op">,</tt> <tt id="link-45" class="py-name"><a title="bvexp201007.affine.go.affine_report" class="py-name" href="#" onclick="return doclink('link-45', 'affine_report', 'link-41');">affine_report</a></tt><tt class="py-op">,</tt> <tt class="py-string">"reports/affine"</tt><tt class="py-op">)</tt>  </tt>
+<a name="L88"></a><tt class="py-lineno">88</tt>  <tt class="py-line"> </tt>
+<a name="L89"></a><tt class="py-lineno">89</tt>  <tt class="py-line"> </tt>
+<a name="L90"></a><tt class="py-lineno">90</tt>  <tt class="py-line"> </tt>
+<a name="L91"></a><tt class="py-lineno">91</tt>  <tt class="py-line"><tt class="py-name">batch_command</tt><tt class="py-op">(</tt><tt class="py-string">'make all'</tt><tt class="py-op">)</tt> </tt>
+<a name="L92"></a><tt class="py-lineno">92</tt>  <tt class="py-line"> </tt><script type="text/javascript">
+<!--
+expandto(location.href);
+// -->
+</script>
+</pre>
+<br />
+<!-- ==================== NAVIGATION BAR ==================== -->
+<table class="navbar" border="0" width="100%" cellpadding="0"
+       bgcolor="#a0c0ff" cellspacing="0">
+  <tr valign="middle">
+  <!-- Home link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="bvexp201007-module.html">Home</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Tree link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="module-tree.html">Trees</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Index link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="identifier-index.html">Indices</a>&nbsp;&nbsp;&nbsp;</th>
+
+  <!-- Help link -->
+      <th>&nbsp;&nbsp;&nbsp;<a
+        href="help.html">Help</a>&nbsp;&nbsp;&nbsp;</th>
+
+      <th class="navbar" width="100%"></th>
+  </tr>
+</table>
+<table border="0" cellpadding="0" cellspacing="0" width="100%%">
+  <tr>
+    <td align="left" class="footer">
+    Generated by Epydoc 3.0.1 on Thu Sep 16 18:33:40 2010
+    </td>
+    <td align="right" class="footer">
+      <a target="mainFrame" href="http://epydoc.sourceforge.net"
+        >http://epydoc.sourceforge.net</a>
+    </td>
+  </tr>
+</table>
+
+<script type="text/javascript">
+  <!--
+  // Private objects are initially displayed (because if
+  // javascript is turned off then we want them to be
+  // visible); but by default, we want to hide them.  So hide
+  // them unless we have a cookie that says to show them.
+  checkCookie();
+  // -->
+</script>
+</body>
+</html>
