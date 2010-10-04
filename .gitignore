@@ -1,0 +1,6 @@
+*pyc
+*.egg-info
+.compmake_history.txt
+dist
+compmake_storage
+docs/website
