@@ -1,4 +1,4 @@
-from numpy import linspace, deg2rad, isnan, array, dot
+from numpy import linspace, deg2rad, array, dot
 from pybv.utils import OpenStruct, RigidBodyState
 from pybv.worlds import get_safe_pose
 from pybv.sensors import TexturedRaytracer
@@ -6,8 +6,7 @@ from pybv.sensors import TexturedRaytracer
 
 import numpy
 from pybv.utils.numpy_utils import assert_reasonable_value, gt, require_shape
-import math
-from numpy.core.numeric import sign
+
 from reprep.node import Node
 
 
